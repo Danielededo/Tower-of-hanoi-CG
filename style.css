@@ -1,0 +1,16 @@
+#left-buttons {
+    float: left;
+    width: 33%;
+}
+#medium-buttons {
+    float: left;
+    width: 33%;
+}
+#right-buttons {
+    float: left;
+    width: 33%;
+}
+.button {
+    -webkit-appearance: button;
+    height: 30px;
+}

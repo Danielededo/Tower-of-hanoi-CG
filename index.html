@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="Tower of Hanoi">
+    <title>Tower of Hanoi</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body onload="setup()">
+    <canvas id="myCanvas" width="1200" height="600">Your browser does not support canvas, please use another browser.</canvas><br/>
+    <div id="left-buttons">
+        <button class="button" id="button-from1to2" type="button">move a disc from the 1st rod to the 2nd rod (press key Q)</button><br/>
+        <br/>
+        <button class="button" id="button-from1to3" type="button">move a disc from the 1st rod to the 3rd rod (press key A)</button><br/>
+        <br/>
+        <button class="button" id="button-solve-it" type="button">solve it!</button><br/>
+        <br/>
+    </div>
+    <div id="medium-buttons">
+        <button class="button" id="button-from2to1" type="button">move a disc from the 2nd rod to the 1st rod (press key W)</button><br/>
+        <br/>
+        <button class="button" id="button-from2to3" type="button">move a disc from the 2nd rod to the 3rd rod (press key S)</button><br/>
+        <br/>
+    </div>
+    <div id="right-buttons">
+        <button class="button" id="button-from3to1" type="button">move a disc from the 3rd rod to the 1st rod (press key E)</button><br/>
+        <br/>
+        <button class="button" id="button-from3to2" type="button">move a disc from the 3rd rod to the 2nd rod (press key D)</button><br/>
+        <br/>
+        <br/>
+    </div>
+
+    <script id="shadow-vs" type="not-js">
+        attribute vec3 vPosition;
+        uniform mat4 uMVP; // model-view-projection matrix
+
+        void main(void) {
+            gl_Position = uMVP * vec4(vPosition, 1.0); // compute position in light coordinate
+        }
+    </script>
+    <script id="shadow-fs" type="not-js">
+        #ifdef GL_ES
+            precision highp float;
+        #endif
+        // we use a texture as the depth map and all channels of a texture (r, g, b and a) are 8-bit, so every point in
+        // a texture is 32-bit. Float here is 16-bit, so if we utilize all 32 bits in a texture, it is quite sufficient.
+        const vec4 bitShift = vec4(1.0, 256.0, 256.0 * 256.0, 256.0 * 256.0 * 256.0);
+        const vec4 bitMask = vec4(1.0 / 256.0, 1.0 / 256.0, 1.0 / 256.0, 0.0);
+
+        void main(void) {
+            vec4 rgbaDepth = fract(gl_FragCoord.z * bitShift);
+            rgbaDepth -= rgbaDepth.gbaa * bitMask;
+	        gl_FragColor = rgbaDepth;
+        }
+    </script>
+
+    <script id="ground-vs" type="not-js">
+        attribute vec3 vPosition;
+        uniform mat4 uMVP;
+        uniform mat4 uMVPFromLight;
+        varying vec4 vPositionFromLight;
+
+        void main(void) {
+            vPositionFromLight = uMVPFromLight * vec4(vPosition, 1.0); // compute position in light coordinate
+            gl_Position = uMVP * vec4(vPosition, 1.0);
+        }
+    </script>
+    <script id="ground-fs" type="not-js">
+        /**
+         * we do not use any texture to draw ground
+         */
+        #ifdef GL_ES
+            precision highp float;
+        #endif
+        uniform vec3 uColor; // the ground's color
+        uniform vec3 uLightColor;
+        uniform sampler2D uShadowMap; // depth value in light coordinate
+        uniform float uShadowMapResolution;
+        varying vec4 vPositionFromLight;
+
+        /**
+         * compute z-value from a vec4
+         */
+        float unpackDepth(const in vec4 rgbaDepth) {
+            const vec4 bitShift = vec4(1.0, 1.0 / 256.0, 1.0 / (256.0 * 256.0), 1.0 / (256.0 * 256.0 * 256.0));
+            float depth = dot(rgbaDepth, bitShift);
+            return depth;
+        }
+
+        /**
+         * compute the visibility coefficient
+         */
+        float getVisibility(vec3 shadowCoordinate) {
+            float sum = 0.0;
+            // use a simple and incomplete but good enough percentage-closer filtering method.
+            // take 16 points on shadow map as the sampler.
+            for (float x = -1.5; x <= 1.5; x += 1.0) {
+                for (float y = -1.5; y <= 1.5; y += 1.0) {
+                    if(shadowCoordinate.z > 1.0) {
+                        // coordinates outside the far plane of the light's orthographic frustum will never be in shadow
+                        sum += 1.0;
+                    } else {
+                        vec2 biasedCoordinate = shadowCoordinate.xy + vec2(x, y) / uShadowMapResolution;
+                        float depth = 1.0; // all coordinates outside the depth map's range have a default depth of 1.0
+                        // which means these coordinates will never be in shadow since no object will have a depth larger than 1.0
+                        if (biasedCoordinate.x >= 0.0 && biasedCoordinate.x <= 1.0 && biasedCoordinate.y >= 0.0 && biasedCoordinate.y <= 1.0) {
+                            vec4 rgbaDepth = texture2D(uShadowMap, biasedCoordinate);
+                            depth = unpackDepth(rgbaDepth); // decode the depth value from the depth map
+                        }
+                        sum += (shadowCoordinate.z > depth + 0.005) ? 0.5 : 1.0; // add 0.005 to eliminate Mach band, also known as shadow acne
+                    }
+                }
+            }
+            return sum / 16.0;
+        }
+
+        void main(void) {
+            vec3 shadowCoordinate = (vPositionFromLight.xyz / vPositionFromLight.w) / 2.0 + 0.5;
+            float visibility = getVisibility(shadowCoordinate);
+            vec3 finalColor = clamp((uColor + uLightColor) / 2.0, 0.0, 1.0); // mix the ground's color and the light's color
+	        gl_FragColor = vec4(visibility * finalColor, 1.0);
+        }
+    </script>
+
+    <script id="rod-vs" type="not-js">
+        attribute vec3 vPosition;
+        attribute vec3 vNormal;
+        attribute vec2 vTexCoord;
+        uniform mat4 uModelView;
+        uniform mat4 uProjection;
+        uniform mat4 uNormal;
+        uniform mat4 uMVPFromLight;
+        varying vec3 fNormal;
+        varying vec3 fPosition;
+        varying vec2 fTexCoord;
+        varying vec4 vPositionFromLight;
+
+        void main(void) {
+            vPositionFromLight = uMVPFromLight * vec4(vPosition, 1.0); // compute position in light coordinate
+            fNormal = (uNormal * vec4(vNormal, 1.0)).xyz; // normals in camera coordinate
+            fPosition = (uModelView * vec4(vPosition, 1.0)).xyz; // vertex position in camera coordinate
+            fTexCoord = vTexCoord;
+            gl_Position = uProjection * uModelView * vec4(vPosition, 1.0);
+        }
+    </script>
+    <script id="rod-fs" type="not-js">
+        /**
+         * we do use image texture to draw rods
+         */
+        #ifdef GL_ES
+            precision highp float;
+        #endif
+        uniform vec3 uLightDirection;
+        uniform vec3 uLightColor;
+        uniform sampler2D uShadowMap; // depth value in light coordinate
+        uniform sampler2D uTexSampler;
+        varying vec3 fNormal;
+        varying vec3 fPosition; // vertex position in camera coordinate
+        varying vec2 fTexCoord;
+        varying vec4 vPositionFromLight;
+
+        /**
+        * compute the Blinn-Phong shading model
+        * @param lightDirection: the direction of the light in camera coordinate
+        * @param lightIntensity: the intensity of the light
+        * @param ambientCoefficient: the coefficient of ambient light
+        * @param diffuseCoefficient: the coefficient of diffuse light
+        * @param specularCoefficient: the coefficient of specular light
+        * @param specularExponent: the lightiness of specular light
+        * @return a 2D vector whose first element is the combination final coefficient of ambient light and diffuse
+        * light while the second element is the final coefficient of specular light
+        */
+        vec2 blinnPhongShading(vec3 lightDirection, float lightIntensity, float ambientCoefficient,
+            float diffuseCoefficient, float specularCoefficient, float specularExponent)
+        {
+            lightDirection = normalize(lightDirection);
+            vec3 eyeDirection = normalize(-fPosition);
+            vec3 normal = normalize(fNormal);
+            vec3 halfVector = normalize(eyeDirection + lightDirection);
+            float ambientAndDiffuse = ambientCoefficient + diffuseCoefficient * lightIntensity * max(0.0, dot(normal,
+                lightDirection));
+            float specular = specularCoefficient * pow(max(0.0, dot(normal, halfVector)), specularExponent);
+            return vec2(ambientAndDiffuse, specular);
+        }
+
+        /**
+         * compute z-value from a vec4
+         */
+        float unpackDepth(const in vec4 rgbaDepth) {
+            const vec4 bitShift = vec4(1.0, 1.0 / 256.0, 1.0 / (256.0 * 256.0), 1.0 / (256.0 * 256.0 * 256.0));
+            float depth = dot(rgbaDepth, bitShift);
+            return depth;
+        }
+
+        void main(void) {
+            vec3 shadowCoordinate = (vPositionFromLight.xyz / vPositionFromLight.w) / 2.0 + 0.5;
+            vec4 rgbaDepth = texture2D(uShadowMap, shadowCoordinate.xy);
+            float depth = unpackDepth(rgbaDepth); // decode the depth value from the depth map
+            float visibility = (shadowCoordinate.z > depth + 0.00001) ? 0.7 : 1.0;
+            vec2 light = blinnPhongShading(uLightDirection, 1.0, 0.5, 1.0, 1.5, 100.0);
+            vec3 ambientAndDiffuseColor = light.x * texture2D(uTexSampler, fTexCoord).xyz;
+            vec3 specularColor = light.y * uLightColor;
+	        gl_FragColor = vec4(visibility * (ambientAndDiffuseColor + specularColor), 1.0);
+        }
+    </script>
+
+    <script id="disc-vs" type="not-js">
+        attribute vec3 vPosition;
+        attribute vec3 vNormal;
+        uniform mat4 uModelView;
+        uniform mat4 uProjection;
+        uniform mat4 uNormal;
+        uniform mat4 uMVPFromLight;
+        varying vec3 fNormal;
+        varying vec3 fPosition; // vertex position in camera coordinate
+        varying vec3 uPosition; // pass on the original coordinate from the vertex shader to the fragment shader
+        // for procedure texture
+        varying vec4 vPositionFromLight;
+
+        void main(void) {
+            vPositionFromLight = uMVPFromLight * vec4(vPosition, 1.0); // compute position in light coordinate
+            fNormal = (uNormal * vec4(vNormal, 1.0)).xyz; // normals in camera coordinate
+            uPosition = vPosition; // vertex position in model coordinate
+            fPosition = (uModelView * vec4(vPosition, 1.0)).xyz; // vertex position in camera coordinate
+            gl_Position = uProjection * uModelView * vec4(vPosition, 1.0);
+        }
+    </script>
+    <script id="disc-fs" type="not-js">
+        /**
+         * we use procedural texture to draw discs
+         */
+        #ifdef GL_ES
+            precision highp float;
+        #endif
+        uniform vec3 uColor; // the object's color
+        uniform vec3 uLightDirection;
+        uniform vec3 uLightColor;
+        uniform sampler2D uShadowMap; // depth value in light coordinate
+        varying vec3 fNormal;
+        varying vec3 fPosition;
+        varying vec3 uPosition;
+        varying vec4 vPositionFromLight;
+
+        /**
+         * a pulse function in order to make stripe
+         */
+        float pulse(float value, float destination) {
+            return floor(mod(value * destination, 1.0) + 0.5);
+        }
+
+        /**
+        * compute the Blinn-Phong shading model
+        * @param lightDirection: the direction of the light in camera coordinate
+        * @param lightIntensity: the intensity of the light
+        * @param ambientCoefficient: the coefficient of ambient light
+        * @param diffuseCoefficient: the coefficient of diffuse light
+        * @param specularCoefficient: the coefficient of specular light
+        * @param specularExponent: the lightiness of specular light
+        * @return a 2D vector whose first element is the combination final coefficient of ambient light and diffuse
+        * light while the second element is the final coefficient of specular light
+        */
+        vec2 blinnPhongShading(vec3 lightDirection, float lightIntensity, float ambientCoefficient,
+            float diffuseCoefficient, float specularCoefficient, float specularExponent)
+        {
+            lightDirection = normalize(lightDirection);
+            vec3 eyeDirection = normalize(-fPosition);
+            vec3 normal = normalize(fNormal);
+            vec3 halfVector = normalize(eyeDirection + lightDirection);
+            float ambientAndDiffuse = ambientCoefficient + diffuseCoefficient * lightIntensity * max(0.0, dot(normal,
+                lightDirection));
+            float specular = specularCoefficient * pow(max(0.0, dot(normal, halfVector)), specularExponent);
+            return vec2(ambientAndDiffuse, specular);
+        }
+
+        /**
+         * compute z-value from a vec4
+         */
+        float unpackDepth(const in vec4 rgbaDepth) {
+            const vec4 bitShift = vec4(1.0, 1.0 / 256.0, 1.0 / (256.0 * 256.0), 1.0 / (256.0 * 256.0 * 256.0));
+            float depth = dot(rgbaDepth, bitShift);
+            return depth;
+        }
+
+        void main(void) {
+            vec3 shadowCoordinate = (vPositionFromLight.xyz / vPositionFromLight.w) / 2.0 + 0.5;
+            vec4 rgbaDepth = texture2D(uShadowMap, shadowCoordinate.xy);
+            float depth = unpackDepth(rgbaDepth); // decode the depth value from the depth map
+            float visibility = (shadowCoordinate.z > depth + 0.00001) ? 0.7 : 1.0;
+            vec2 light = blinnPhongShading(uLightDirection, 1.0, 0.5, 1.0, 1.5, 30.0);
+            vec3 objectColor = (1.0 + 0.3 * pulse(uPosition.z, 0.1)) * uColor; // add some stripes
+            vec3 ambientAndDiffuseColor = light.x * objectColor;
+            vec3 specularColor = light.y * uLightColor;
+	        gl_FragColor = vec4(visibility * (ambientAndDiffuseColor + specularColor), 1.0);
+        }
+    </script>
+
+    <!-- always load libraries first-->
+    <script src="./Libraries/twgl-full.js"></script>
+    <script src="./Libraries/jquery-3.3.1.js"></script>
+    <script src="./Libraries/miscellaneousUtilities.js"></script>
+
+    <!-- compile shaders and define how to create all objects in local coordinate-->
+    <script src="./Objects/textures/woodTexture.js"></script> <!-- load textures before loading object models-->
+    <script src="./Objects/ground.js"></script> <!-- prototype of ground-->
+    <script src="./Objects/rod.js"></script> <!-- prototype of rod-->
+    <script src="./Objects/disc.js"></script> <!-- prototype of disc-->
+    <script src="./Objects/allObjects.js"></script> <!-- define the initialize procedure to create 3 rods and 4 discs
+    in terms of graphic models, so it should be loaded before main.js-->
+
+    <!-- the game logic part-->
+    <script src="./GameCore/gameLogic.js"></script> <!-- load gameLogic.js first-->
+    <script src="./GameCore/AI.js"></script>
+
+    <!-- user interaction methods-->
+    <script src="./UserInteraction/arcball.js"></script>
+    <script src="./UserInteraction/buttonClick.js"></script>
+    <script src="./UserInteraction/keyboard.js"></script>
+
+    <!-- This should be loaded last, so please keep the order of loading JavaScript Files -->
+    <script src="./main.js"></script>
+</body>
+</html>
