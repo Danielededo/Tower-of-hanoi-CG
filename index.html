@@ -34,7 +34,7 @@
         <br/>
     </div>
 
-    <script id="shadow-vs" type="not-js">
+    <!--<script id="shadow-vs" type="not-js">
         attribute vec3 vPosition;
         uniform mat4 uMVP; // model-view-projection matrix
 
@@ -56,9 +56,9 @@
             rgbaDepth -= rgbaDepth.gbaa * bitMask;
 	        gl_FragColor = rgbaDepth;
         }
-    </script>
+    </script>-->
 
-    <script id="ground-vs" type="not-js">
+    <!--<script id="ground-vs" type="not-js">
         attribute vec3 vPosition;
         uniform mat4 uMVP;
         uniform mat4 uMVPFromLight;
@@ -124,9 +124,9 @@
             vec3 finalColor = clamp((uColor + uLightColor) / 2.0, 0.0, 1.0); // mix the ground's color and the light's color
 	        gl_FragColor = vec4(visibility * finalColor, 1.0);
         }
-    </script>
+    </script>-->
 
-    <script id="rod-vs" type="not-js">
+    <!--<script id="rod-vs" type="not-js">
         attribute vec3 vPosition;
         attribute vec3 vNormal;
         attribute vec2 vTexCoord;
@@ -206,9 +206,9 @@
             vec3 specularColor = light.y * uLightColor;
 	        gl_FragColor = vec4(visibility * (ambientAndDiffuseColor + specularColor), 1.0);
         }
-    </script>
+    </script>-->
 
-    <script id="disc-vs" type="not-js">
+    <!--<script id="disc-vs" type="not-js">
         attribute vec3 vPosition;
         attribute vec3 vNormal;
         uniform mat4 uModelView;
@@ -296,7 +296,7 @@
             vec3 specularColor = light.y * uLightColor;
 	        gl_FragColor = vec4(visibility * (ambientAndDiffuseColor + specularColor), 1.0);
         }
-    </script>
+    </script>-->
 
     <!-- always load libraries first-->
     <script src="./lib/Libraries/twgl-full.js"></script>
