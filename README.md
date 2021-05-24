@@ -1,67 +1,53 @@
-# [Computer Graphics](https://www11.ceda.polimi.it/schedaincarico/schedaincarico/controller/scheda_pubblica/SchedaPublic.do?&evn_default=evento&c_classe=712745&polij_device_category=DESKTOP&__pj0=0&__pj1=0451f4bfa941b844b219b97b3aab0ffb) 2020, Course Project
+# 3D tower of Hanoi drawn by WebGL
 
-*Politecnico di Milano - MSc in Computer Science and Engineering*
+## Introduction
+The Tower of Hanoi is a mathematical game or puzzle. It consists of three rods and a number of disks of different sizes,
+ which can slide onto any rod. The puzzle starts with the disks in a neat stack in ascending order of size on one rod, 
+ the smallest at the top, thus making a conical shape.
 
-- [Computer Graphics 2020, Course Project](#computer-graphics-2020-course-project)
-  - [Project Description](#project-description)
-  - [Implementation](#implementation)
-    - [Textures](#textures)
-    - [UI Controls](#ui-controls)
-      - [**Lights**](#lights)
-      - [**Camera**](#camera)
-    - [Eyes and Tail Movement](#eyes-and-tail-movement)
-    - [Clockhands Movement](#clockhands-movement)
-  - [Building and Deploying the project](#building-and-deploying-the-project)
-  - [Screenshots](#screenshots)
+The objective of the game is to move the entire stack to another rod, obeying the following simple rules:
+1. Only one disk can be moved at a time.
+2. Each move consists of taking the upper disk from one of the stacks and placing it on top of another stack.
+3. No disk may be placed on top of a smaller disk.
 
-## Project Description
+## Ways of control
+1. You could drag the screen by mouse to adjust the view
+2. You could click buttons on the web page to move discs
+3. You could also press keys denoted in texts of buttons to move discs instead of clicking buttons. Here is the list of 
+hot keys:
 
-The aim of this project was to develop a WebGL application and associated OpenGL shaders that will render a 3D model of Cat Wall Watch like the one below from a frame of *[Back to the Future](https://en.wikipedia.org/wiki/Back_to_the_Future)*.
+    | key | motion                                      |
+    | --- | ------------------------------------------- |
+    | A   | move a disc from the 1st rod to the 2nd rod |
+    | Q   | move a disc from the 1st rod to the 3rd rod |
+    | D   | move a disc from the 2nd rod to the 1st rod |
+    | S   | move a disc from the 2nd rod to the 3rd rod |
+    | T   | move a disc from the 3rd rod to the 1st rod |
+    | F   | move a disc from the 3rd rod to the 2nd rod |
 
-<img src="./screenshots/bttf.jpg" />
+## Code modification suggestions
+1. If you want to adjust the position of camera in world coordinate, the angele of field of view or the position of 
+light in world coordinate, please change numbers in function draw in main.js
+2. If you want to adjust the position or the size of rods and discs, or the flying altitude of the moving disc, please
+modify numbers in function Game in gameLogic.js
+3. If you want to speed up the moving disc, please modify variable movingSpeed defined in 
+Game.prototype.updateDiscPosition in gameLogic.js
+4. I use some parallel lights, but you can swift to a dot light with a lot of work. I give out a brief instruction in
+main.js
+5. If you want to save power when running the game, please use a smaller number for framebuffer.resolution defined in 
+allObjects.js at the expense of aliasing of the shadow.
 
-## Implementation
-The application has been written in JavaScript and GLSL and consists of different [3D .obj files](./model/) with the requirement that the final implementation should show the current time and the movement of the cat's eyes and tail needs to be in the same direction, as the real clock does.
+## Known bug
+1. If you use Safari, open the GitHub Pages link in new tab but do not swift to the web page immediately, the speed of 
+the moving disc will be abnormally fast. The reason why the issue exists is that I use the first 10 frames to compute 
+frame per second(FPS) and the speed of the moving disc depends on it. If the web page does not have focus, animation 
+will be stopped by browser automatically to save energy so that the interval between the start time and the end time of 
+my timer will be quite long and I cannot get the correct FPS. However, Chrome does not have the problem.
 
-The final result is:
+## Miscellaneous
+1. It is best for computers or iPads, not mobile phones.
+2. I meant to let users use mouse to drag and drop any discs, but the implementation will be too complicated without a 
+physics engine because I have to implement collusion detection and mouse selection detection by myself. It is unwise 
+to reinvent the wheel and WebGL is a little low-level for games so I suggest you choosing any game engine such as 
+three.js to realize the feature. 
 
-<img src="./screenshots/cat-watch-wall.gif" width="75%" />
-
-### Textures
-Most of the components of the watch use two kinds of textures: a normal color texture and a [normal map texture](https://en.wikipedia.org/wiki/Normal_mapping) that encodes information about normal vectors for each internal point of a triangle. Because of the [tangent space encoding](https://en.wikipedia.org/wiki/Normal_mapping#Calculating_tangent_space) of this values in the normal map, the fragment shader will perform an *on-the-fly* computation of geometrical normals to obtain the tangent and bitangent vectors.
-This dynamic computation can be enabled in the UI control *"Compute geometrical normals"* and is not enabled by default because using the normal vector direction stored with the geometry results in a better rendering.
-
-### UI Controls
-In addition to a simple implementation of the cat watch I've also implemented an interface to control the lights inside the scene, with the related diffuse and specular effects. This UI communicates directly with the GLSL program of each 3D component setting the current option, light positions and colors.
-
-#### **Lights**
-It's possible to enable up to 3 different types of lights in the scene: [directional](https://en.wikipedia.org/wiki/Computer_graphics_lighting#Directional), [point](https://en.wikipedia.org/wiki/Computer_graphics_lighting#Point) and [spot](https://en.wikipedia.org/wiki/Computer_graphics_lighting#Spotlight) lights, with their related color, coordinates and angles. In addition to that I've implemented [Diffuse](https://en.wikipedia.org/wiki/Computer_graphics_lighting#Diffuse)(Lambert, Toon) and [Specular](https://en.wikipedia.org/wiki/Computer_graphics_lighting#Specular) (Phong, Blinn, Toon Phong, Toon Blinn).
-
-#### **Camera**
-The camera looks at the cat and, by default, it's set at the coordinates `x = 0.0`, `y = 0.05`, `z = 0.2`. However it's possible to change these parameters and move the "eye" around the object by using the arrow keys to change coordinates `x` and `y`, and +/- keys to move along the `z` axis.
-
-### Eyes and Tail Movement
-The animation of eyes and tail is performed by the function `animate()` of [`main.js`](./main.js) and it relies on the assumption that the `window.requestAnimationFrame` method performs a number of callbacks to it that is usually [60 times per second](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame). Therefore in 60fps the tail and eyes will have 15 frames to move in a fixed direction, 15 frames to return to the centre and again 15+15 frames in the opposite direction, resulting in a 60 frames pendulum movement.
-A delta equal to 1, as it's set by default, will move the objects of 15 degrees in both directions.
-
-### Clockhands Movement
-The clockhands rotation (in degrees) is calculated on the current time as follows:
-
-`hoursRotationMatrix = rotateZ( -(hour + minutes/60) * 2*Math.PI/12 );`
-
-`minutesRotationMatrix = rotateZ( -minutes * 2*Math.PI/60 );`
-
-where `hour` is a number between 0 and 11 while `minutes` varies from 0 to 59. For a better result the hours clockhand's rotation is also influenced by the number of elapsed minutes.
-
-### Building and Deploying the project
-The last version of the project is available at [this GitHub Page](https://ste7en.github.io/ComputerGraphics/) but can also be build offline by cloning this repository and running a webserver (e.g. Apache) in the same folder.
-
-## Screenshots
-Fig. 1 - a single white direct light with Lambert diffuse and Phong Specular.
-<img src="./screenshots/1.png" />
-Fig. 2 - a yellow direct light with Toon diffuse and warmer yellow Phong Specular.
-<img src="./screenshots/2.png" />
-Fig. 3 - a yellow direct light and a red point light with Toon diffuse and Phong Specular.
-<img src="./screenshots/3.png" />
-Fig. 4 - in addition to the previous two lights, a blue spot light with Toon diffuse and Phong Specular.
-<img src="./screenshots/4.png" />
