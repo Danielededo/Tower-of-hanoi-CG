@@ -10,11 +10,6 @@ The objective of the game is to move the entire stack to another rod, obeying th
 2. Each move consists of taking the upper disk from one of the stacks and placing it on top of another stack.
 3. No disk may be placed on top of a smaller disk.
 
-## Ways to run the program
-1. Here is the GitHub Pages link for the game: https://shxuy.github.io/TowerOfHanoi_3D/index.html
-2. Download all files and run index.html in your native browser
-3. Modify paths of JavaScript files in index.html and use your own server
-
 ## Ways of control
 1. You could drag the screen by mouse to adjust the view
 2. You could click buttons on the web page to move discs
@@ -23,13 +18,12 @@ hot keys:
 
     | key | motion                                      |
     | --- | ------------------------------------------- |
-    | Q   | move a disc from the 1st rod to the 2nd rod |
-    | A   | move a disc from the 1st rod to the 3rd rod |
-    | W   | move a disc from the 2nd rod to the 1st rod |
+    | A   | move a disc from the 1st rod to the 2nd rod |
+    | Q   | move a disc from the 1st rod to the 3rd rod |
+    | D   | move a disc from the 2nd rod to the 1st rod |
     | S   | move a disc from the 2nd rod to the 3rd rod |
-    | E   | move a disc from the 3rd rod to the 1st rod |
-    | D   | move a disc from the 3rd rod to the 2nd rod |
-4. You could click the button 'solve it' to watch the solving animation
+    | T   | move a disc from the 3rd rod to the 1st rod |
+    | F   | move a disc from the 3rd rod to the 2nd rod |
 
 ## Code modification suggestions
 1. If you want to adjust the position of camera in world coordinate, the angele of field of view or the position of 
