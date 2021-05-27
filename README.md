@@ -1,14 +1,14 @@
 # 3D tower of Hanoi drawn by WebGL
 
 ## Introduction
-The Tower of Hanoi is a mathematical game or puzzle. It consists of three rods and a number of disks of different sizes,
- which can slide onto any rod. The puzzle starts with the disks in a neat stack in ascending order of size on one rod, 
+The Tower of Hanoi is a mathematical game or puzzle. It consists of three rods and a number of discs of different sizes,
+ which can slide onto any rod. The puzzle starts with the discs in a neat stack in ascending order of size on one rod, 
  the smallest at the top, thus making a conical shape.
 
 The objective of the game is to move the entire stack to another rod, obeying the following simple rules:
-1. Only one disk can be moved at a time.
-2. Each move consists of taking the upper disk from one of the stacks and placing it on top of another stack.
-3. No disk may be placed on top of a smaller disk.
+1. Only one disc can be moved at a time.
+2. Each move consists of taking the upper disc from one of the stacks and placing it on top of another stack.
+3. No disc may be placed on top of a smaller disc.
 
 ## Ways of control
 1. You could drag the screen by mouse to adjust the view
