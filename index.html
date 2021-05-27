@@ -3,16 +3,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="description" content="Tower of Hanoi">
-    <title>Tower of Hanoi - Computer Graphics</title>
+    <title>Tower of Hanoi [CG course]</title>
     <link rel="stylesheet" type="text/css" href="./lib/style.css" />
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
 </head>
 <body onload="setup()">
-    <canvas id="myCanvas" width="1300" height="600">Your browser does not support canvas, please use another browser.</canvas><br/>
+    <canvas id="myCanvas" width="1000" height="500">Your browser does not support canvas, please use another browser.</canvas><br/>
     <div id="left-buttons">
-        <button class="button" id="button-from1to2" type="button">Move from 1st to 2nd (or press key 'A')</button><br/>
+        <button class="button" id="button-from1to2" type="button">1st &#10132; 2nd(or 'a')</button><br/>
         <br/>
-        <button class="button" id="button-from1to3" type="button">Move from 1st to 3rd (or press key 'Q')</button><br/>
+        <button class="button" id="button-from1to3" type="button">1st &#10132; 3rd (or 'q')</button><br/>
         <br/>
         
         <!--
@@ -22,15 +22,14 @@
         
     </div>
     <div id="medium-buttons">
-        <button class="button" id="button-from2to1" type="button">Move from 2nd to 1st (or press key 'D')</button><br/>
+        <button class="button" id="button-from2to1" type="button">2nd &#10132; 1st (or 'd')</button><br/>
         <br/>
-        <button class="button" id="button-from2to3" type="button">Move from 2nd to 3rd (or press key 'S')</button><br/>
+        <button class="button" id="button-from2to3" type="button">2nd &#10132; 3rd (or 's')</button><br/>
         <br/>
     </div>
     <div id="right-buttons">
-        <button class="button" id="button-from3to1" type="button">Move from 3rd to 1st (or press key 'T')</button><br/>
-        <br/>
-        <button class="button" id="button-from3to2" type="button">Move from 3rd to 2nd (or press key 'F')</button><br/>
+        <button class="button" id="button-from3to2" type="button">3rd &#10132; 2nd (or 'f')</button><br/>
+        <br/><button class="button" id="button-from3to1" type="button">3rd &#10132; 1st (or 't')</button><br/>
         <br/>
         <br/>
     </div>
