@@ -31,9 +31,6 @@ var Disc = undefined;
     }`;
     var fragmentSource = `#version 300 es
     
-    /**
-    * we use procedural texture to draw discs
-    */
    #ifdef GL_ES
        precision highp float;
    #endif
@@ -46,24 +43,12 @@ var Disc = undefined;
    in vec3 uPosition;
    in vec4 vPositionFromLight;
    out vec4 myOutputColor;
-   /**
-    * a pulse function in order to make stripe
-    */
+   
    float pulse(float value, float destination) {
        return floor(mod(value * destination, 1.0) + 0.5);
    }
 
-   /**
-   * compute the Blinn-Phong shading model
-   * @param lightDirection: the direction of the light in camera coordinate
-   * @param lightIntensity: the intensity of the light
-   * @param ambientCoefficient: the coefficient of ambient light
-   * @param diffuseCoefficient: the coefficient of diffuse light
-   * @param specularCoefficient: the coefficient of specular light
-   * @param specularExponent: the lightiness of specular light
-   * @return a 2D vector whose first element is the combination final coefficient of ambient light and diffuse
-   * light while the second element is the final coefficient of specular light
-   */
+
    vec2 blinnPhongShading(vec3 lightDirection, float lightIntensity, float ambientCoefficient,
        float diffuseCoefficient, float specularCoefficient, float specularExponent)
    {
@@ -77,9 +62,9 @@ var Disc = undefined;
        return vec2(ambientAndDiffuse, specular);
    }
 
-   /**
-    * compute z-value from a vec4
-    */
+
+
+
    float unpackDepth(const in vec4 rgbaDepth) {
        const vec4 bitShift = vec4(1.0, 1.0 / 256.0, 1.0 / (256.0 * 256.0), 1.0 / (256.0 * 256.0 * 256.0));
        float depth = dot(rgbaDepth, bitShift);
@@ -100,7 +85,7 @@ var Disc = undefined;
 
     // compile the shaders only when initializing every object
     // we do not have to recompile them during drawing in every frame
-
+   
     var shaderProgram = undefined;
 
     // As to rod, since every rod is identical, we could put vertexPos, normal and such things outside function init
@@ -137,6 +122,17 @@ var Disc = undefined;
         var gl = drawingState.gl; // an abbreviation...
 
         if (!shaderProgram) {
+            /*var path = window.location.pathname;
+            var page = path.split("/").pop();
+            var baseDir = window.location.href.replace(page, '');
+            var shaderDir = baseDir + "shaders/";
+
+            utils.loadFiles([shaderDir + 'disc_vs.glsl', shaderDir + 'disc_fs.glsl'], function (shaderText) {
+                var vertexShader = utils.createShader(gl, gl.VERTEX_SHADER, shaderText[0]);
+                var fragmentShader = utils.createShader(gl, gl.FRAGMENT_SHADER, shaderText[1]);
+                shaderProgram = utils.createProgram(gl, vertexShader, fragmentShader);
+            });*/
+
             // Compile vertex shader
             var vertexShader = gl.createShader(gl.VERTEX_SHADER);
             gl.shaderSource(vertexShader, vertexSource);
