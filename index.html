@@ -7,32 +7,224 @@
     <link rel="stylesheet" type="text/css" href="./lib/style.css" />
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
 </head>
-<body>
-    <canvas id="my-canvas" width="1000" height="500">Your browser does not support canvas, please use another browser.</canvas><br/>
-    <div id="left-buttons">
-        <button class="button" id="button-from1to2" type="button">1st &#10132; 2nd(or 'a')</button><br/>
+
+<body onload="setup()">
+    <table>
+    <td>
+        <canvas id="my-canvas" width="850" height="450">
+            Your browser does not support canvas, please use another browser.
+        </canvas>
+    </td>
+
+    <td>
+        <button class="button" id="button-from1to2" type="button">1st &#10132; 2nd (or 'a')</button>
+        <button class="button" id="button-from1to3" type="button">1st &#10132; 3rd (or 'q')</button>
         <br/>
-        <button class="button" id="button-from1to3" type="button">1st &#10132; 3rd (or 'q')</button><br/>
         <br/>
+        <button class="button" id="button-from2to1" type="button">2nd &#10132; 1st (or 'd')</button>
+        <button class="button" id="button-from2to3" type="button">2nd &#10132; 3rd (or 's')</button>
+        <br/>
+        <br/>
+        <button class="button" id="button-from3to1" type="button">3rd &#10132; 1st (or 't')</button>
+        <button class="button" id="button-from3to2" type="button">3rd &#10132; 2nd (or 'f')</button>
+    </td>
+
+    </table>
+    
+    <table border="1" style="background-color: grey;">
+        <tr>
+            <td colspan="6">
+                <input id="computeGeometricalNormals" type="checkbox">Compute geometrical normals <br>
+                <input id="useNormalMaps" type="checkbox" checked>Use NM texture
+            </td>
+        </tr>
+        <tr>
+        <td><div style="text-align:center"><select id="lightEditNo" onchange="showLight(this.value);">
+            <option value="LA">Light A</option>
+            <option value="LB">Light B</option>
+            <option value="LC">Light C</option>
+        </select></div></td>
+        <th colspan="2">Diffuse</th>
+        <th colspan="2">Specular</th>
+        </tr>
+        <tr>
+        <td rowspan="6">
+    <div id="LA">
+        <table border="1">
+        <tr>
+        <td><div id="LA11"><b>Type</b></div></td>
+        <td><div id="LA12"><select id="LAlightType" onchange="showHideUI(this.id,this.value);">
+            <option value="none">None</option>
+            <option value="direct">Direct</option>
+            <option value="point">Point</option>
+            <option value="spot">Spot</option>
+        </select></div></td>
+        <td><div id="LA13">Color</div></td>
+        <td><div id="LA14"><input type="color" id="LAlightColor" value="#ffffff"></div></td>
+        </tr>
+        <tr>
+        <td><div id="LA21">Pos <i>x</i></div></td>
+        <td><div id="LA22"><input type="range" min="-250" max="250" id="LAPosX"></div></td>
+        <td><div id="LA23">Decay &beta;</div></td>
+        <td><div id="LA24"><input type="range" min="0" max="2" id="LADecay"></div></td>
+        </tr>
+        <tr>
+        <td><div id="LA31">Pos <i>y</i></div></td>
+        <td><div id="LA32"><input type="range" min="-250" max="250" id="LAPosY"></div></td>
+        <td><div id="LA33">Targe dist. <i>g</i></div></td>
+        <td><div id="LA34"><input type="range" min="0" max="100" id="LATarget"></div></td>
+        </tr>
+        <tr>
+        <td><div id="LA41">Pos <i>z</i></div></td>
+        <td><div id="LA42"><input type="range" min="-250" max="250" id="LAPosZ"></div></td>
+        <td><div id="LA43">Cone <i>out</i></div></td>
+        <td><div id="LA44"><input type="range" min="0" max="150" id="LAConeOut"></div></td>
+        </tr>
+        <tr>
+        <td><div id="LA51">Dir &theta;</div></td>
+        <td><div id="LA52"><input type="range" min="0" max="180" id="LADirTheta"></div></td>
+        <td><div id="LA53">Cone <i>in</i></div></td>
+        <td><div id="LA54"><input type="range" min="0" max="100" id="LAConeIn"></div></td>
+        </tr>
+        <tr>
+        <td><div id="LA61">Dir &phi;</div></td>
+        <td><div id="LA62"><input type="range" min="-180" max="180" id="LADirPhi"></div></td>
+        <td colspan="2">&nbsp;</td>
+        </tr>
+        </table>
+    </div>
+    <div id="LB" style="display:none">
+        <table border="1">
+        <tr>
+        <td><div id="LB11"><b>Type</b></div></td>
+        <td><div id="LB12"><select id="LBlightType" onchange="showHideUI(this.id,this.value);">
+            <option value="none">None</option>
+            <option value="direct">Direct</option>
+            <option value="point">Point</option>
+            <option value="spot">Spot</option>
+        </select></div></td>
+        <td><div id="LB13">Color</div></td>
+        <td><div id="LB14"><input type="color" id="LBlightColor" value="#ffffff"></div></td>
+        </tr>
+        <tr>
+        <td><div id="LB21">Pos <i>x</i></div></td>
+        <td><div id="LB22"><input type="range" min="-250" max="250" id="LBPosX"></div></td>
+        <td><div id="LB23">Decay &beta;</div></td>
+        <td><div id="LB24"><input type="range" min="0" max="2" id="LBDecay"></div></td>
+        </tr>
+        <tr>
+        <td><div id="LB31">Pos <i>y</i></div></td>
+        <td><div id="LB32"><input type="range" min="-250" max="250" id="LBPosY"></div></td>
+        <td><div id="LB33">Targe dist. <i>g</i></div></td>
+        <td><div id="LB34"><input type="range" min="0" max="100" id="LBTarget"></div></td>
+        </tr>
+        <tr>
+        <td><div id="LB41">Pos <i>z</i></div></td>
+        <td><div id="LB42"><input type="range" min="-250" max="250" id="LBPosZ"></div></td>
+        <td><div id="LB43">Cone <i>out</i></div></td>
+        <td><div id="LB44"><input type="range" min="0" max="150" id="LBConeOut"></div></td>
+        </tr>
+        <tr>
+        <td><div id="LB51">Dir &theta;</div></td>
+        <td><div id="LB52"><input type="range" min="0" max="180" id="LBDirTheta"></div></td>
+        <td><div id="LB53">Cone <i>in</i></div></td>
+        <td><div id="LB54"><input type="range" min="0" max="100" id="LBConeIn"></div></td>
+        </tr>
+        <tr>
+        <td><div id="LB61">Dir &phi;</div></td>
+        <td><div id="LB62"><input type="range" min="-180" max="180" id="LBDirPhi"></div></td>
+        <td colspan="2">&nbsp;</td>
+        </tr>
+        </table>
+    </div>
+    <div id="LC" style="display:none">
+        <table border="1">
+        <tr>
+        <td><div id="LC11"><b>Type</b></div></td>
+        <td><div id="LC12"><select id="LClightType" onchange="showHideUI(this.id,this.value);">
+            <option value="none">None</option>
+            <option value="direct">Direct</option>
+            <option value="point">Point</option>
+            <option value="spot">Spot</option>
+        </select></div></td>
+        <td><div id="LC13">Color</div></td>
+        <td><div id="LC14"><input type="color" id="LClightColor" value="#ffffff"></div></td>
+        </tr>
+        <tr>
+        <td><div id="LC21">Pos <i>x</i></div></td>
+        <td><div id="LC22"><input type="range" min="-250" max="250" id="LCPosX"></div></td>
+        <td><div id="LC23">Decay &beta;</div></td>
+        <td><div id="LC24"><input type="range" min="0" max="2" id="LCDecay"></div></td>
+        </tr>
+        <tr>
+        <td><div id="LC31">Pos <i>y</i></div></td>
+        <td><div id="LC32"><input type="range" min="-250" max="250" id="LCPosY"></div></td>
+        <td><div id="LC33">Targe dist. <i>g</i></div></td>
+        <td><div id="LC34"><input type="range" min="0" max="100" id="LCTarget"></div></td>
+        </tr>
+        <tr>
+        <td><div id="LC41">Pos <i>z</i></div></td>
+        <td><div id="LC42"><input type="range" min="-250" max="250" id="LCPosZ"></div></td>
+        <td><div id="LC43">Cone <i>out</i></div></td>
+        <td><div id="LC44"><input type="range" min="0" max="150" id="LCConeOut"></div></td>
+        </tr>
+        <tr>
+        <td><div id="LC51">Dir &theta;</div></td>
+        <td><div id="LC52"><input type="range" min="0" max="180" id="LCDirTheta"></div></td>
+        <td><div id="LC53">Cone <i>in</i></div></td>
+        <td><div id="LC54"><input type="range" min="0" max="100" id="LCConeIn"></div></td>
+        </tr>
+        <tr>
+        <td><div id="LC61">Dir &phi;</div></td>
+        <td><div id="LC62"><input type="range" min="-180" max="180" id="LCDirPhi"></div></td>
+        <td colspan="2">&nbsp;</td>
+        </tr>
+        </table>
+    </div>
+        </td>
         
-        <!--
-        <button class="button" id="button-solve-it" type="button">solve it!</button><br/>
-        <br/>
-        -->
-        
-    </div>
-    <div id="medium-buttons">
-        <button class="button" id="button-from2to1" type="button">2nd &#10132; 1st (or 'd')</button><br/>
-        <br/>
-        <button class="button" id="button-from2to3" type="button">2nd &#10132; 3rd (or 's')</button><br/>
-        <br/>
-    </div>
-    <div id="right-buttons">
-        <button class="button" id="button-from3to2" type="button">3rd &#10132; 2nd (or 'f')</button><br/>
-        <br/><button class="button" id="button-from3to1" type="button">3rd &#10132; 1st (or 't')</button><br/>
-        <br/>
-        <br/>
-    </div>
+        <td><div id="D11"><b>Type</b></div></td>
+        <td><div id="D12"><select id="diffuseType" onchange="showHideUI(this.id,this.value);">
+            <option value="none">None</option>
+            <option value="lambert">Lambert</option>
+            <option value="toon">Toon</option>
+        </select></div></td>
+        <td><div id="S11"><b>Type</b></div></td>
+        <td><div id="S12"><select id="specularType" onchange="showHideUI(this.id,this.value);">
+            <option value="none">None</option>
+            <option value="phong">Phong</option>
+            <option value="blinn">Blinn</option>
+            <option value="toonP">Toon (Phong)</option>
+            <option value="toonB">Toon (Blinn)</option>
+        </select></div></td>
+        </tr>
+        <tr>
+        <td><div id="D21">Color</div></td>
+        <td><div id="D22"><input type="color" id="diffuseColor" value="#00ffff"></div></td>
+        <td><div id="S21">Color</div></td>
+        <td><div id="S22"><input type="color" id="specularColor" value="#ffffff"></div></td>
+        </tr>
+        <tr>
+        <td><div id="D31">Texture</div></td>
+        <td><div id="D32"><input type="range" min="0" max="100" id="DTexMix"></div></td>
+        <td><div id="S31">Shiny &gamma;</div></td>
+        <td><div id="S32"><input type="range" min="1" max="200" id="SpecShine"></div></td>
+        </tr>
+        <tr>
+        <td><div id="D41">Toon thr.</div></td>
+        <td><div id="D42"><input type="range" min="0" max="100" id="DToonTh"></div></td>
+        <td><div id="S41">Toon thr.</div></td>
+        <td><div id="S42"><input type="range" min="0" max="100" id="SToonTh"></div></td>
+        </tr>
+        <tr>
+        <tr>
+        <td colspan="2">
+            <div style="text-align:center">
+            <span onclick="resetShaderParams();">Reset</span>
+            </div>
+        </td>
+        </tr>
+    </table>
 
     <!--<script id="shadow-vs" type="not-js">
         attribute vec3 vPosition;
