@@ -8,7 +8,7 @@ var Rod = undefined;
 (function() {
 
     // Read shader source
-    var vertexSource = `#version 300 es
+    /*var vertexSource = `#version 300 es
 
     in vec3 vPosition;
     in vec3 vNormal;
@@ -31,9 +31,7 @@ var Rod = undefined;
     }`;
     var fragmentSource = `#version 300 es
 
-    /**
-    * we do use image texture to draw rods
-    */
+    
     #ifdef GL_ES
        precision highp float;
    #endif
@@ -46,17 +44,7 @@ var Rod = undefined;
    in vec2 fTexCoord;
    in vec4 vPositionFromLight;
    out vec4 myOutputColor;
-   /**
-   * compute the Blinn-Phong shading model
-   * @param lightDirection: the direction of the light in camera coordinate
-   * @param lightIntensity: the intensity of the light
-   * @param ambientCoefficient: the coefficient of ambient light
-   * @param diffuseCoefficient: the coefficient of diffuse light
-   * @param specularCoefficient: the coefficient of specular light
-   * @param specularExponent: the lightiness of specular light
-   * @return a 2D vector whose first element is the combination final coefficient of ambient light and diffuse
-   * light while the second element is the final coefficient of specular light
-   */
+  
    vec2 blinnPhongShading(vec3 lightDirection, float lightIntensity, float ambientCoefficient,
        float diffuseCoefficient, float specularCoefficient, float specularExponent)
    {
@@ -70,9 +58,7 @@ var Rod = undefined;
        return vec2(ambientAndDiffuse, specular);
    }
 
-   /**
-    * compute z-value from a vec4
-    */
+   
    float unpackDepth(const in vec4 rgbaDepth) {
        const vec4 bitShift = vec4(1.0, 1.0 / 256.0, 1.0 / (256.0 * 256.0), 1.0 / (256.0 * 256.0 * 256.0));
        float depth = dot(rgbaDepth, bitShift);
@@ -88,12 +74,11 @@ var Rod = undefined;
        vec3 ambientAndDiffuseColor = light.x * texture(uTexSampler, fTexCoord).xyz;
        vec3 specularColor = light.y * uLightColor;
        myOutputColor = vec4(visibility * (ambientAndDiffuseColor + specularColor), 1.0);
-   }`;
+   }`;*/
 
     // compile the shaders only when initializing every object
     // we do not have to recompile them during drawing in every frame
 
-    var shaderProgram = undefined;
 
     // As to rod, since every rod is identical, we could put vertexPos, normal and such things outside function init
     // so that we only create buffers once for every rod to save time.
@@ -138,8 +123,8 @@ var Rod = undefined;
     Rod.prototype.initialize = function(drawingState) {
         var gl = drawingState.gl; // an abbreviation...
 
-        if (!shaderProgram) {
-            // Compile vertex shader
+        
+            /*// Compile vertex shader
             var vertexShader = gl.createShader(gl.VERTEX_SHADER);
             gl.shaderSource(vertexShader, vertexSource);
             gl.compileShader(vertexShader);
@@ -164,22 +149,22 @@ var Rod = undefined;
             gl.linkProgram(shaderProgram);
             if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
                 alert('Could not initialize shaders');
-            }
+            }*/
 
             // with the vertex shader, we need to pass it positions as an attribute - so set up that communication
-            shaderProgram.PositionAttribute = gl.getAttribLocation(shaderProgram, 'vPosition');
-            shaderProgram.NormalAttribute = gl.getAttribLocation(shaderProgram, 'vNormal');
-            shaderProgram.TexCoordAttribute = gl.getAttribLocation(shaderProgram, 'vTexCoord');
+            shaderProgram[0].PositionAttribute = gl.getAttribLocation(shaderProgram[0], 'vPosition');
+            shaderProgram[0].NormalAttribute = gl.getAttribLocation(shaderProgram[0], 'vNormal');
+            shaderProgram[0].TexCoordAttribute = gl.getAttribLocation(shaderProgram[0], 'vTexCoord');
 
             // this gives us access to uniforms
-            shaderProgram.ModelViewLoc = gl.getUniformLocation(shaderProgram, 'uModelView');
-            shaderProgram.ProjectionLoc = gl.getUniformLocation(shaderProgram, 'uProjection');
-            shaderProgram.NormalMatrixLoc = gl.getUniformLocation(shaderProgram, 'uNormal');
-            shaderProgram.MVPFromLightLoc = gl.getUniformLocation(shaderProgram, 'uMVPFromLight');
-            shaderProgram.LightDirectionLoc = gl.getUniformLocation(shaderProgram, 'uLightDirection');
-            shaderProgram.LightColorLoc = gl.getUniformLocation(shaderProgram, 'uLightColor');
-            shaderProgram.ShadowMapLoc = gl.getUniformLocation(shaderProgram, 'uShadowMap');
-            shaderProgram.TexSamplerLoc = gl.getUniformLocation(shaderProgram, 'uTexSampler');
+            shaderProgram[0].ModelViewLoc = gl.getUniformLocation(shaderProgram[0], 'uModelView');
+            shaderProgram[0].ProjectionLoc = gl.getUniformLocation(shaderProgram[0], 'uProjection');
+            shaderProgram[0].NormalMatrixLoc = gl.getUniformLocation(shaderProgram[0], 'uNormal');
+            shaderProgram[0].MVPFromLightLoc = gl.getUniformLocation(shaderProgram[0], 'uMVPFromLight');
+            shaderProgram[0].LightDirectionLoc = gl.getUniformLocation(shaderProgram[0], 'uLightDirection');
+            shaderProgram[0].LightColorLoc = gl.getUniformLocation(shaderProgram[0], 'uLightColor');
+            shaderProgram[0].ShadowMapLoc = gl.getUniformLocation(shaderProgram[0], 'uShadowMap');
+            shaderProgram[0].TexSamplerLoc = gl.getUniformLocation(shaderProgram[0], 'uTexSampler');
 
             // data ...
             // vertex positions
@@ -228,7 +213,7 @@ var Rod = undefined;
 
             // return the texture pointer to the system (this step is unnecessary)
             gl.bindTexture(gl.TEXTURE_2D, null);
-        }
+        
     }
     
     /**
@@ -417,31 +402,31 @@ var Rod = undefined;
         var gl = drawingState.gl;
 
         // choose the shader program we have compiled
-        gl.useProgram(shaderProgram);
+        gl.useProgram(shaderProgram[0]);
 
         // we need to enable the attributes we had set up, which are set disabled by default by system
-        gl.enableVertexAttribArray(shaderProgram.PositionAttribute);
-        gl.enableVertexAttribArray(shaderProgram.NormalAttribute);
-        gl.enableVertexAttribArray(shaderProgram.TexCoordAttribute);
+        gl.enableVertexAttribArray(shaderProgram[0].PositionAttribute);
+        gl.enableVertexAttribArray(shaderProgram[0].NormalAttribute);
+        gl.enableVertexAttribArray(shaderProgram[0].TexCoordAttribute);
 
         // set the uniforms
-        gl.uniformMatrix4fv(shaderProgram.ModelViewLoc, false, modelViewM);
-        gl.uniformMatrix4fv(shaderProgram.ProjectionLoc, false, drawingState.projection);
-        gl.uniformMatrix4fv(shaderProgram.NormalMatrixLoc, false, normalM);
-        gl.uniformMatrix4fv(shaderProgram.MVPFromLightLoc, false, MVP);
-        gl.uniform3fv(shaderProgram.LightDirectionLoc, drawingState.lightDirection);
-        gl.uniform3fv(shaderProgram.LightColorLoc, drawingState.lightColor);
-        gl.uniform1i(shaderProgram.ShadowMapLoc, 0); // we will store the shadow map in TMU0 soon, so instruct shader
+        gl.uniformMatrix4fv(shaderProgram[0].ModelViewLoc, false, modelViewM);
+        gl.uniformMatrix4fv(shaderProgram[0].ProjectionLoc, false, drawingState.projection);
+        gl.uniformMatrix4fv(shaderProgram[0].NormalMatrixLoc, false, normalM);
+        gl.uniformMatrix4fv(shaderProgram[0].MVPFromLightLoc, false, MVP);
+        gl.uniform3fv(shaderProgram[0].LightDirectionLoc, drawingState.lightDirection);
+        gl.uniform3fv(shaderProgram[0].LightColorLoc, drawingState.lightColor);
+        gl.uniform1i(shaderProgram[0].ShadowMapLoc, 0); // we will store the shadow map in TMU0 soon, so instruct shader
         // programs to use use TMU0
-        gl.uniform1i(shaderProgram.TexSamplerLoc, 1); // so we will store the image texture in TMU1 soon
+        gl.uniform1i(shaderProgram[0].TexSamplerLoc, 1); // so we will store the image texture in TMU1 soon
 
         // connect the attributes to the buffer
         gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
-        gl.vertexAttribPointer(shaderProgram.PositionAttribute, 3, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(shaderProgram[0].PositionAttribute, 3, gl.FLOAT, false, 0, 0);
         gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
-        gl.vertexAttribPointer(shaderProgram.NormalAttribute, 3, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(shaderProgram[0].NormalAttribute, 3, gl.FLOAT, false, 0, 0);
         gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-        gl.vertexAttribPointer(shaderProgram.TexCoordAttribute, 2, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(shaderProgram[0].TexCoordAttribute, 2, gl.FLOAT, false, 0, 0);
 
         // Bind texture
         gl.activeTexture(gl.TEXTURE0); // bind our shadow map to TMU0
@@ -453,9 +438,9 @@ var Rod = undefined;
         gl.drawArrays(gl.TRIANGLES, 0, vertexPos.length / 3);
 
         // WebGL is a state machine, so do not forget to disable all attributes after every drawing
-        gl.disableVertexAttribArray(shaderProgram.PositionAttribute);
-        gl.disableVertexAttribArray(shaderProgram.NormalAttribute);
-        gl.disableVertexAttribArray(shaderProgram.TexCoordAttribute);
+        gl.disableVertexAttribArray(shaderProgram[0].PositionAttribute);
+        gl.disableVertexAttribArray(shaderProgram[0].NormalAttribute);
+        gl.disableVertexAttribArray(shaderProgram[0].TexCoordAttribute);
     }
 
     /**

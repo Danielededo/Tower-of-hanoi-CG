@@ -17,8 +17,9 @@
 
 //var m4 = twgl.m4; // abbreviation
 //var v3 = twgl.v3;
+var shaderProgram = new Array();
 
-function init() {
+async function init() {
 
     var canvas = document.getElementById("my-canvas");
     var gl = canvas.getContext('webgl2'); // gl should not be a global variable and it should be wrapped in object
@@ -35,6 +36,25 @@ function init() {
     var drawingState = {
         gl : gl
     }
+
+    var path = window.location.pathname;
+    var page = path.split("/").pop();
+    var baseDir = window.location.href.replace(page, '');
+    var shaderDir = baseDir + "Shaders/";
+
+    await utils.loadFiles([shaderDir + 'rod_vs.glsl', shaderDir + 'rod_fs.glsl'], function (shaderText) {
+        var vertexShader = utils.createShader(gl, gl.VERTEX_SHADER, shaderText[0]);
+        var fragmentShader = utils.createShader(gl, gl.FRAGMENT_SHADER, shaderText[1]);
+        shaderProgram[0] = utils.createProgram(gl, vertexShader, fragmentShader);
+        });
+
+    await utils.loadFiles([shaderDir + 'disc_vs.glsl', shaderDir + 'disc_fs.glsl'], function (shaderText) {
+        var vertexShader = utils.createShader(gl, gl.VERTEX_SHADER, shaderText[0]);
+        var fragmentShader = utils.createShader(gl, gl.FRAGMENT_SHADER, shaderText[1]);
+        shaderProgram[1] = utils.createProgram(gl, vertexShader, fragmentShader);
+        });
+    
+
     initializeObjects(game, drawingState); // use drawingState.gl
 
     // compile the shader program for shadow
