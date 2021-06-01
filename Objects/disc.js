@@ -151,10 +151,10 @@ var Disc = undefined;
             }*/
 
             // with the vertex shader, we need to pass it positions as an attribute - so set up that communication
-            shaderProgram[1].PositionAttribute = gl.getAttribLocation(shaderProgram[1], 'vPosition');
-            shaderProgram[1].NormalAttribute = gl.getAttribLocation(shaderProgram[1], 'vNormal');
+            shaderProgram[1].PositionAttribute = gl.getAttribLocation(shaderProgram[1], 'vPosition'); // vPosition represents the position of the primitives
+            shaderProgram[1].NormalAttribute = gl.getAttribLocation(shaderProgram[1], 'vNormal'); // vNormal represents the normals of the primitives
 
-            // this gives us access to uniforms
+            // this gives us access to uniform variables
             shaderProgram[1].ModelViewLoc = gl.getUniformLocation(shaderProgram[1], 'uModelView');
             shaderProgram[1].ProjectionLoc = gl.getUniformLocation(shaderProgram[1], 'uProjection');
             shaderProgram[1].NormalMatrixLoc = gl.getUniformLocation(shaderProgram[1], 'uNormal');
@@ -171,13 +171,15 @@ var Disc = undefined;
         // normals
         this.normal = this.generateNormal();
 
+        // here no texture
+
         // now to make the buffers
-        this.posBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.posBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertexPos), gl.STATIC_DRAW);
-        this.normalBuffer = gl.createBuffer();
+        this.positionBuffer = gl.createBuffer(); // create vertex buffer
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer); // vbo buffer is set as the active one, ARRAY_BUFFER means it holds vertex coords
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertexPos), gl.STATIC_DRAW); // vertex data are placed inside the buffer
+        this.normalBuffer = gl.createBuffer(); // create normal buffer
         gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.normal), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.normal), gl.STATIC_DRAW); // normal data are placed inside the buffer
     }
     
     /**
@@ -350,11 +352,11 @@ var Disc = undefined;
         gl.uniformMatrix4fv(shadowProgram.MVPLoc, false, MVP);
 
         // connect the attribute to the buffer
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.posBuffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
         gl.vertexAttribPointer(shadowProgram.PositionAttribute, 3, gl.FLOAT, false, 0, 0);
 
         // Do the drawing
-        gl.drawArrays(gl.TRIANGLES, 0, this.vertexPos.length / 3);
+        gl.drawArrays(gl.TRIANGLES, 0, this.vertexPos.length / 3); // the last parameter specifies how many vertices to draw
 
         // WebGL is a state machine, so do not forget to disable all attributes after every drawing
         gl.disableVertexAttribArray(shadowProgram.PositionAttribute);
@@ -392,7 +394,7 @@ var Disc = undefined;
         // programs to use use TMU0
 
         // connect the attributes to the buffer
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.posBuffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
         gl.vertexAttribPointer(shaderProgram[1].PositionAttribute, 3, gl.FLOAT, false, 0, 0);
         gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
         gl.vertexAttribPointer(shaderProgram[1].NormalAttribute, 3, gl.FLOAT, false, 0, 0);
@@ -402,7 +404,7 @@ var Disc = undefined;
         gl.bindTexture(gl.TEXTURE_2D, drawingState.shadowMap);
 
         // Do the drawing
-        gl.drawArrays(gl.TRIANGLES, 0, this.vertexPos.length / 3);
+        gl.drawArrays(gl.TRIANGLES, 0, this.vertexPos.length / 3); // the last parameter specifies how many vertices to draw
 
         // WebGL is a state machine, so do not forget to disable all attributes after every drawing
         gl.disableVertexAttribArray(shaderProgram[1].PositionAttribute);

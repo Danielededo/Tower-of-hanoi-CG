@@ -89,7 +89,7 @@ var Rod = undefined;
     var normal;
     var texCoord;
 
-    var posBuffer;
+    var positionBuffer;
     var normalBuffer;
     var texCoordBuffer;
 
@@ -152,11 +152,11 @@ var Rod = undefined;
             }*/
 
             // with the vertex shader, we need to pass it positions as an attribute - so set up that communication
-            shaderProgram[0].PositionAttribute = gl.getAttribLocation(shaderProgram[0], 'vPosition');
-            shaderProgram[0].NormalAttribute = gl.getAttribLocation(shaderProgram[0], 'vNormal');
-            shaderProgram[0].TexCoordAttribute = gl.getAttribLocation(shaderProgram[0], 'vTexCoord');
+            shaderProgram[0].PositionAttribute = gl.getAttribLocation(shaderProgram[0], 'vPosition'); // vPosition represents the position of the primitives
+            shaderProgram[0].NormalAttribute = gl.getAttribLocation(shaderProgram[0], 'vNormal'); // vNormal represents the normals of the primitives
+            shaderProgram[0].TexCoordAttribute = gl.getAttribLocation(shaderProgram[0], 'vTexCoord'); // vTextCoord represents the texture coords of the primitives
 
-            // this gives us access to uniforms
+            // this gives us access to uniform variables
             shaderProgram[0].ModelViewLoc = gl.getUniformLocation(shaderProgram[0], 'uModelView');
             shaderProgram[0].ProjectionLoc = gl.getUniformLocation(shaderProgram[0], 'uProjection');
             shaderProgram[0].NormalMatrixLoc = gl.getUniformLocation(shaderProgram[0], 'uNormal');
@@ -175,15 +175,15 @@ var Rod = undefined;
             texCoord = this.generateTextureCoordinate();
 
             // now to make the buffers
-            posBuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexPos), gl.STATIC_DRAW);
-            normalBuffer = gl.createBuffer();
+            positionBuffer = gl.createBuffer(); // create vertex buffer
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer); // vbo buffer is set as the active one, ARRAY_BUFFER means it holds vertex coords
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexPos), gl.STATIC_DRAW); // vertex data are placed inside the buffer
+            normalBuffer = gl.createBuffer(); // create normal buffer
             gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normal), gl.STATIC_DRAW);
-            texCoordBuffer = gl.createBuffer();
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normal), gl.STATIC_DRAW); // normal data are placed inside the buffer
+            texCoordBuffer = gl.createBuffer(); // create texture buffer
             gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texCoord), gl.STATIC_DRAW);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texCoord), gl.STATIC_DRAW); // texture data are placed inside the buffer
 
             // set up texture
             texture = gl.createTexture();
@@ -378,11 +378,11 @@ var Rod = undefined;
         gl.uniformMatrix4fv(shadowProgram.MVPLoc, false, MVP);
 
         // connect the attribute to the buffer
-        gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.vertexAttribPointer(shadowProgram.PositionAttribute, 3, gl.FLOAT, false, 0, 0);
 
         // Do the drawing
-        gl.drawArrays(gl.TRIANGLES, 0, vertexPos.length / 3);
+        gl.drawArrays(gl.TRIANGLES, 0, vertexPos.length / 3); // the last parameter specifies how many vertices to draw
 
         // WebGL is a state machine, so do not forget to disable all attributes after every drawing
         gl.disableVertexAttribArray(shadowProgram.PositionAttribute);
@@ -421,7 +421,7 @@ var Rod = undefined;
         gl.uniform1i(shaderProgram[0].TexSamplerLoc, 1); // so we will store the image texture in TMU1 soon
 
         // connect the attributes to the buffer
-        gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.vertexAttribPointer(shaderProgram[0].PositionAttribute, 3, gl.FLOAT, false, 0, 0);
         gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
         gl.vertexAttribPointer(shaderProgram[0].NormalAttribute, 3, gl.FLOAT, false, 0, 0);
@@ -435,7 +435,7 @@ var Rod = undefined;
 	    gl.bindTexture(gl.TEXTURE_2D, texture);
 
 	    // Do the drawing
-        gl.drawArrays(gl.TRIANGLES, 0, vertexPos.length / 3);
+        gl.drawArrays(gl.TRIANGLES, 0, vertexPos.length / 3); // the last parameter specifies how many vertices to draw
 
         // WebGL is a state machine, so do not forget to disable all attributes after every drawing
         gl.disableVertexAttribArray(shaderProgram[0].PositionAttribute);

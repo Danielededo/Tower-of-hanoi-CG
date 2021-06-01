@@ -92,7 +92,7 @@ var Ground = undefined;
     var vertexPos;
     var normal;
 
-    var posBuffer;
+    var positionBuffer;
     var normalBuffer;
 
     /**
@@ -168,8 +168,8 @@ var Ground = undefined;
 
 
             // now to make the buffers
-            posBuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+            positionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
             gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexPos), gl.STATIC_DRAW);
         }
     }
@@ -192,11 +192,11 @@ var Ground = undefined;
         gl.uniformMatrix4fv(shadowProgram.MVPLoc, false, MVP);
 
         // connect the attribute to the buffer
-        gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.vertexAttribPointer(shadowProgram.PositionAttribute, 3, gl.FLOAT, false, 0, 0);
 
         // Do the drawing
-        gl.drawArrays(gl.TRIANGLES, 0, vertexPos.length / 3);
+        gl.drawArrays(gl.TRIANGLES, 0, vertexPos.length / 3); // the last parameter specifies how many vertices to draw
 
         // WebGL is a state machine, so do not forget to disable all attributes after every drawing
         gl.disableVertexAttribArray(shadowProgram.PositionAttribute);
@@ -230,7 +230,7 @@ var Ground = undefined;
         // programs to use use TMU0
 
         // connect the attributes to the buffer
-        gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.vertexAttribPointer(shaderProgram.PositionAttribute, 3, gl.FLOAT, false, 0, 0);
 
         // Bind texture
@@ -238,7 +238,7 @@ var Ground = undefined;
         gl.bindTexture(gl.TEXTURE_2D, drawingState.shadowMap);
 
         // Do the drawing
-        gl.drawArrays(gl.TRIANGLES, 0, vertexPos.length / 3);
+        gl.drawArrays(gl.TRIANGLES, 0, vertexPos.length / 3); // the last parameter specifies how many vertices to draw
 
         // WebGL is a state machine, so do not forget to disable all attributes after every drawing
         gl.disableVertexAttribArray(shaderProgram.PositionAttribute);
