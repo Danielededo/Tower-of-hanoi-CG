@@ -6,16 +6,16 @@
 // the constructor
 function Game() {
 
-    this.rods = [];
+    this.rods = []; //array that contains the rod objects
     var rodDistance = 160; // the distance between two nearest rods
-    var rodDiameter = 20;
-    var rodHeight = 60;
-    var rodPrecision = 30;
+    var rodDiameter = 20; // the diameter of the rod
+    var rodHeight = 60;  // the height of the rod
+    var rodPrecision = 30; // the number of triangles in the top face to simulate a circle
     this.rods[0] = new Rod('rod1', [-rodDistance, 0, 0], rodDiameter, rodHeight, rodPrecision);
     this.rods[1] = new Rod('rod2', [0, 0, 0], rodDiameter, rodHeight, rodPrecision);
     this.rods[2] = new Rod('rod3', [rodDistance, 0, 0], rodDiameter, rodHeight, rodPrecision);
 
-    // put all discs to the first rod
+    // put all discs to the first rod through the array stackOfDiscs of rod[0]
     this.heightOfDisc = 10;
     var discPrecision = 75;
     // the inner diameter of a disc is the diameter of a rod

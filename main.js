@@ -21,6 +21,7 @@ var shaderProgram = new Array();
 
 async function init() {
 
+    // create canvas
     var canvas = document.getElementById("my-canvas");
     var gl = canvas.getContext('webgl2'); // gl should not be a global variable and it should be wrapped in object
     // drawingState defined in allObjects.js so that you could draw many animations on one web page.
@@ -37,17 +38,20 @@ async function init() {
         gl : gl
     }
 
+    // retrieve shaders using path
     var path = window.location.pathname;
     var page = path.split("/").pop();
     var baseDir = window.location.href.replace(page, '');
     var shaderDir = baseDir + "Shaders/";
 
+    //compile the shaders for rod 
     await utils.loadFiles([shaderDir + 'rod_vs.glsl', shaderDir + 'rod_fs.glsl'], function (shaderText) {
         var vertexShader = utils.createShader(gl, gl.VERTEX_SHADER, shaderText[0]);
         var fragmentShader = utils.createShader(gl, gl.FRAGMENT_SHADER, shaderText[1]);
         shaderProgram[0] = utils.createProgram(gl, vertexShader, fragmentShader);
         });
 
+    // compile the shaders for disc
     await utils.loadFiles([shaderDir + 'disc_vs.glsl', shaderDir + 'disc_fs.glsl'], function (shaderText) {
         var vertexShader = utils.createShader(gl, gl.VERTEX_SHADER, shaderText[0]);
         var fragmentShader = utils.createShader(gl, gl.FRAGMENT_SHADER, shaderText[1]);

@@ -57,13 +57,13 @@ DrawingState object (passed to the draw and init methods) has the following fiel
 // initialize all of the objects that haven't yet been initialized
 function initializeObjects(game, drawingState) {
 
-    // push every object in the game into the allObjects array for drawing
+// push every object in the game into the allObjects array for drawing
 //DEL: allObjects.push(new Ground());
     for (var i = 0; i < game.getNumberOfRods(); i++)
-        allObjects.push(game.rods[i]);
+        allObjects.push(game.rods[i]); //push the rods
     for (i = 0; i < game.getNumberOfRods(); i++)
         for (var j = 0; j < game.rods[i].getNumberOfDiscs(); j++)
-            allObjects.push(game.rods[i].stackOfDiscs[j]);
+            allObjects.push(game.rods[i].stackOfDiscs[j]); // push the discs
 
     allObjects.forEach(function(object) {
         object.initialize(drawingState);
