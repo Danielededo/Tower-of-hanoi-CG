@@ -78,7 +78,16 @@ var shadowProgram = undefined;
 function compileShadowProgram(drawingState) {
     if (!shadowProgram) {
         gl = drawingState.gl;
+        /*var path = window.location.pathname;
+        var page = path.split("/").pop();
+        var baseDir = window.location.href.replace(page, '');
+        var shaderDir = baseDir + "shaders/";
 
+        await utils.loadFiles([shaderDir + 'shadow_vs.glsl', shaderDir + 'shadow_fs.glsl'], function (shaderText) {
+            var vertexShader = utils.createShader(gl, gl.VERTEX_SHADER, shaderText[0]);
+            var fragmentShader = utils.createShader(gl, gl.FRAGMENT_SHADER, shaderText[1]);
+            shadowProgram = utils.createProgram(gl, vertexShader, fragmentShader);
+        });*/
         // Read shader source
         var vertexSource = `#version 300 es
 

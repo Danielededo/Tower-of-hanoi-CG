@@ -71,9 +71,10 @@ function init() {
         var eye = [0, 150, 300];
         var target = [0, 0, 0];
         var up = [0, 1, 0];
-        var cameraM = twgl.m4.lookAt(eye, target, up);
+        var cameraM = twgl.m4.lookAt(eye, target, up); //camera matrix
 
-        var viewM = twgl.m4.inverse(cameraM);
+        var viewM = twgl.m4.inverse(cameraM);//view matrix is the inverse of camera matrix
+
         // when we are testing fps at the first stage, player has no control, which means arcball has not been defined
         if (frameIndex > frameCount)
             viewM = twgl.m4.multiply(ab.getMatrix(), viewM); // quaternion converted into the corresponding matrix
