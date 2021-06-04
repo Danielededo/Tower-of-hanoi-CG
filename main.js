@@ -20,10 +20,61 @@
 // array of shaderProgram
 var shaderProgram = new Array();
 
+var lookRadius = 1.0;
+/*var canw;
+var EVangle, EVelevation ;
+var angle = 0.01;
+var elevation = 0.01;
+var extView = 1;
+var mouseState = false;
+var lastMouseX = -100, lastMouseY = -100;
+function doMouseDown(event) {
+	lastMouseX = event.pageX;
+	lastMouseY = event.pageY;
+	mouseState = true;
+}
+function doMouseUp(event) {
+	lastMouseX = -100;
+	lastMouseY = -100;
+	mouseState = false;
+}
+function doMouseMove(event) {
+	if(mouseState) {
+	 var dx = event.pageX - lastMouseX;
+	var dy = lastMouseY - event.pageY;
+	 if((event.pageX <= 0.66 * canw) || (extView == 0)) {		
+		if((dx != 0) || (dy != 0)) {
+			angle += 0.5 * dx;
+			elevation += 0.5 * dy;
+		}
+	  } else {
+		if((dx != 0) || (dy != 0)) {
+			EVangle += 0.5 * dx;
+			EVelevation += 0.5 * dy;
+		}
+//		modRot = modRot + 0.5 * dx;
+	  }
+	  lastMouseX = event.pageX;
+	  lastMouseY = event.pageY;
+	}
+}*/
+function doMouseWheel(event) {
+	var nLookRadius = lookRadius + event.wheelDelta/1000.0;
+	if((nLookRadius > 0.5) && (nLookRadius < 2.0)) {
+        console.log(lookRadius);
+		lookRadius = nLookRadius;
+	}
+}
+
+
 async function init() {
 
     // create canvas
     var canvas = document.getElementById("my-canvas");
+    //canvas.addEventListener("mousedown", doMouseDown, false);
+	//canvas.addEventListener("mouseup", doMouseUp, false);
+	//canvas.addEventListener("mousemove", doMouseMove, false);
+    canvas.addEventListener("mousewheel", doMouseWheel, false);
     var gl = canvas.getContext('webgl2'); // gl should not be a global variable and it should be wrapped in object
     // drawingState defined in allObjects.js so that you could draw many animations on one web page.
     if (!gl) {
@@ -93,7 +144,7 @@ async function init() {
         game.checkResult();
         
         // figure out the transforms
-        var eye = [0, 150, 300];
+        var eye = [lookRadius*0, lookRadius*150, lookRadius*300];
         var target = [0, 0, 0];
         var up = [0, 1, 0];
         var cameraM = twgl.m4.lookAt(eye, target, up); //camera matrix

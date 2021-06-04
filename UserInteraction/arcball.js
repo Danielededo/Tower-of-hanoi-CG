@@ -149,13 +149,6 @@ function ArcBall(canvas, callback) {
         that.mode = 0;
         if (that.callback) that.callback();
     });
-    /*var lookRadius = 35.0;
-    canvas.addEventListener("mousewheel",function(e) {
-        var nLookRadius = lookRadius + e.wheelDelta/200.0;
-        if((nLookRadius > 2.0) && (nLookRadius < 100.0)) {
-            lookRadius = nLookRadius;
-        }
-    });*/
 
 }
 ArcBall.prototype.reset = function() {
