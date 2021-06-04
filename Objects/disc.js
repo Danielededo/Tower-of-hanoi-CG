@@ -339,7 +339,7 @@ var Disc = undefined;
      */
     Disc.prototype.drawBefore = function(drawingState) {
         var modelM = twgl.m4.identity();
-        twgl.m4.setTranslation(modelM, this.position, modelM);
+        twgl.m4.setTranslation(modelM, this.position, modelM); // translation matrix with the position of the disc
         var MVP = twgl.m4.multiply(twgl.m4.multiply(modelM, drawingState.lightView), drawingState.lightProjection);
 
         // choose the shader program we have compiled
@@ -368,8 +368,8 @@ var Disc = undefined;
     Disc.prototype.draw = function(drawingState) {
         // we make a model matrix to place the disc in the world
         var modelM = twgl.m4.identity();
-        twgl.m4.setTranslation(modelM, this.position, modelM);
-        var modelViewM = twgl.m4.multiply(modelM, drawingState.view);
+        twgl.m4.setTranslation(modelM, this.position, modelM); // translation matrix with the position of the disc
+        var modelViewM = twgl.m4.multiply(modelM, drawingState.view); //
         var normalM = twgl.m4.inverse(twgl.m4.transpose(modelViewM));
         var MVP = twgl.m4.multiply(twgl.m4.multiply(modelM, drawingState.lightView), drawingState.lightProjection);
 

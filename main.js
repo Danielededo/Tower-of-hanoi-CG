@@ -17,6 +17,7 @@
 
 //var m4 = twgl.m4; // abbreviation
 //var v3 = twgl.v3;
+// array of shaderProgram
 var shaderProgram = new Array();
 
 async function init() {
@@ -209,11 +210,6 @@ async function init() {
         allObjects.forEach(function (object) {
             if(object.draw)
                 object.draw(drawingState);
-        });
-
-        allObjects.forEach(function (object) {
-            if(object.drawAfter)
-                object.drawAfter(drawingState); // no drawAfter functions actually
         });
 
         frameIndex++;
