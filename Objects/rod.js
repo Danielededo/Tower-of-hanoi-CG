@@ -163,7 +163,7 @@ var Rod = undefined;
             shaderProgram[0].MVPFromLightLoc = gl.getUniformLocation(shaderProgram[0], 'uMVPFromLight');
             shaderProgram[0].LightDirectionLoc = gl.getUniformLocation(shaderProgram[0], 'uLightDirection');
             shaderProgram[0].LightColorLoc = gl.getUniformLocation(shaderProgram[0], 'uLightColor');
-            shaderProgram[0].ShadowMapLoc = gl.getUniformLocation(shaderProgram[0], 'uShadowMap');
+            //shaderProgram[0].ShadowMapLoc = gl.getUniformLocation(shaderProgram[0], 'uShadowMap');
             shaderProgram[0].TexSamplerLoc = gl.getUniformLocation(shaderProgram[0], 'uTexSampler');
 
             // data ...
@@ -188,9 +188,9 @@ var Rod = undefined;
             // set up texture
             texture = gl.createTexture();
             // following three lines are unnecessary
-            gl.activeTexture(gl.TEXTURE1); // since we use TMU0 for shadow map, we use TMU1 here.
-            gl.bindTexture(gl.TEXTURE_2D, texture);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, null); // return the image data
+            //gl.activeTexture(gl.TEXTURE1); // since we use TMU0 for shadow map, we use TMU1 here.
+            //gl.bindTexture(gl.TEXTURE_2D, texture);
+            //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, null); // return the image data
             // pointer to the system
 
             // load texture. Following two lines are critical for binding our texture object and the image
@@ -416,7 +416,7 @@ var Rod = undefined;
         gl.uniformMatrix4fv(shaderProgram[0].MVPFromLightLoc, false, MVP);
         gl.uniform3fv(shaderProgram[0].LightDirectionLoc, drawingState.lightDirection);
         gl.uniform3fv(shaderProgram[0].LightColorLoc, drawingState.lightColor);
-        gl.uniform1i(shaderProgram[0].ShadowMapLoc, 0); // we will store the shadow map in TMU0 soon, so instruct shader
+        //gl.uniform1i(shaderProgram[0].ShadowMapLoc, 0); // we will store the shadow map in TMU0 soon, so instruct shader
         // programs to use use TMU0
         gl.uniform1i(shaderProgram[0].TexSamplerLoc, 1); // so we will store the image texture in TMU1 soon
 
@@ -429,8 +429,8 @@ var Rod = undefined;
         gl.vertexAttribPointer(shaderProgram[0].TexCoordAttribute, 2, gl.FLOAT, false, 0, 0);
 
         // Bind texture
-        gl.activeTexture(gl.TEXTURE0); // bind our shadow map to TMU0
-        gl.bindTexture(gl.TEXTURE_2D, drawingState.shadowMap);
+        //gl.activeTexture(gl.TEXTURE0); // bind our shadow map to TMU0
+        //gl.bindTexture(gl.TEXTURE_2D, drawingState.shadowMap);
         gl.activeTexture(gl.TEXTURE1); // store wood texture in TMU1
 	    gl.bindTexture(gl.TEXTURE_2D, texture);
 

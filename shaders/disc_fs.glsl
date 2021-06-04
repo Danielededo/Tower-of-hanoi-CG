@@ -10,18 +10,10 @@
 uniform vec3 uColor; // the object's color
 uniform vec3 uLightDirection;
 uniform vec3 uLightColor;
-uniform sampler2D uShadowMap; // depth value in light coordinate
 in vec3 fNormal;
 in vec3 fPosition;
 in vec3 uPosition;
-in vec4 vPositionFromLight;
 out vec4 myOutputColor;
-/**
-* a pulse function in order to make stripe
-*/
-float pulse(float value, float destination) {
-    return floor(mod(value * destination, 1.0) + 0.5);
-}
 
 /**
 * compute the Blinn-Phong shading model
@@ -57,13 +49,9 @@ float unpackDepth(const in vec4 rgbaDepth) {
 }
 
 void main(void) {
-    vec3 shadowCoordinate = (vPositionFromLight.xyz / vPositionFromLight.w) / 2.0 + 0.5;
-    vec4 rgbaDepth = texture(uShadowMap, shadowCoordinate.xy);
-    float depth = unpackDepth(rgbaDepth); // decode the depth value from the depth map
-    float visibility = (shadowCoordinate.z > depth + 0.00001) ? 0.7 : 1.0;
     vec2 light = blinnPhongShading(uLightDirection, 1.0, 0.5, 1.0, 1.5, 30.0);
-    vec3 objectColor = (1.0 + 0.3 * pulse(uPosition.z, 0.1)) * uColor; // add some stripes
+    vec3 objectColor = uColor; // add some stripes
     vec3 ambientAndDiffuseColor = light.x * objectColor;
     vec3 specularColor = light.y * uLightColor;
-    myOutputColor = vec4(visibility * (ambientAndDiffuseColor + specularColor), 1.0);
+    myOutputColor = vec4((ambientAndDiffuseColor + specularColor), 1.0);
 }

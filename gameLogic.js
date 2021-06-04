@@ -20,13 +20,13 @@ function Game() {
     var discPrecision = 75;
     // the inner diameter of a disc is the diameter of a rod
     this.rods[0].stackOfDiscs.push(new Disc('disc1', [-rodDistance, 0 * this.heightOfDisc, 0], 120, rodDiameter,
-                            this.heightOfDisc, discPrecision, normalizeRgb(255, 255, 0))); // vertex color is yellow
+                            this.heightOfDisc, discPrecision, [255, 255, 0])); // vertex color is yellow
     this.rods[0].stackOfDiscs.push(new Disc('disc2', [-rodDistance, 1 * this.heightOfDisc, 0], 100, rodDiameter,
-                            this.heightOfDisc, discPrecision, normalizeRgb(0, 0, 255))); // vertex color is blue
+                            this.heightOfDisc, discPrecision, [0, 0, 255])); // vertex color is blue
     this.rods[0].stackOfDiscs.push(new Disc('disc3', [-rodDistance, 2 * this.heightOfDisc, 0], 80, rodDiameter,
-                            this.heightOfDisc, discPrecision, normalizeRgb(0, 255, 0))); // vertex color is lime
+                            this.heightOfDisc, discPrecision, [0, 255, 0])); // vertex color is lime
     this.rods[0].stackOfDiscs.push(new Disc('disc4', [-rodDistance, 3 * this.heightOfDisc, 0], 60, rodDiameter,
-                            this.heightOfDisc, discPrecision, normalizeRgb(255, 0, 0))); // vertex color is red
+                            this.heightOfDisc, discPrecision, [255, 0, 0])); // vertex color is red
     
     // initialize the game state
     this.movingUpwards = false; // whether there is a disc is moving upwards

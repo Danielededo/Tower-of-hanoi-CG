@@ -162,7 +162,7 @@ var Disc = undefined;
             shaderProgram[1].ColorLoc = gl.getUniformLocation(shaderProgram[1], 'uColor');
             shaderProgram[1].LightDirectionLoc = gl.getUniformLocation(shaderProgram[1], 'uLightDirection');
             shaderProgram[1].LightColorLoc = gl.getUniformLocation(shaderProgram[1], 'uLightColor');
-            shaderProgram[1].ShadowMapLoc = gl.getUniformLocation(shaderProgram[1], 'uShadowMap');
+            //shaderProgram[1].ShadowMapLoc = gl.getUniformLocation(shaderProgram[1], 'uShadowMap');
         
 
         // data ...
@@ -390,7 +390,7 @@ var Disc = undefined;
         gl.uniform3fv(shaderProgram[1].ColorLoc, this.color);
         gl.uniform3fv(shaderProgram[1].LightDirectionLoc, drawingState.lightDirection);
         gl.uniform3fv(shaderProgram[1].LightColorLoc, drawingState.lightColor);
-        gl.uniform1i(shaderProgram[1].ShadowMapLoc, 0); // we will store the shadow map in TMU0 soon, so instruct shader
+        //gl.uniform1i(shaderProgram[1].ShadowMapLoc, 0); // we will store the shadow map in TMU0 soon, so instruct shader
         // programs to use use TMU0
 
         // connect the attributes to the buffer
@@ -400,8 +400,8 @@ var Disc = undefined;
         gl.vertexAttribPointer(shaderProgram[1].NormalAttribute, 3, gl.FLOAT, false, 0, 0);
 
         // Bind texture
-        gl.activeTexture(gl.TEXTURE0); // bind our shadow map to TMU0
-        gl.bindTexture(gl.TEXTURE_2D, drawingState.shadowMap);
+        //gl.activeTexture(gl.TEXTURE0); // bind our shadow map to TMU0
+        //gl.bindTexture(gl.TEXTURE_2D, drawingState.shadowMap);
 
         // Do the drawing
         gl.drawArrays(gl.TRIANGLES, 0, this.vertexPos.length / 3); // the last parameter specifies how many vertices to draw

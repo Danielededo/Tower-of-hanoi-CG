@@ -63,14 +63,14 @@ async function init() {
     initializeObjects(game, drawingState); // use drawingState.gl
 
     // compile the shader program for shadow
-    compileShadowProgram(drawingState); // use drawingState.gl
+    //compileShadowProgram(drawingState); // use drawingState.gl
 
     // create a frame buffer object for shadow
-    var framebuffer = createFramebufferForShadow(drawingState); // use drawingState.gl
+    //var framebuffer = createFramebufferForShadow(drawingState); // use drawingState.gl
 
     var ab; // for arcball
 
-    var realTime = performance.now();
+    var realTime = performance.now(); // the returned value represents the time elapsed since the time origin.
 
     var frameIndex = 0;
     var frameCount = 10; // only use 10 frames (the second frame to the eleventh frame) to compute user's fps
@@ -170,8 +170,8 @@ async function init() {
             lightColor: lightColor,
             lightProjection : lightProjectionM,
             lightView : lightViewM,
-            shadowMap : framebuffer.texture,
-            shadowMapResolution: framebuffer.resolution,
+            //shadowMap : framebuffer.texture,
+            //shadowMapResolution: framebuffer.resolution,
             realTime : realTime,
         }
 
@@ -184,8 +184,8 @@ async function init() {
         game.updateDiscPosition(drawingState);
 
         // draw to the framebuffer
-        gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
-        gl.viewport(0, 0, framebuffer.resolution, framebuffer.resolution); // never forget to set viewport as our
+        //gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+        //gl.viewport(0, 0, framebuffer.resolution, framebuffer.resolution); // never forget to set viewport as our
         // texture's size
 
         // first, let's clear the background in the frame buffer
@@ -193,10 +193,10 @@ async function init() {
         gl.enable(gl.DEPTH_TEST);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        allObjects.forEach(function (object) {
+        /*allObjects.forEach(function (object) {
             if(object.drawBefore)
                 object.drawBefore(drawingState);
-        });
+        });*/
 
         // return the frame buffer pointer to the system, now we can draw on the screen
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
