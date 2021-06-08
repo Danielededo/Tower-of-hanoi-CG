@@ -18,6 +18,7 @@
 //var m4 = twgl.m4; // abbreviation
 //var v3 = twgl.v3;
 // array of shaderProgram
+var allObjects = [];
 var shaderProgram = new Array();
 
 var lookRadius = 1.0;
@@ -111,8 +112,18 @@ async function init() {
         });
     
 
-    initializeObjects(game, drawingState); // use drawingState.gl
-
+    for (var i = 0; i < game.getNumberOfRods(); i++){
+        allObjects.push(game.rods[i]); //push the rods
+    }
+    for (i = 0; i < game.getNumberOfRods(); i++){
+        for (var j = 0; j < game.rods[i].getNumberOfDiscs(); j++){
+            allObjects.push(game.rods[i].stackOfDiscs[j]); // push the discs
+        }
+    }
+    allObjects.forEach(
+        function(object){
+            object.initialize(drawingState);
+    });
     // compile the shader program for shadow
     //compileShadowProgram(drawingState); // use drawingState.gl
 
