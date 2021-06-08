@@ -337,7 +337,7 @@ var Disc = undefined;
     /**
      * compute shadow map
      */
-    Disc.prototype.drawBefore = function(drawingState) {
+    /*Disc.prototype.drawBefore = function(drawingState) {
         var modelM = twgl.m4.identity();
         twgl.m4.setTranslation(modelM, this.position, modelM); // translation matrix with the position of the disc
         var MVP = twgl.m4.multiply(twgl.m4.multiply(modelM, drawingState.lightView), drawingState.lightProjection);
@@ -360,7 +360,7 @@ var Disc = undefined;
 
         // WebGL is a state machine, so do not forget to disable all attributes after every drawing
         gl.disableVertexAttribArray(shadowProgram.PositionAttribute);
-    }
+    }*/
 
     /**
      * draw on the screen

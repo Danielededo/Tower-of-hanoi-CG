@@ -153,7 +153,7 @@ async function init() {
 
         // when we are testing fps at the first stage, player has no control, which means arcball has not been defined
         if (frameIndex > frameCount)
-            viewM = twgl.m4.multiply(ab.getMatrix(), viewM); // quaternion converted into the corresponding matrix
+            viewM = twgl.m4.multiply(ab.getMatrix(), viewM); // world matrix of the object multiplyed by view matrix(in viewM)
 
         var fieldOfView = Math.PI / 4;
         var projectionM = twgl.m4.perspective(fieldOfView, 2, 10, 1000);
