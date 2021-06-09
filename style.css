@@ -1,8 +1,5 @@
 .button {
-    /*
-    -webkit-appearance: button;
-    height: 30px;
-    */
+
     font-family: "Consolas", Times, serif;
     background-color: #282828;
 	border: none;

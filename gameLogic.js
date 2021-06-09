@@ -39,11 +39,7 @@ function Game() {
 
     this.lastTime = undefined;
 
-    //this.playerSteps = []; // record player's every step. It is not used in the game at all.
-    
     this.hasSucceeded = false; // avoid infinite congratulations
-
-    //this.displayMode = false;
 }
 
 Game.prototype.getNumberOfRods = function() {
@@ -65,6 +61,7 @@ Game.prototype.getNumberOfDiscs = function() {
  *                      the program started running
  */
 Game.prototype.tryToMoveDisc = function(from, to) {
+
     from = from || 1;
     to = to || 1;
 
@@ -90,7 +87,6 @@ Game.prototype.tryToMoveDisc = function(from, to) {
     
     // I assume after the first success, player will continue to move discs for fun
     if (from == 3) {
-    //if (from == 3 && !this.displayMode) {
         this.hasSucceeded = false;
     }
 
@@ -102,8 +98,6 @@ Game.prototype.tryToMoveDisc = function(from, to) {
     this.movingDisc = this.rods[from - 1].stackOfDiscs.pop();
     this.fromRod = this.rods[from - 1];
     this.toRod = this.rods[to - 1];
-
-    //this.playerSteps.push([from, to]);
 }
 
 /**
@@ -113,6 +107,7 @@ Game.prototype.tryToMoveDisc = function(from, to) {
  * please call it in function draw in main.js
  */
 Game.prototype.updateDiscPosition = function(drawingState) {
+
     var movingSpeed = 0.3;  // moving units in world coordinate per millisecond
     var flyingAltitude = 80; // the flying altitude of the moving disc in world coordinate
 
@@ -165,7 +160,6 @@ Game.prototype.updateDiscPosition = function(drawingState) {
             this.movingDownwards = false;
         }
    }
-   // else: nothing is moving
 }
     
 /**

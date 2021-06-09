@@ -1,64 +1,16 @@
 /** the main file
- *
- * If you want to adjust the position of camera in world coordinate, the angele of field of view or the position of
- * light in world coordinate, please change numbers in function draw in main.js
  * If you want to adjust the position or the size of rods and discs, or the flying altitude of the moving disc, please
  * modify numbers in function Game in gameLogic.js
  * If you want to speed up the moving disc, please modify variable movingSpeed defined in
  * Game.prototype.updateDiscPosition in gameLogic.js
- *
- * I use some parallel lights, but you can swift to a dot light with a lot of work. I give out a brief instruction in
- * main.js
- *
- * If the animation is too frozen on your computer, please use a smaller number of framebuffer.resolution in
- * allObjects.js at the expense of aliasing of the shadow
- *
 */
 
-//var m4 = twgl.m4; // abbreviation
-//var v3 = twgl.v3;
 // array of shaderProgram
 var allObjects = [];
 var shaderProgram = new Array();
 
 var lookRadius = 1.0;
-/*var canw;
-var EVangle, EVelevation ;
-var angle = 0.01;
-var elevation = 0.01;
-var extView = 1;
-var mouseState = false;
-var lastMouseX = -100, lastMouseY = -100;
-function doMouseDown(event) {
-	lastMouseX = event.pageX;
-	lastMouseY = event.pageY;
-	mouseState = true;
-}
-function doMouseUp(event) {
-	lastMouseX = -100;
-	lastMouseY = -100;
-	mouseState = false;
-}
-function doMouseMove(event) {
-	if(mouseState) {
-	 var dx = event.pageX - lastMouseX;
-	var dy = lastMouseY - event.pageY;
-	 if((event.pageX <= 0.66 * canw) || (extView == 0)) {		
-		if((dx != 0) || (dy != 0)) {
-			angle += 0.5 * dx;
-			elevation += 0.5 * dy;
-		}
-	  } else {
-		if((dx != 0) || (dy != 0)) {
-			EVangle += 0.5 * dx;
-			EVelevation += 0.5 * dy;
-		}
-//		modRot = modRot + 0.5 * dx;
-	  }
-	  lastMouseX = event.pageX;
-	  lastMouseY = event.pageY;
-	}
-}*/
+
 function doMouseWheel(event) {
 	var nLookRadius = lookRadius + event.wheelDelta/1000.0;
 	if((nLookRadius > 0.5) && (nLookRadius < 2.0)) {
@@ -67,14 +19,10 @@ function doMouseWheel(event) {
 	}
 }
 
-
 async function init() {
 
     // create canvas
     var canvas = document.getElementById("my-canvas");
-    //canvas.addEventListener("mousedown", doMouseDown, false);
-	//canvas.addEventListener("mouseup", doMouseUp, false);
-	//canvas.addEventListener("mousemove", doMouseMove, false);
     canvas.addEventListener("mousewheel", doMouseWheel, false);
     var gl = canvas.getContext('webgl2'); // gl should not be a global variable and it should be wrapped in object
     // drawingState defined in allObjects.js so that you could draw many animations on one web page.
@@ -111,7 +59,7 @@ async function init() {
         shaderProgram[1] = utils.createProgram(gl, vertexShader, fragmentShader);
         });
     
-
+    // initialize all objects
     for (var i = 0; i < game.getNumberOfRods(); i++){
         allObjects.push(game.rods[i]); //push the rods
     }
@@ -122,17 +70,12 @@ async function init() {
     }
     allObjects.forEach(
         function(object){
-            object.initialize(drawingState);
+            object.initialize(drawingState); // actual initialization
     });
-    // compile the shader program for shadow
-    //compileShadowProgram(drawingState); // use drawingState.gl
+    
+    var ab; // the arcball
 
-    // create a frame buffer object for shadow
-    //var framebuffer = createFramebufferForShadow(drawingState); // use drawingState.gl
-
-    var ab; // for arcball
-
-    var realTime = performance.now(); // the returned value represents the time elapsed since the time origin.
+    var realTime = performance.now(); // the returned value represents the time elapsed since the time origin
 
     var frameIndex = 0;
     var frameCount = 10; // only use 10 frames (the second frame to the eleventh frame) to compute user's fps
@@ -142,8 +85,7 @@ async function init() {
 
     /**
      * the main drawing function
-     TODO: change numbers to get WORLD 
-    */
+    **/
     function draw() {
 
         // since we have drawn the first frame now, the web page must have the focus
