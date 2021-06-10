@@ -14,7 +14,6 @@ var lookRadius = 1.0;
 function doMouseWheel(event) {
 	var nLookRadius = lookRadius + event.wheelDelta/1000.0;
 	if((nLookRadius > 0.5) && (nLookRadius < 2.0)) {
-        console.log(lookRadius);
 		lookRadius = nLookRadius;
 	}
 }
@@ -100,9 +99,9 @@ async function init() {
         var eye = [lookRadius*0, lookRadius*150, lookRadius*300];
         var target = [0, 0, 0];
         var up = [0, 1, 0];
-        var cameraM = twgl.m4.lookAt(eye, target, up); //camera matrix
+        var cameraM = twgl.m4.lookAt(eye, target, up); // camera matrix
 
-        var viewM = twgl.m4.inverse(cameraM);//view matrix is the inverse of camera matrix
+        var viewM = twgl.m4.inverse(cameraM);// view matrix is the inverse of camera matrix
 
         // when we are testing fps at the first stage, player has no control, which means arcball has not been defined
         if (frameIndex > frameCount)
@@ -115,91 +114,29 @@ async function init() {
         var lightPosition = [2, 1, 2]; // the position of a single light in world coordinate.
 
         var lightDirection = twgl.v3.subtract(lightPosition, target); // now light direction is in world coordinate
-        //lightDirection = twgl.m4.transformPoint(viewM, lightDirection); // but we need light direction in camera coordinate,
-        // as said in allObjects.js
 
-        var lightViewM = twgl.m4.inverse(twgl.m4.lookAt(lightPosition, target, up));
+        // if we had need to transform light direction in camera coordinate:
+        // lightDirection = twgl.m4.transformPoint(viewM, lightDirection);
 
-        var lightProjectionM = twgl.m4.ortho(-175, 175, -175, 175, -175, 175); // The number should be as small as it
-        // can to utilize every pixel of the shadow map. After testing, I found that the if you use a number smaller
-        // than 175, the shadow map will not contain every objects in the world
-
-        /* Because I use parallel light, I use orthogonal projection here.
-        If you want to use dot light, please do following things:
-        1. use perspective projection here
-        2. pass lightPosition in camera coordinate to fragment shaders of every object. which means you should add
-               lightPosition = twgl.m4.transformPoint(viewM, lightPosition);
-           here and add it to the variable drawingState and add
-               uniform vec3 uLightPosition;
-           in fragment shaders of every object
-        3. Compute light direction in camera coordinate for every vertex in fragment shaders of every object
-
-        Here is an example for disc-fs: (only two lines are changed)
-
-        #ifdef GL_ES
-            precision highp float;
-        #endif
-        uniform vec3 uColor;
-        // replace: uniform vec3 uLightDirection; by:
-        uniform vec3 uLightPosition;
-        // all other uniform, varying or const variables are unchanged, so I omit this part
-
-        // functions pulse, blinnPhongShading and unpackDepth are unchanged here, so I omit this part.
-
-        void main(void) {
-            vec3 shadowCoordinate = (vPositionFromLight.xyz / vPositionFromLight.w) / 2.0 + 0.5;
-            vec4 rgbaDepth = texture2D(uShadowMap, shadowCoordinate.xy);
-            float depth = unpackDepth(rgbaDepth); // decode the depth value from the depth map
-            float visibility = (shadowCoordinate.z > depth + 0.00001) ? 0.5 : 1.0;
-            vec2 light = blinnPhongShading(uLightDirection, 1.0, 0.35, 1.0, 1.5, 30.0);
-            // replace: vec2 light = blinnPhongShading(uLightDirection, 1.0, 0.35, 1.0, 1.5, 30.0); by:
-            vec2 light = blinnPhongShading(uLightPosition - fPosition, 1.0, 0.35, 1.0, 1.5, 30.0);
-            vec3 objectColor = (1.0 + 0.3 * pulse(uPosition.z, 0.1)) * uColor; // add some stripes
-            vec3 ambientAndDiffuseColor = light.x * objectColor;
-            vec3 specularColor = light.y * uLightColor;
-	        gl_FragColor = vec4(visibility * (ambientAndDiffuseColor + specularColor), 1.0);
-        }
-        */
-
-        var lightColor = normalizeRgb(255, 255, 255); // white light
+        var lightColor = [1, 1, 1]; // white light
 
         // make a real drawing state for drawing
         drawingState = {
             gl : gl,
             projection : projectionM,
             view : viewM,
-            camera : cameraM,
             lightDirection : lightDirection,
             lightColor: lightColor,
-            lightProjection : lightProjectionM,
-            lightView : lightViewM,
-            //shadowMap : framebuffer.texture,
-            //shadowMapResolution: framebuffer.resolution,
             realTime : realTime,
         }
 
-/*
-        if (game.displayMode)
-            game.displaySolution(drawingState);
-*/
-
         // update the moving disc's position in world coordinate
         game.updateDiscPosition(drawingState);
-
-        // draw to the framebuffer
-        //gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
-        //gl.viewport(0, 0, framebuffer.resolution, framebuffer.resolution); // never forget to set viewport as our
-        // texture's size
 
         // first, let's clear the background in the frame buffer
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
         gl.enable(gl.DEPTH_TEST);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-        /*allObjects.forEach(function (object) {
-            if(object.drawBefore)
-                object.drawBefore(drawingState);
-        });*/
 
         // return the frame buffer pointer to the system, now we can draw on the screen
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);

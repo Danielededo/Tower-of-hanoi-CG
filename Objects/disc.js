@@ -42,11 +42,9 @@ Disc.prototype.initialize = function(drawingState) {
     shaderProgram[1].ModelViewLoc = gl.getUniformLocation(shaderProgram[1], 'uModelView');
     shaderProgram[1].ProjectionLoc = gl.getUniformLocation(shaderProgram[1], 'uProjection');
     shaderProgram[1].NormalMatrixLoc = gl.getUniformLocation(shaderProgram[1], 'uNormal');
-    shaderProgram[1].MVPFromLightLoc = gl.getUniformLocation(shaderProgram[1], 'uMVPFromLight');
     shaderProgram[1].ColorLoc = gl.getUniformLocation(shaderProgram[1], 'uColor');
     shaderProgram[1].LightDirectionLoc = gl.getUniformLocation(shaderProgram[1], 'uLightDirection');
     shaderProgram[1].LightColorLoc = gl.getUniformLocation(shaderProgram[1], 'uLightColor');
-    //shaderProgram[1].ShadowMapLoc = gl.getUniformLocation(shaderProgram[1], 'uShadowMap');
 
 
     // data
@@ -226,10 +224,9 @@ Disc.prototype.generateNormal = function() {
 Disc.prototype.draw = function(drawingState) {
     // we make a model matrix to place the disc in the world
     var modelM = twgl.m4.identity();
-    twgl.m4.setTranslation(modelM, this.position, modelM); // translation matrix with the position of the disc
-    var modelViewM = twgl.m4.multiply(modelM, drawingState.view); //
-    var normalM = twgl.m4.inverse(twgl.m4.transpose(modelViewM));
-    var MVP = twgl.m4.multiply(twgl.m4.multiply(modelM, drawingState.lightView), drawingState.lightProjection);
+    twgl.m4.setTranslation(modelM, this.position, modelM); // M = worldMatrix, from object space to world space
+    var modelViewM = twgl.m4.multiply(modelM, drawingState.view); // MV =  M * V (with twgl not transposed)
+    var normalM = twgl.m4.inverse(twgl.m4.transpose(modelM));
 
     var gl = drawingState.gl;
 
@@ -244,7 +241,6 @@ Disc.prototype.draw = function(drawingState) {
     gl.uniformMatrix4fv(shaderProgram[1].ModelViewLoc, false, modelViewM);
     gl.uniformMatrix4fv(shaderProgram[1].ProjectionLoc, false, drawingState.projection);
     gl.uniformMatrix4fv(shaderProgram[1].NormalMatrixLoc, false, normalM);
-    gl.uniformMatrix4fv(shaderProgram[1].MVPFromLightLoc, false, MVP);
     gl.uniform3fv(shaderProgram[1].ColorLoc, this.color);
     gl.uniform3fv(shaderProgram[1].LightDirectionLoc, drawingState.lightDirection);
     gl.uniform3fv(shaderProgram[1].LightColorLoc, drawingState.lightColor);

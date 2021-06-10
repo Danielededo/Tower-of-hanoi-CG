@@ -54,7 +54,6 @@ Rod.prototype.initialize = function(drawingState) {
     shaderProgram[0].ModelViewLoc = gl.getUniformLocation(shaderProgram[0], 'uModelView');
     shaderProgram[0].ProjectionLoc = gl.getUniformLocation(shaderProgram[0], 'uProjection');
     shaderProgram[0].NormalMatrixLoc = gl.getUniformLocation(shaderProgram[0], 'uNormal');
-    shaderProgram[0].MVPFromLightLoc = gl.getUniformLocation(shaderProgram[0], 'uMVPFromLight');
     shaderProgram[0].LightDirectionLoc = gl.getUniformLocation(shaderProgram[0], 'uLightDirection');
     shaderProgram[0].LightColorLoc = gl.getUniformLocation(shaderProgram[0], 'uLightColor');
     shaderProgram[0].TexSamplerLoc = gl.getUniformLocation(shaderProgram[0], 'uTexSampler');
@@ -244,10 +243,9 @@ Rod.prototype.generateTextureCoordinate = function() {
 Rod.prototype.draw = function(drawingState) {
     // we make a model matrix to place the rod in the world
     var modelM = twgl.m4.identity();
-    twgl.m4.setTranslation(modelM, this.position, modelM);
-    var modelViewM = twgl.m4.multiply(modelM, drawingState.view);
-    var normalM = twgl.m4.inverse(twgl.m4.transpose(modelViewM));
-    var MVP = twgl.m4.multiply(twgl.m4.multiply(modelM, drawingState.lightView), drawingState.lightProjection);
+    twgl.m4.setTranslation(modelM, this.position, modelM); // M = worldMatrix, from object space to world space
+    var modelViewM = twgl.m4.multiply(modelM, drawingState.view); // MV =  M * V (with twgl not transposed)
+    var normalM = twgl.m4.inverse(twgl.m4.transpose(modelM));
     
     var gl = drawingState.gl;
 
@@ -263,7 +261,6 @@ Rod.prototype.draw = function(drawingState) {
     gl.uniformMatrix4fv(shaderProgram[0].ModelViewLoc, false, modelViewM);
     gl.uniformMatrix4fv(shaderProgram[0].ProjectionLoc, false, drawingState.projection);
     gl.uniformMatrix4fv(shaderProgram[0].NormalMatrixLoc, false, normalM);
-    gl.uniformMatrix4fv(shaderProgram[0].MVPFromLightLoc, false, MVP);
     gl.uniform3fv(shaderProgram[0].LightDirectionLoc, drawingState.lightDirection);
     gl.uniform3fv(shaderProgram[0].LightColorLoc, drawingState.lightColor);
     

@@ -12,7 +12,6 @@ uniform vec3 uLightDirection;
 uniform vec3 uLightColor;
 in vec3 fNormal;
 in vec3 fPosition;
-in vec3 uPosition;
 out vec4 myOutputColor;
 
 /**
