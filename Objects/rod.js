@@ -6,7 +6,7 @@ var Rod = undefined;
 // so that we only create buffers once for every rod to save time.
 // As to discs, their size are different so data in buffers varies. We have to use this.vertexPos, this.normal and
 // so on inside function init.
-(function() {
+
 var vertexPos;
 var normal;
 var texCoord;
@@ -43,7 +43,7 @@ Rod = function Rod(name, position, diameter, height, precision, color) {
  * generate all data unchanged between two frames
  */
 Rod.prototype.initialize = function(drawingState) {
-    var gl = drawingState.gl; // an abbreviation...
+    var gl = drawingState.gl;
 
     //create uniform/attribute locations
     // with the vertex shader, we need to pass it positions as an attribute - so set up that communication
@@ -59,54 +59,39 @@ Rod.prototype.initialize = function(drawingState) {
     shaderProgram[0].LightColorLoc = gl.getUniformLocation(shaderProgram[0], 'uLightColor');
     shaderProgram[0].TexSamplerLoc = gl.getUniformLocation(shaderProgram[0], 'uTexSampler');
 
-    // data ...
+    // data
     // vertex positions
     vertexPos = this.generateLocalPosition();
-    // normals
-    normal = this.generateNormal();
-    // texture coordinates
-    texCoord = this.generateTextureCoordinate();
-
-    // create buffers and upload vertex data
+    // create buffer and upload data
     positionBuffer = gl.createBuffer(); // create vertex buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer); // vbo buffer is set as the active one, ARRAY_BUFFER means it holds vertex coords
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexPos), gl.STATIC_DRAW); // vertex data are placed inside the buffer
+
+    // normals
+    normal = this.generateNormal();
+    // create buffer and upload data
     normalBuffer = gl.createBuffer(); // create normal buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normal), gl.STATIC_DRAW); // normal data are placed inside the buffer
+
+    // texture coordinates
+    texCoord = this.generateTextureCoordinate();
+    // create buffer and upload data
     texCoordBuffer = gl.createBuffer(); // create texture buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texCoord), gl.STATIC_DRAW); // texture data are placed inside the buffer
 
     // set up texture
     texture = gl.createTexture();
-    // following three lines are unnecessary
-    //gl.activeTexture(gl.TEXTURE1); // since we use TMU0 for shadow map, we use TMU1 here.
-    //gl.bindTexture(gl.TEXTURE_2D, texture);
-    //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, null); // return the image data
-    // pointer to the system
 
     // load texture. Following two lines are critical for binding our texture object and the image
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, LoadedImageFiles["woodTexture.jpg"]);
-    // since we always load texture JavaScript files before loading objects JavaScript files, all images must
-    // have finished loading procedures now
 
-    // Option 1 : Use mipmap, select interpolation mode
-    gl.generateMipmap(gl.TEXTURE_2D);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
-
-    // Option 2: At least use linear filters
-    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-
-    // Optional ... if your shader & texture coordinates go outside the [0,1] range
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT); // I want symmetrical pattern
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT);
-
-    // return the texture pointer to the system (this step is unnecessary)
-    gl.bindTexture(gl.TEXTURE_2D, null);
-    
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 }
 
 /**
@@ -311,4 +296,3 @@ Rod.prototype.draw = function(drawingState) {
 Rod.prototype.getNumberOfDiscs = function() {
     return this.stackOfDiscs.length;
 }
-})();

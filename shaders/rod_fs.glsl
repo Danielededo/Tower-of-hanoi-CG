@@ -38,15 +38,6 @@ vec2 blinnPhongShading(vec3 lightDirection, float lightIntensity, float ambientC
     return vec2(ambientAndDiffuse, specular);
 }
 
-/**
-* compute z-value from a vec4
-*/
-float unpackDepth(const in vec4 rgbaDepth) {
-    const vec4 bitShift = vec4(1.0, 1.0 / 256.0, 1.0 / (256.0 * 256.0), 1.0 / (256.0 * 256.0 * 256.0));
-    float depth = dot(rgbaDepth, bitShift);
-    return depth;
-}
-
 void main(void) {
     vec2 light = blinnPhongShading(uLightDirection, 1.0, 0.5, 1.0, 1.5, 100.0);
     vec3 ambientAndDiffuseColor = light.x * texture(uTexSampler, fTexCoord).xyz;

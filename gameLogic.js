@@ -3,7 +3,7 @@
  the core logic of the game.
  */
 
-// the constructor
+// the constructor that creates the data structures(for discs and rods)
 function Game() {
 
     this.rods = []; //array that contains the rod objects

@@ -6,7 +6,7 @@ var Disc = undefined;
 // so that we only create buffers once for every rod to save time.
 // As to discs, their size are different so data in buffers varies. We have to use this.vertexPos, this.normal and
 // so on inside function init.
-(function() {
+
 var discIndex = 1; // for the constructor of disc
 /**
  * constructor for square Disc
@@ -32,7 +32,7 @@ Disc = function Disc(name, position, outerDiameter, innerDiameter, height, preci
  * compile the corresponding shader program and generate all data unchanged between two frames
  */
 Disc.prototype.initialize = function(drawingState) {
-    var gl = drawingState.gl; // an abbreviation...
+    var gl = drawingState.gl;
 
     // with the vertex shader, we need to pass it positions as an attribute - so set up that communication
     shaderProgram[1].PositionAttribute = gl.getAttribLocation(shaderProgram[1], 'vPosition'); // vPosition represents the position of the primitives
@@ -49,21 +49,22 @@ Disc.prototype.initialize = function(drawingState) {
     //shaderProgram[1].ShadowMapLoc = gl.getUniformLocation(shaderProgram[1], 'uShadowMap');
 
 
-    // data ...
+    // data
     // vertex positions
     this.vertexPos = this.generateLocalPosition();
-    // normals
-    this.normal = this.generateNormal();
-
-    // here no texture
-
-    // now to make the buffers
+    // create buffer and upload data
     this.positionBuffer = gl.createBuffer(); // create vertex buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer); // vbo buffer is set as the active one, ARRAY_BUFFER means it holds vertex coords
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertexPos), gl.STATIC_DRAW); // vertex data are placed inside the buffer
+
+    // normals
+    this.normal = this.generateNormal();
+    // create buffer and upload data
     this.normalBuffer = gl.createBuffer(); // create normal buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.normal), gl.STATIC_DRAW); // normal data are placed inside the buffer
+
+    // here no texture
 }
 
 /**
@@ -261,4 +262,3 @@ Disc.prototype.draw = function(drawingState) {
     gl.disableVertexAttribArray(shaderProgram[1].PositionAttribute);
     gl.disableVertexAttribArray(shaderProgram[1].NormalAttribute);
 }
-})();

@@ -59,7 +59,7 @@ async function init() {
         shaderProgram[1] = utils.createProgram(gl, vertexShader, fragmentShader);
         });
     
-    // initialize all objects
+    // initialize all objects(the objects are game attributes)
     for (var i = 0; i < game.getNumberOfRods(); i++){
         allObjects.push(game.rods[i]); //push the rods
     }
@@ -112,9 +112,8 @@ async function init() {
         var projectionM = twgl.m4.perspective(fieldOfView, 2, 10, 1000);
 
         // get lighting information
-        var lightPosition = [2, 1, 2]; // the position of a single light in world coordinate. The number should be as
-        // small as it can to utilize every pixel of the shadow map
-        // so that
+        var lightPosition = [2, 1, 2]; // the position of a single light in world coordinate.
+
         var lightDirection = twgl.v3.subtract(lightPosition, target); // now light direction is in world coordinate
         //lightDirection = twgl.m4.transformPoint(viewM, lightDirection); // but we need light direction in camera coordinate,
         // as said in allObjects.js
