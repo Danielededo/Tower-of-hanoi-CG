@@ -12,8 +12,8 @@ out vec2 fTexCoord;
 
 void main(void) {
    
-    fNormal = (uNormal * vec4(vNormal, 1.0)).xyz; // normals in camera coordinate
-    fPosition = (uModelView * vec4(vPosition, 1.0)).xyz; // vertex position in camera coordinate
+    fNormal = (uNormal * vec4(vNormal, 1.0)).xyz;
+    fPosition = (uModelView * vec4(vPosition, 1.0)).xyz;
     fTexCoord = vTexCoord; // texture
     gl_Position = uProjection * uModelView * vec4(vPosition, 1.0); // projection = Perspective * MV
 }
