@@ -5,6 +5,7 @@ precision highp float;
 uniform vec3 uColor; // the object's color
 uniform vec3 uLightDirection;
 uniform vec3 uLightColor;
+uniform vec3 uEye;
 in vec3 fNormal;
 in vec3 fPosition;
 out vec4 myOutputColor;
@@ -26,7 +27,7 @@ vec4 compDiffuse(vec3 lightDir, vec4 lightCol, vec3 normalVec, vec4 diffColor){
 }
 
 vec4 compSpecular(vec3 lightDir, vec4 lightCol, vec3 normalVec, vec3 eyedirVec) {
-    vec4 specularColor = vec4(0.3451, 0.5569, 0.8392, 1.0);
+    vec4 specularColor = vec4(0.8863, 0.2353, 0.1216, 1.0);
     vec3 reflection = -reflect(lightDir, normalVec);
     float LdotN = max(0.0, dot(normalVec, lightDir));
     float LdotR = max(dot(reflection, eyedirVec), 0.0);
@@ -53,7 +54,7 @@ void main() {
     vec4 diffColor = vec4(uColor,1.0);
     vec4 ambColor = vec4(uColor,1.0);
     vec3 normalVec = normalize(fNormal);
-    vec3 eyedirVec = normalize(uLightDirection);
+    vec3 eyedirVec = normalize(uEye - fPosition);
 
     // diffuse
     vec4 diffuse = compDiffuse(uLightDirection, lightCol, normalVec, diffColor);

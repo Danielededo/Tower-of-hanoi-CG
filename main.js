@@ -128,6 +128,7 @@ async function init() {
             lightDirection : lightDirection,
             lightColor: lightColor,
             realTime : realTime,
+            eye : eye,
         }
 
         // update the moving disc's position in world coordinate

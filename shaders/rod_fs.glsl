@@ -8,6 +8,7 @@ in vec2 fTexCoord;
 uniform vec3 uLightDirection; // 
 uniform vec3 uLightColor;
 uniform sampler2D uTexSampler;
+uniform vec3 uEye;
 
 out vec4 myOutputColor;
 
@@ -28,7 +29,7 @@ vec4 compDiffuse(vec3 lightDir, vec4 lightCol, vec3 normalVec, vec4 diffColor){
 }
 
 vec4 compSpecular(vec3 lightDir, vec4 lightCol, vec3 normalVec, vec3 eyedirVec) {
-    vec4 specularColor = vec4(0.0, 0.0, 0.0, 1.0);
+    vec4 specularColor = vec4(0.7216, 0.1098, 0.1098, 1.0);
     vec3 reflection = -reflect(lightDir, normalVec);
     float LdotN = max(0.0, dot(normalVec, lightDir));
     float LdotR = max(dot(reflection, eyedirVec), 0.0);
@@ -55,7 +56,7 @@ void main() {
     vec4 diffColor = texcol;
     vec4 ambColor = texcol;
     vec3 normalVec = normalize(fNormal);
-    vec3 eyedirVec = normalize(uLightDirection);
+    vec3 eyedirVec = normalize(uEye - fPosition);
 
     // diffuse
     vec4 diffuse = compDiffuse(uLightDirection, lightCol, normalVec, diffColor);
