@@ -17,7 +17,7 @@ function Game() {
 
     // put all discs to the first rod through the array stackOfDiscs of rod[0]
     this.heightOfDisc = 10;
-    var discPrecision = 75;
+    var discPrecision = 50;
     // the inner diameter of a disc is the diameter of a rod
     this.rods[0].stackOfDiscs.push(new Disc('disc1', [-rodDistance, 0 * this.heightOfDisc, 0], 120, rodDiameter,
                             this.heightOfDisc, discPrecision, [200/255, 200/255, 0])); // vertex color is yellow

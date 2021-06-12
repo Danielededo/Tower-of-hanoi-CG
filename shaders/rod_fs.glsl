@@ -29,16 +29,27 @@ vec4 compDiffuse(vec3 lightDir, vec4 lightCol, vec3 normalVec, vec4 diffColor){
 }
 
 vec4 compSpecular(vec3 lightDir, vec4 lightCol, vec3 normalVec, vec3 eyedirVec) {
-    vec4 specularColor = vec4(0.7216, 0.1098, 0.1098, 1.0);
+    vec4 specularColor = vec4(1.0, 1.0, 1.0, 1.0);
     vec3 reflection = -reflect(lightDir, normalVec);
     float LdotN = max(0.0, dot(normalVec, lightDir));
     float LdotR = max(dot(reflection, eyedirVec), 0.0);
+    vec3 halfVec = normalize(lightDir + eyedirVec);
+	float HdotN = max(dot(normalVec, halfVec), 0.0);
     float SpecShine = 100.0; // fix
+    float SToonTh = 90.0;
     vec4 LScol = lightCol * specularColor * max(sign(LdotN),0.0);
+    
+    // Blinn
+    vec4 specularBlinn = LScol * pow(HdotN, SpecShine);
+    // Toon Blinn
+	vec4 specularToonB = max(sign(HdotN - SToonTh), 0.0) * LScol;
+
     // Phong
     vec4 specularPhong = LScol * pow(LdotR, SpecShine);
+    // Toon Phong
+	vec4 specularToonP = max(sign(LdotR - SToonTh), 0.0) * LScol;
 
-	return specularPhong;
+	return specularBlinn;
 }
 
 vec4 compAmbient(vec4 ambColor) {

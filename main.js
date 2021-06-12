@@ -111,14 +111,14 @@ async function init() {
         var projectionM = twgl.m4.perspective(fieldOfView, 2, 10, 1000);
 
         // get lighting information
-        var lightPosition = [2, 1, 2]; // the position of a single light in world coordinate.
+        var lightPosition = [-1.5, 1, 1]; // the position of a single light in world coordinate.
 
         var lightDirection = twgl.v3.subtract(lightPosition, target); // now light direction is in world coordinate
 
         // if we had need to transform light direction in camera coordinate:
         // lightDirection = twgl.m4.transformPoint(viewM, lightDirection);
 
-        var lightColor = [1, 1, 1]; // white light
+        var lightColor = [0.5, 0.5, 0.5]; // white light
 
         // make a real drawing state for drawing
         drawingState = {
