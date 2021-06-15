@@ -95,20 +95,23 @@ async function init() {
         // now last frame must has been drawn on the screen, so we could check whether the game is over
         game.checkResult();
         
-        // figure out the transforms
-        var eye = [lookRadius*0, lookRadius*150, lookRadius*300];
+        // here we compute the view matrix (through the camera matrix) and the projection matrix (through the function perspective)
+        //  view matrix will be passed to the single objects for the computation of its viewWorld matrix (modelViewM)
+        var eye = [lookRadius*0, lookRadius*150, lookRadius*300]; // position of the camera
         var target = [0, 0, 0];
         var up = [0, 1, 0];
-        var cameraM = twgl.m4.lookAt(eye, target, up); // camera matrix
+        var cameraM = twgl.m4.lookAt(eye, target, up); // Mc = camera matrix
 
-        var viewM = twgl.m4.inverse(cameraM);// view matrix is the inverse of camera matrix
+        // Mv = (Mc)^-1
+        var viewM = twgl.m4.inverse(cameraM); // Mv = view matrix = the inverse of camera matrix
 
         // when we are testing fps at the first stage, player has no control, which means arcball has not been defined
         if (frameIndex > frameCount)
-            viewM = twgl.m4.multiply(ab.getMatrix(), viewM); // world matrix of the object multiplyed by view matrix(in viewM)
+            viewM = twgl.m4.multiply(ab.getMatrix(), viewM); // rotation matrix multiplyed by view matrix(in viewM)
 
         var fieldOfView = Math.PI / 4;
-        var projectionM = twgl.m4.perspective(fieldOfView, 2, 10, 1000);
+        var projectionM = twgl.m4.perspective(fieldOfView, 2, 10, 1000); // Mp = perspective projection
+
 
         // get lighting information
         var lightPosition = [-1.5, 1, 1]; // the position of a single light in world coordinate.
@@ -123,12 +126,12 @@ async function init() {
         // make a real drawing state for drawing
         drawingState = {
             gl : gl,
-            projection : projectionM,
-            view : viewM,
+            projection : projectionM, // perspective projection matrix
+            view : viewM, // view matrix
             lightDirection : lightDirection,
             lightColor: lightColor,
             realTime : realTime,
-            eye : eye,
+            eye : eye, // position of the camera
         }
 
         // update the moving disc's position in world coordinate

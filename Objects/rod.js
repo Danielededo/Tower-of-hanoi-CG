@@ -242,10 +242,12 @@ Rod.prototype.generateTextureCoordinate = function() {
  * draw on the screen
  */
 Rod.prototype.draw = function(drawingState) {
-    // we make a model matrix to place the rod in the world
+    // receives from main.js the view matrix
     var modelM = twgl.m4.identity();
-    twgl.m4.setTranslation(modelM, this.position, modelM); // M = worldMatrix, from object space to world space
-    var modelViewM = twgl.m4.multiply(modelM, drawingState.view); // MV =  M * V (with twgl not transposed)
+    twgl.m4.setTranslation(modelM, this.position, modelM); // M = modelMatrix = worldMatrix, from object space to world space
+
+    var modelViewM = twgl.m4.multiply(modelM, drawingState.view); // MV = M * V (with twgl not transposed)
+
     var normalM = twgl.m4.inverse(twgl.m4.transpose(modelM));
     
     var gl = drawingState.gl;
