@@ -1,4 +1,4 @@
-# Tower of Hanoi Project - Computer Graphics Polimi 2021
+# Tower of Hanoi Project - Computer Graphics Course @Polimi (AY 2020-2021)
 
 ## Introduction
 The Tower of Hanoi is a mathematical puzzle. It consists of three rods and a number of discs (in our case 4 discs) of different sizes,
