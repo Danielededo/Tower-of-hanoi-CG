@@ -5,6 +5,7 @@ precision highp float;
 uniform vec3 uColor; // the object's color
 uniform vec3 uLightDirection;
 uniform vec3 uLightColor;
+uniform vec3 uAmbientLightColor;
 uniform vec3 uEye;
 in vec3 fNormal;
 in vec3 fPosition;
@@ -50,8 +51,7 @@ vec4 compSpecular(vec3 lightDir, vec4 lightCol, vec3 normalVec, vec3 eyedirVec) 
 	return specularBlinn;
 }
 
-vec4 compAmbient(vec4 ambColor) {
-	vec4 ambientLightColor = vec4(1.0, 1.0, 1.0, 1.0);
+vec4 compAmbient(vec4 ambientLightColor, vec4 ambColor) {
     // Ambient
 	vec4 ambientAmbient = ambientLightColor * ambColor;
 
@@ -64,6 +64,7 @@ void main() {
     vec4 lightCol = vec4(uLightColor,1.0);
     vec4 diffColor = vec4(0.5, 0.5, 0.5, 1.0);
     vec4 ambColor = vec4(uColor, 1.0);
+    vec4 ambLightCol = vec4(uAmbientLightColor,1.0);
     vec3 normalVec = normalize(fNormal);
     vec3 eyedirVec = normalize(uEye - fPosition);
 
@@ -74,7 +75,7 @@ void main() {
     vec4 specular = compSpecular(uLightDirection, lightCol, normalVec, eyedirVec);
 
     // ambient
-    vec4 ambient = compAmbient(ambColor);
+    vec4 ambient = compAmbient(ambLightCol, ambColor);
 
     vec4 out_color = clamp(ambient + diffuse + specular, 0.0, 1.0);
     myOutputColor = vec4(out_color.rgb, 1.0);

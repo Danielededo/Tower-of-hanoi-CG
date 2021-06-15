@@ -57,6 +57,7 @@ Rod.prototype.initialize = function(drawingState) {
     shaderProgram[0].NormalMatrixLoc = gl.getUniformLocation(shaderProgram[0], 'uNormal');
     shaderProgram[0].LightDirectionLoc = gl.getUniformLocation(shaderProgram[0], 'uLightDirection');
     shaderProgram[0].LightColorLoc = gl.getUniformLocation(shaderProgram[0], 'uLightColor');
+    shaderProgram[0].AmbientLightColorLoc = gl.getUniformLocation(shaderProgram[0], 'uAmbientLightColor');
     shaderProgram[0].TexSamplerLoc = gl.getUniformLocation(shaderProgram[0], 'uTexSampler');
     shaderProgram[0].Eye = gl.getUniformLocation(shaderProgram[0], 'uEye');
 
@@ -266,6 +267,7 @@ Rod.prototype.draw = function(drawingState) {
     gl.uniformMatrix4fv(shaderProgram[0].NormalMatrixLoc, false, normalM);
     gl.uniform3fv(shaderProgram[0].LightDirectionLoc, drawingState.lightDirection);
     gl.uniform3fv(shaderProgram[0].LightColorLoc, drawingState.lightColor);
+    gl.uniform3fv(shaderProgram[0].AmbientLightColorLoc, drawingState.ambientLightColor);
     gl.uniform3fv(shaderProgram[0].Eye, drawingState.eye);
     
     gl.uniform1i(shaderProgram[0].TexSamplerLoc, 1); // so we will store the image texture

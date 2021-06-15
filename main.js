@@ -118,6 +118,8 @@ async function init() {
 
         var lightDirection = twgl.v3.subtract(lightPosition, target); // now light direction is in world coordinate
 
+        var ambientLightColor = [1, 1, 1];
+
         // if we had need to transform light direction in camera coordinate:
         // lightDirection = twgl.m4.transformPoint(viewM, lightDirection);
 
@@ -130,6 +132,7 @@ async function init() {
             view : viewM, // view matrix
             lightDirection : lightDirection,
             lightColor: lightColor,
+            ambientLightColor : ambientLightColor,
             realTime : realTime,
             eye : eye, // position of the camera
         }
