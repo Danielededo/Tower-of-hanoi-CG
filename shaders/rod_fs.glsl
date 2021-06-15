@@ -37,7 +37,7 @@ vec4 compSpecular(vec3 lightDir, vec4 lightCol, vec3 normalVec, vec3 eyedirVec, 
     vec3 halfVec = normalize(lightDir + eyedirVec);
 	float HdotN = max(dot(normalVec, halfVec), 0.0);
     float SpecShine = 100.0; // fix
-    float SToonTh = 90.0;
+    float SToonTh = 0.9;
     vec4 LScol = lightCol * specularCol * max(sign(LdotN),0.0);
     
     // Blinn
