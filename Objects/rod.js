@@ -51,7 +51,8 @@ Rod.prototype.initialize = function(drawingState) {
     shaderProgram[0].NormalAttribute = gl.getAttribLocation(shaderProgram[0], 'vNormal'); // vNormal represents the normals of the primitives
     shaderProgram[0].TexCoordAttribute = gl.getAttribLocation(shaderProgram[0], 'vTexCoord'); // vTextCoord represents the texture coords of the primitives
     // this gives us access to uniform variables
-    shaderProgram[0].ModelViewLoc = gl.getUniformLocation(shaderProgram[0], 'uModelView');
+    shaderProgram[0].ModelLoc = gl.getUniformLocation(shaderProgram[0], 'uModel');
+    shaderProgram[0].ViewLoc = gl.getUniformLocation(shaderProgram[0], 'uView');
     shaderProgram[0].ProjectionLoc = gl.getUniformLocation(shaderProgram[0], 'uProjection');
     shaderProgram[0].NormalMatrixLoc = gl.getUniformLocation(shaderProgram[0], 'uNormal');
     shaderProgram[0].LightDirectionLoc = gl.getUniformLocation(shaderProgram[0], 'uLightDirection');
@@ -246,8 +247,6 @@ Rod.prototype.draw = function(drawingState) {
     var modelM = twgl.m4.identity();
     twgl.m4.setTranslation(modelM, this.position, modelM); // M = modelMatrix = worldMatrix, from object space to world space
 
-    var modelViewM = twgl.m4.multiply(modelM, drawingState.view); // MV = M * V (with twgl not transposed)
-
     var normalM = twgl.m4.inverse(twgl.m4.transpose(modelM));
     
     var gl = drawingState.gl;
@@ -261,7 +260,8 @@ Rod.prototype.draw = function(drawingState) {
     gl.enableVertexAttribArray(shaderProgram[0].TexCoordAttribute);
 
     // set the uniforms
-    gl.uniformMatrix4fv(shaderProgram[0].ModelViewLoc, false, modelViewM);
+    gl.uniformMatrix4fv(shaderProgram[0].ModelLoc, false, modelM);
+    gl.uniformMatrix4fv(shaderProgram[0].ViewLoc, false, drawingState.view);
     gl.uniformMatrix4fv(shaderProgram[0].ProjectionLoc, false, drawingState.projection);
     gl.uniformMatrix4fv(shaderProgram[0].NormalMatrixLoc, false, normalM);
     gl.uniform3fv(shaderProgram[0].LightDirectionLoc, drawingState.lightDirection);

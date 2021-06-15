@@ -39,7 +39,8 @@ Disc.prototype.initialize = function(drawingState) {
     shaderProgram[1].NormalAttribute = gl.getAttribLocation(shaderProgram[1], 'vNormal'); // vNormal represents the normals of the primitives
 
     // this gives us access to uniform variables
-    shaderProgram[1].ModelViewLoc = gl.getUniformLocation(shaderProgram[1], 'uModelView');
+    shaderProgram[1].ModelLoc = gl.getUniformLocation(shaderProgram[1], 'uModel');
+    shaderProgram[1].ViewLoc = gl.getUniformLocation(shaderProgram[1], 'uView');
     shaderProgram[1].ProjectionLoc = gl.getUniformLocation(shaderProgram[1], 'uProjection');
     shaderProgram[1].NormalMatrixLoc = gl.getUniformLocation(shaderProgram[1], 'uNormal');
     shaderProgram[1].ColorLoc = gl.getUniformLocation(shaderProgram[1], 'uColor');
@@ -226,8 +227,6 @@ Disc.prototype.draw = function(drawingState) {
     var modelM = twgl.m4.identity();
     twgl.m4.setTranslation(modelM, this.position, modelM); // M = modelMatrix = worldMatrix, from object space to world space
 
-    var modelViewM = twgl.m4.multiply(modelM, drawingState.view); // MV = M * V (with twgl not transposed)
-
     var normalM = twgl.m4.inverse(twgl.m4.transpose(modelM));
 
     var gl = drawingState.gl;
@@ -240,7 +239,8 @@ Disc.prototype.draw = function(drawingState) {
     gl.enableVertexAttribArray(shaderProgram[1].NormalAttribute);
 
     // set the uniforms
-    gl.uniformMatrix4fv(shaderProgram[1].ModelViewLoc, false, modelViewM);
+    gl.uniformMatrix4fv(shaderProgram[1].ModelLoc, false, modelM);
+    gl.uniformMatrix4fv(shaderProgram[1].ViewLoc, false, drawingState.view);
     gl.uniformMatrix4fv(shaderProgram[1].ProjectionLoc, false, drawingState.projection);
     gl.uniformMatrix4fv(shaderProgram[1].NormalMatrixLoc, false, normalM);
     gl.uniform3fv(shaderProgram[1].ColorLoc, this.color);
