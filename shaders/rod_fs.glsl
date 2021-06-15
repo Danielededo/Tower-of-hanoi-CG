@@ -8,6 +8,7 @@ in vec2 fTexCoord;
 uniform vec3 uLightDirection;
 uniform vec3 uLightColor;
 uniform vec3 uAmbientLightColor;
+uniform vec3 uSpecularColor;
 uniform sampler2D uTexSampler;
 uniform vec3 uEye;
 
@@ -29,8 +30,7 @@ vec4 compDiffuse(vec3 lightDir, vec4 lightCol, vec3 normalVec, vec4 diffColor){
     return diffuseLambert;
 }
 
-vec4 compSpecular(vec3 lightDir, vec4 lightCol, vec3 normalVec, vec3 eyedirVec) {
-    vec4 specularColor = vec4(1.0, 1.0, 1.0, 1.0);
+vec4 compSpecular(vec3 lightDir, vec4 lightCol, vec3 normalVec, vec3 eyedirVec, vec4 specularCol) {
     vec3 reflection = -reflect(lightDir, normalVec);
     float LdotN = max(0.0, dot(normalVec, lightDir));
     float LdotR = max(dot(reflection, eyedirVec), 0.0);
@@ -38,7 +38,7 @@ vec4 compSpecular(vec3 lightDir, vec4 lightCol, vec3 normalVec, vec3 eyedirVec) 
 	float HdotN = max(dot(normalVec, halfVec), 0.0);
     float SpecShine = 100.0; // fix
     float SToonTh = 90.0;
-    vec4 LScol = lightCol * specularColor * max(sign(LdotN),0.0);
+    vec4 LScol = lightCol * specularCol * max(sign(LdotN),0.0);
     
     // Blinn
     vec4 specularBlinn = LScol * pow(HdotN, SpecShine);
@@ -67,6 +67,7 @@ void main() {
     vec4 diffColor = texcol;
     vec4 ambColor = texcol;
     vec4 ambLightCol = vec4(uAmbientLightColor,1.0);
+    vec4 specularCol = vec4(uSpecularColor, 1.0);
     vec3 normalVec = normalize(fNormal);
     vec3 eyedirVec = normalize(uEye - fPosition);
 
@@ -74,7 +75,7 @@ void main() {
     vec4 diffuse = compDiffuse(uLightDirection, lightCol, normalVec, diffColor);
 
     // specular
-    vec4 specular = compSpecular(uLightDirection, lightCol, normalVec, eyedirVec);
+    vec4 specular = compSpecular(uLightDirection, lightCol, normalVec, eyedirVec, specularCol);
 
     // ambient
     vec4 ambient = compAmbient(ambLightCol, ambColor);

@@ -47,6 +47,7 @@ Disc.prototype.initialize = function(drawingState) {
     shaderProgram[1].LightDirectionLoc = gl.getUniformLocation(shaderProgram[1], 'uLightDirection');
     shaderProgram[1].LightColorLoc = gl.getUniformLocation(shaderProgram[1], 'uLightColor');
     shaderProgram[1].AmbientLightColorLoc = gl.getUniformLocation(shaderProgram[1], 'uAmbientLightColor');
+    shaderProgram[1].SpecularColorLoc = gl.getUniformLocation(shaderProgram[1], 'uSpecularColor');
     shaderProgram[1].Eye = gl.getUniformLocation(shaderProgram[1], 'uEye');
 
     // data
@@ -248,6 +249,7 @@ Disc.prototype.draw = function(drawingState) {
     gl.uniform3fv(shaderProgram[1].LightDirectionLoc, drawingState.lightDirection);
     gl.uniform3fv(shaderProgram[1].LightColorLoc, drawingState.lightColor);
     gl.uniform3fv(shaderProgram[1].AmbientLightColorLoc, drawingState.ambientLightColor);
+    gl.uniform3fv(shaderProgram[1].SpecularColorLoc, drawingState.specularColor);
     gl.uniform3fv(shaderProgram[1].Eye, drawingState.eye);
 
     // connect the attributes to the buffer

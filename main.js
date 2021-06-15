@@ -120,6 +120,8 @@ async function init() {
 
         var ambientLightColor = [1, 1, 1];
 
+        var specularColor = [1, 1, 1];
+
         // if we had need to transform light direction in camera coordinate:
         // lightDirection = twgl.m4.transformPoint(viewM, lightDirection);
 
@@ -133,6 +135,7 @@ async function init() {
             lightDirection : lightDirection,
             lightColor: lightColor,
             ambientLightColor : ambientLightColor,
+            specularColor : specularColor,
             realTime : realTime,
             eye : eye, // position of the camera
         }
