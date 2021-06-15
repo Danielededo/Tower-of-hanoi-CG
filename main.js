@@ -1,10 +1,3 @@
-/** the main file
- * If you want to adjust the position or the size of rods and discs, or the flying altitude of the moving disc, please
- * modify numbers in function Game in gameLogic.js
- * If you want to speed up the moving disc, please modify variable movingSpeed defined in
- * Game.prototype.updateDiscPosition in gameLogic.js
-*/
-
 // array of shaderProgram
 var allObjects = [];
 var shaderProgram = new Array();
@@ -18,11 +11,11 @@ function doMouseWheel(event) {
 	}
 }
 
-async function init() {
+async function main() {
 
     // create canvas
     var canvas = document.getElementById("my-canvas");
-    canvas.addEventListener("mousewheel", doMouseWheel, false);
+    canvas.addEventListener("mousewheel", doMouseWheel, false); // zoom
     var gl = canvas.getContext('webgl2'); // gl should not be a global variable and it should be wrapped in object
     // drawingState defined in allObjects.js so that you could draw many animations on one web page.
     if (!gl) {
@@ -30,13 +23,8 @@ async function init() {
         return;
     }
 
-    // start a new game
+    // start a new game through the constructor
     var game = new Game();
-
-    // make a fake drawing state for the object initialization
-    var drawingState = {
-        gl : gl
-    }
 
     // retrieve shaders using path
     var path = window.location.pathname;
@@ -44,7 +32,7 @@ async function init() {
     var baseDir = window.location.href.replace(page, '');
     var shaderDir = baseDir + "Shaders/";
 
-    //compile the shaders for rod 
+    // compile the shaders for rod 
     await utils.loadFiles([shaderDir + 'rod_vs.glsl', shaderDir + 'rod_fs.glsl'], function (shaderText) {
         var vertexShader = utils.createShader(gl, gl.VERTEX_SHADER, shaderText[0]);
         var fragmentShader = utils.createShader(gl, gl.FRAGMENT_SHADER, shaderText[1]);
@@ -58,9 +46,13 @@ async function init() {
         shaderProgram[1] = utils.createProgram(gl, vertexShader, fragmentShader);
         });
     
-    // initialize all objects(the objects are game attributes)
+    // for the object initialization
+    var drawingState = {
+        gl : gl
+    }
+    // initialize all objects (the objects are game attributes)
     for (var i = 0; i < game.getNumberOfRods(); i++){
-        allObjects.push(game.rods[i]); //push the rods
+        allObjects.push(game.rods[i]); // push the rods
     }
     for (i = 0; i < game.getNumberOfRods(); i++){
         for (var j = 0; j < game.rods[i].getNumberOfDiscs(); j++){
@@ -72,8 +64,9 @@ async function init() {
             object.initialize(drawingState); // actual initialization
     });
     
-    var ab; // the arcball
+    var ab; // the arcball for the rotation
 
+    // for the animation
     var realTime = performance.now(); // the returned value represents the time elapsed since the time origin
 
     var frameIndex = 0;
@@ -82,19 +75,9 @@ async function init() {
 
     var fps = 60; // fps = 60 Hz (updated soon after the first 10 frames)
 
-    /**
-     * the main drawing function
-    **/
+    // drawing function
     function draw() {
 
-        // since we have drawn the first frame now, the web page must have the focus
-        if (frameIndex == 1) {
-            startTimestamp = performance.now();
-        }
-
-        // now last frame must has been drawn on the screen, so we could check whether the game is over
-        game.checkResult();
-        
         // here we compute the view matrix (through the camera matrix) and the projection matrix (through the function perspective)
         //  view matrix will be passed to the single objects for the computation of its viewWorld matrix (modelViewM)
         var eye = [lookRadius*0, lookRadius*150, lookRadius*300]; // position of the camera
@@ -140,9 +123,6 @@ async function init() {
             eye : eye, // position of the camera
         }
 
-        // update the moving disc's position in world coordinate
-        game.updateDiscPosition(drawingState);
-
         // first, let's clear the background in the frame buffer
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
         gl.enable(gl.DEPTH_TEST);
@@ -157,21 +137,38 @@ async function init() {
         gl.enable(gl.DEPTH_TEST);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+        
+        // first check whether the game is over
+        game.checkResult();
+        
+        // then update the moving disc's position in world coordinate
+        game.updateDiscPosition(drawingState);
+
+        // finally draw all the objects
         allObjects.forEach(function (object) {
             if(object.draw)
                 object.draw(drawingState);
         });
 
+        // for the animation
+
+        if (frameIndex == 1) { // first frame drawn
+            startTimestamp = performance.now();
+        }
+
         frameIndex++;
-        realTime += 1000 / fps; // advance the clock appropriately (unless the screen is not refreshing when the web
-        // page loses focus or when players invoke an alert message defined in function tryToMoveDisc in gameLogic.js)
 
-        // the first frame whose index is 0 is not take into consideration
+        /* advance the clock appropriately (unless the screen is not refreshing when the web
+        *  page loses focus or when players invoke an alert message defined in function tryToMoveDisc in gameLogic.js)
+        */
+        realTime += 1000 / fps;
+
+        // the first frame whose index is 0 is not taken into consideration
         if (frameIndex === frameCount + 1) {
-            // update fps and 1 second = 1000 mill-seconds
-            fps = Math.round(frameCount * 1000 / (performance.now()- startTimestamp));
+            // update fps (1 second = 1000 mill-seconds)
+            fps = Math.round(frameCount * 1000 / (performance.now() - startTimestamp));
 
-            // now we could support user interactions
+            // from now on support user interactions
             bindButtonsToGame(game);
             bindKeysToGame(game);
             ab = new ArcBall(canvas);
@@ -181,4 +178,4 @@ async function init() {
     }
     draw();
 }
-window.onload = init;
+window.onload = main;
