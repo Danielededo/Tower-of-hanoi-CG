@@ -96,17 +96,30 @@ async function main() {
         var projectionM = twgl.m4.perspective(fieldOfView, 2, 10, 1000); // Mp = perspective projection
 
 
-        // get lighting information
-        var lightPosition = [-1.5, 1, 1]; // the position of a single light in world coordinate.
+        var diffuseType = [1,0];
+        var specularType = [1,0,0];
+        var lightConeOut = 30.0;
+        var lightConeIn = 0.8;
+        var lightDecay = 0.0;
+        var lightTarget = 6.1;
+        var lightType = [1,0,0];
 
-        var lightDirection = twgl.v3.subtract(lightPosition, target); // now light direction is in world coordinate
+        var lightPosition = [-1.5, 1, 1]; // the position of a single light
+
+        var lightDirection = twgl.v3.subtract(lightPosition, target);
 
         var ambientLightColor = [1, 1, 1];
 
+
         var specularColor = [1, 1, 1];
 
-        // if we had need to transform light direction in camera coordinate:
-        // lightDirection = twgl.m4.transformPoint(viewM, lightDirection);
+        var diffuseColor = [1, 1, 1];
+
+        var specShine = 100.0;
+
+        var DToonTh = 0.5;
+
+        var SToonTh = 0.9;
 
         var lightColor = [0.5, 0.5, 0.5]; // white light
 
@@ -115,10 +128,22 @@ async function main() {
             gl : gl,
             projection : projectionM, // perspective projection matrix
             view : viewM, // view matrix
+            diffuseType : diffuseType,
+            specularType : specularType,
+            lightConeOut : lightConeOut,
+            lightConeIn : lightConeIn,
+            lightDecay : lightDecay,
+            lightTarget : lightTarget,
+            lightType : lightType,
+            lightPosition : lightPosition,
             lightDirection : lightDirection,
             lightColor: lightColor,
             ambientLightColor : ambientLightColor,
             specularColor : specularColor,
+            diffuseColor : diffuseColor,
+            specShine : specShine,
+            DToonTh : DToonTh,
+            SToonTh : SToonTh,
             realTime : realTime,
             eye : eye, // position of the camera
         }

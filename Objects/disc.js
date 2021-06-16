@@ -38,15 +38,33 @@ Disc.prototype.initialize = function(drawingState) {
     shaderProgram[1].PositionAttribute = gl.getAttribLocation(shaderProgram[1], 'vPosition'); // vPosition represents the position of the primitives
     shaderProgram[1].NormalAttribute = gl.getAttribLocation(shaderProgram[1], 'vNormal'); // vNormal represents the normals of the primitives
 
-    // this gives us access to uniform variables
+    // vertex shader uniforms
     shaderProgram[1].ModelLoc = gl.getUniformLocation(shaderProgram[1], 'uModel');
     shaderProgram[1].ViewLoc = gl.getUniformLocation(shaderProgram[1], 'uView');
     shaderProgram[1].ProjectionLoc = gl.getUniformLocation(shaderProgram[1], 'uProjection');
     shaderProgram[1].NormalMatrixLoc = gl.getUniformLocation(shaderProgram[1], 'uNormal');
+    // fragment shader uniforms
     shaderProgram[1].ColorLoc = gl.getUniformLocation(shaderProgram[1], 'uColor');
+
+    shaderProgram[1].DiffuseTypeLoc = gl.getUniformLocation(shaderProgram[1], 'uDiffuseType');
+    shaderProgram[1].uSpecularTypeLoc = gl.getUniformLocation(shaderProgram[1], 'uSpecularType');
+    shaderProgram[1].LightConeOutLoc = gl.getUniformLocation(shaderProgram[1], 'uLightConeOut');
+    shaderProgram[1].LightConeInLoc = gl.getUniformLocation(shaderProgram[1], 'uLightConeIn');
+    shaderProgram[1].LightDecayLoc = gl.getUniformLocation(shaderProgram[1], 'uLightDecay');
+    shaderProgram[1].LightTargetLoc = gl.getUniformLocation(shaderProgram[1], 'uLightTarget');
+    shaderProgram[1].LightTypeLoc = gl.getUniformLocation(shaderProgram[1], 'uLightType');
+
+    shaderProgram[1].LightPositionLoc = gl.getUniformLocation(shaderProgram[1], 'uLightPosition');
     shaderProgram[1].LightDirectionLoc = gl.getUniformLocation(shaderProgram[1], 'uLightDirection');
     shaderProgram[1].LightColorLoc = gl.getUniformLocation(shaderProgram[1], 'uLightColor');
     shaderProgram[1].AmbientLightColorLoc = gl.getUniformLocation(shaderProgram[1], 'uAmbientLightColor');
+
+    
+    shaderProgram[1].DiffuseColorLoc = gl.getUniformLocation(shaderProgram[1], 'uDiffuseColor');
+    shaderProgram[1].SpecShineLoc = gl.getUniformLocation(shaderProgram[1], 'uSpecShine');
+    shaderProgram[1].DToonThLoc = gl.getUniformLocation(shaderProgram[1], 'uDToonTh');
+    shaderProgram[1].SToonThLoc = gl.getUniformLocation(shaderProgram[1], 'uSToonTh');
+
     shaderProgram[1].SpecularColorLoc = gl.getUniformLocation(shaderProgram[1], 'uSpecularColor');
     shaderProgram[1].Eye = gl.getUniformLocation(shaderProgram[1], 'uEye');
 
@@ -245,10 +263,27 @@ Disc.prototype.draw = function(drawingState) {
     gl.uniformMatrix4fv(shaderProgram[1].ViewLoc, false, drawingState.view);
     gl.uniformMatrix4fv(shaderProgram[1].ProjectionLoc, false, drawingState.projection);
     gl.uniformMatrix4fv(shaderProgram[1].NormalMatrixLoc, false, normalM);
+
     gl.uniform3fv(shaderProgram[1].ColorLoc, this.color);
+
+    gl.uniform2fv(shaderProgram[1].DiffuseTypeLoc, drawingState.diffuseType);
+    gl.uniform3fv(shaderProgram[1].uSpecularTypeLoc, drawingState.specularType);
+    gl.uniform1f(shaderProgram[1].LightConeOutLoc, drawingState.lightConeOut);
+    gl.uniform1f(shaderProgram[1].LightConeInLoc, drawingState.lightConeIn);
+    gl.uniform1f(shaderProgram[1].LightDecayLoc, drawingState.lightDecay);
+    gl.uniform1f(shaderProgram[1].LightTargetLoc, drawingState.lightTarget);
+    gl.uniform3fv(shaderProgram[1].LightTypeLoc, drawingState.lightType);
+
+    gl.uniform3fv(shaderProgram[1].LightPositionLoc, drawingState.lightPosition);
     gl.uniform3fv(shaderProgram[1].LightDirectionLoc, drawingState.lightDirection);
     gl.uniform3fv(shaderProgram[1].LightColorLoc, drawingState.lightColor);
     gl.uniform3fv(shaderProgram[1].AmbientLightColorLoc, drawingState.ambientLightColor);
+
+    gl.uniform3fv(shaderProgram[1].DiffuseColorLoc, drawingState.diffuseColor);
+    gl.uniform1f(shaderProgram[1].SpecShineLoc, drawingState.specShine);
+    gl.uniform1f(shaderProgram[1].DToonThLoc, drawingState.DToonTh);
+    gl.uniform1f(shaderProgram[1].SToonThLoc, drawingState.SToonTh);
+
     gl.uniform3fv(shaderProgram[1].SpecularColorLoc, drawingState.specularColor);
     gl.uniform3fv(shaderProgram[1].Eye, drawingState.eye);
 

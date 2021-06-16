@@ -50,16 +50,32 @@ Rod.prototype.initialize = function(drawingState) {
     shaderProgram[0].PositionAttribute = gl.getAttribLocation(shaderProgram[0], 'vPosition'); // vPosition represents the position of the primitives
     shaderProgram[0].NormalAttribute = gl.getAttribLocation(shaderProgram[0], 'vNormal'); // vNormal represents the normals of the primitives
     shaderProgram[0].TexCoordAttribute = gl.getAttribLocation(shaderProgram[0], 'vTexCoord'); // vTextCoord represents the texture coords of the primitives
-    // this gives us access to uniform variables
+    // vertex shader uniforms
     shaderProgram[0].ModelLoc = gl.getUniformLocation(shaderProgram[0], 'uModel');
     shaderProgram[0].ViewLoc = gl.getUniformLocation(shaderProgram[0], 'uView');
     shaderProgram[0].ProjectionLoc = gl.getUniformLocation(shaderProgram[0], 'uProjection');
     shaderProgram[0].NormalMatrixLoc = gl.getUniformLocation(shaderProgram[0], 'uNormal');
+    // fragment shader uniforms
+    shaderProgram[0].TexSamplerLoc = gl.getUniformLocation(shaderProgram[0], 'uTexSampler');
+
+    shaderProgram[0].DiffuseTypeLoc = gl.getUniformLocation(shaderProgram[0], 'uDiffuseType');
+    shaderProgram[0].uSpecularTypeLoc = gl.getUniformLocation(shaderProgram[0], 'uSpecularType');
+    shaderProgram[0].LightConeOutLoc = gl.getUniformLocation(shaderProgram[0], 'uLightConeOut');
+    shaderProgram[0].LightConeInLoc = gl.getUniformLocation(shaderProgram[0], 'uLightConeIn');
+    shaderProgram[0].LightDecayLoc = gl.getUniformLocation(shaderProgram[0], 'uLightDecay');
+    shaderProgram[0].LightTargetLoc = gl.getUniformLocation(shaderProgram[0], 'uLightTarget');
+    shaderProgram[0].LightTypeLoc = gl.getUniformLocation(shaderProgram[0], 'uLightType');
+
+    shaderProgram[0].LightPositionLoc = gl.getUniformLocation(shaderProgram[0], 'uLightPosition');
     shaderProgram[0].LightDirectionLoc = gl.getUniformLocation(shaderProgram[0], 'uLightDirection');
     shaderProgram[0].LightColorLoc = gl.getUniformLocation(shaderProgram[0], 'uLightColor');
     shaderProgram[0].AmbientLightColorLoc = gl.getUniformLocation(shaderProgram[0], 'uAmbientLightColor');
+
+    shaderProgram[0].SpecShineLoc = gl.getUniformLocation(shaderProgram[0], 'uSpecShine');
+    shaderProgram[0].DToonThLoc = gl.getUniformLocation(shaderProgram[0], 'uDToonTh');
+    shaderProgram[0].SToonThLoc = gl.getUniformLocation(shaderProgram[0], 'uSToonTh');
+
     shaderProgram[0].SpecularColorLoc = gl.getUniformLocation(shaderProgram[0], 'uSpecularColor');
-    shaderProgram[0].TexSamplerLoc = gl.getUniformLocation(shaderProgram[0], 'uTexSampler');
     shaderProgram[0].Eye = gl.getUniformLocation(shaderProgram[0], 'uEye');
 
     // data
@@ -266,13 +282,29 @@ Rod.prototype.draw = function(drawingState) {
     gl.uniformMatrix4fv(shaderProgram[0].ViewLoc, false, drawingState.view);
     gl.uniformMatrix4fv(shaderProgram[0].ProjectionLoc, false, drawingState.projection);
     gl.uniformMatrix4fv(shaderProgram[0].NormalMatrixLoc, false, normalM);
+
+    gl.uniform1i(shaderProgram[0].TexSamplerLoc, 1); // so we will store the image texture
+
+    gl.uniform2fv(shaderProgram[0].DiffuseTypeLoc, drawingState.diffuseType);
+    gl.uniform3fv(shaderProgram[0].uSpecularTypeLoc, drawingState.specularType);
+    gl.uniform1f(shaderProgram[0].LightConeOutLoc, drawingState.lightConeOut);
+    gl.uniform1f(shaderProgram[0].LightConeInLoc, drawingState.lightConeIn);
+    gl.uniform1f(shaderProgram[0].LightDecayLoc, drawingState.lightDecay);
+    gl.uniform1f(shaderProgram[0].LightTargetLoc, drawingState.lightTarget);
+    gl.uniform3fv(shaderProgram[0].LightTypeLoc, drawingState.lightType);
+
+    gl.uniform3fv(shaderProgram[0].LightPositionLoc, drawingState.lightPosition);
     gl.uniform3fv(shaderProgram[0].LightDirectionLoc, drawingState.lightDirection);
     gl.uniform3fv(shaderProgram[0].LightColorLoc, drawingState.lightColor);
     gl.uniform3fv(shaderProgram[0].AmbientLightColorLoc, drawingState.ambientLightColor);
+
+    gl.uniform1f(shaderProgram[0].SpecShineLoc, drawingState.specShine);
+    gl.uniform1f(shaderProgram[0].DToonThLoc, drawingState.DToonTh);
+    gl.uniform1f(shaderProgram[0].SToonThLoc, drawingState.SToonTh);
+
     gl.uniform3fv(shaderProgram[0].SpecularColorLoc, drawingState.specularColor);
     gl.uniform3fv(shaderProgram[0].Eye, drawingState.eye);
     
-    gl.uniform1i(shaderProgram[0].TexSamplerLoc, 1); // so we will store the image texture
 
     // connect the attributes to the buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
