@@ -266,13 +266,13 @@ Disc.prototype.draw = function(drawingState) {
 
     gl.uniform3fv(shaderProgram[1].ColorLoc, this.color);
 
-    gl.uniform2fv(shaderProgram[1].DiffuseTypeLoc, drawingState.diffuseType);
-    gl.uniform3fv(shaderProgram[1].uSpecularTypeLoc, drawingState.specularType);
+    gl.uniform2fv(shaderProgram[1].DiffuseTypeLoc, diffuseType);
+    gl.uniform3fv(shaderProgram[1].uSpecularTypeLoc, specularType);
     gl.uniform1f(shaderProgram[1].LightConeOutLoc, drawingState.lightConeOut);
     gl.uniform1f(shaderProgram[1].LightConeInLoc, drawingState.lightConeIn);
     gl.uniform1f(shaderProgram[1].LightDecayLoc, drawingState.lightDecay);
     gl.uniform1f(shaderProgram[1].LightTargetLoc, drawingState.lightTarget);
-    gl.uniform3fv(shaderProgram[1].LightTypeLoc, drawingState.lightType);
+    gl.uniform3fv(shaderProgram[1].LightTypeLoc, lightType);
 
     gl.uniform3fv(shaderProgram[1].LightPositionLoc, drawingState.lightPosition);
     gl.uniform3fv(shaderProgram[1].LightDirectionLoc, drawingState.lightDirection);

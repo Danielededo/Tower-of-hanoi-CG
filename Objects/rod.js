@@ -285,14 +285,14 @@ Rod.prototype.draw = function(drawingState) {
 
     gl.uniform1i(shaderProgram[0].TexSamplerLoc, 1); // so we will store the image texture
 
-    gl.uniform2fv(shaderProgram[0].DiffuseTypeLoc, drawingState.diffuseType);
-    gl.uniform3fv(shaderProgram[0].uSpecularTypeLoc, drawingState.specularType);
+    gl.uniform2fv(shaderProgram[0].DiffuseTypeLoc, diffuseType);
+    gl.uniform3fv(shaderProgram[0].uSpecularTypeLoc, specularType);
     gl.uniform1f(shaderProgram[0].LightConeOutLoc, drawingState.lightConeOut);
     gl.uniform1f(shaderProgram[0].LightConeInLoc, drawingState.lightConeIn);
     gl.uniform1f(shaderProgram[0].LightDecayLoc, drawingState.lightDecay);
     gl.uniform1f(shaderProgram[0].LightTargetLoc, drawingState.lightTarget);
-    gl.uniform3fv(shaderProgram[0].LightTypeLoc, drawingState.lightType);
-
+    gl.uniform3fv(shaderProgram[0].LightTypeLoc, lightType);
+    
     gl.uniform3fv(shaderProgram[0].LightPositionLoc, drawingState.lightPosition);
     gl.uniform3fv(shaderProgram[0].LightDirectionLoc, drawingState.lightDirection);
     gl.uniform3fv(shaderProgram[0].LightColorLoc, drawingState.lightColor);

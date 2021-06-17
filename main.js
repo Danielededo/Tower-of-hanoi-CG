@@ -2,7 +2,12 @@
 var allObjects = [];
 var shaderProgram = new Array();
 
+var lightType;
+var diffuseType;
+var specularType;
+
 var lookRadius = 1.0;
+var gl;
 
 function doMouseWheel(event) {
 	var nLookRadius = lookRadius + event.wheelDelta/1000.0;
@@ -11,18 +16,69 @@ function doMouseWheel(event) {
 	}
 }
 
+function changeLightType(value){
+    switch(value){
+        case "direct":
+            lightType = [1.0, 0.0, 0.0];
+            break;
+        case "point":
+            lightType = [0.0, 1.0, 0.0];
+            break;
+        case "spot":
+            lightType = [0.0, 0.0, 1.0];
+            break;
+    }
+}
+
+function changeDiffuseType(value){
+    switch(value){
+        case "lambert":
+            diffuseType = [1.0, 0.0];
+            break;
+        case "toon":
+            diffuseType = [0.0, 1.0];
+            break;
+        case "none":
+            diffuseType = [0.0, 0.0];
+            break;
+    }
+}
+
+function changeSpecularType(value){
+    switch(value){
+        case "blinn":
+            specularType = [0.0, 1.0, 0.0];
+            break;
+        case "phong":
+            specularType = [1.0, 0.0, 0.0];
+            break;
+        case "toonP":
+            specularType = [1.0, 0.0, 1.0];
+            break;
+        case "toonB":
+            specularType = [0.0, 1.0, 1.0];
+            break;
+        case "none":
+            specularType = [0.0, 0.0, 0.0];
+            break;
+    }
+}
+
 async function main() {
 
     // create canvas
     var canvas = document.getElementById("my-canvas");
     canvas.addEventListener("mousewheel", doMouseWheel, false); // zoom
-    var gl = canvas.getContext('webgl2'); // gl should not be a global variable and it should be wrapped in object
+    gl = canvas.getContext('webgl2'); // gl should not be a global variable and it should be wrapped in object
     // drawingState defined in allObjects.js so that you could draw many animations on one web page.
     if (!gl) {
         document.write('Your browser does not support WebGL, please use another browser.');
         return;
     }
 
+    lightType = [1.0, 0.0, 0.0];
+    diffuseType = [1.0, 0.0];
+    specularType = [0.0, 1.0, 0.0];
     // start a new game through the constructor
     var game = new Game();
 
@@ -80,9 +136,9 @@ async function main() {
 
         // here we compute the view matrix (through the camera matrix) and the projection matrix (through the function perspective)
         //  view matrix will be passed to the single objects for the computation of its viewWorld matrix (modelViewM)
-        var eye = [lookRadius*0, lookRadius*150, lookRadius*300]; // position of the camera
-        var target = [0, 0, 0];
-        var up = [0, 1, 0];
+        var eye = [lookRadius*0.0, lookRadius*150.0, lookRadius*300.0]; // position of the camera
+        var target = [0.0, 0.0, 0.0];
+        var up = [0.0, 1.0, 0.0];
         var cameraM = twgl.m4.lookAt(eye, target, up); // Mc = camera matrix
 
         // Mv = (Mc)^-1
@@ -95,27 +151,23 @@ async function main() {
         var fieldOfView = Math.PI / 4;
         var projectionM = twgl.m4.perspective(fieldOfView, 2, 10, 1000); // Mp = perspective projection
 
-
-        var diffuseType = [1,0];
-        var specularType = [1,0,0];
         var lightConeOut = 30.0;
         var lightConeIn = 0.8;
         var lightDecay = 0.0;
         var lightTarget = 6.1;
-        var lightType = [1,0,0];
 
-        var lightPosition = [-1.5, 1, 1]; // the position of a single light
+        var lightPosition = [-1.5, 1.0, 1.0]; // the position of a single light
 
         var lightDirection = twgl.v3.subtract(lightPosition, target);
 
-        var ambientLightColor = [1, 1, 1];
+        var ambientLightColor = [1.0, 1.0, 1.0];
 
 
-        var specularColor = [1, 1, 1];
+        var specularColor = [1.0, 1.0, 1.0];
 
-        var diffuseColor = [1, 1, 1];
+        var diffuseColor = [1.0, 1.0, 1.0];
 
-        var specShine = 100.0;
+        var specShine = 0.7;
 
         var DToonTh = 0.5;
 
@@ -128,13 +180,10 @@ async function main() {
             gl : gl,
             projection : projectionM, // perspective projection matrix
             view : viewM, // view matrix
-            diffuseType : diffuseType,
-            specularType : specularType,
             lightConeOut : lightConeOut,
             lightConeIn : lightConeIn,
             lightDecay : lightDecay,
             lightTarget : lightTarget,
-            lightType : lightType,
             lightPosition : lightPosition,
             lightDirection : lightDirection,
             lightColor: lightColor,
