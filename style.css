@@ -1,19 +1,64 @@
-.button {
+body {
+	background-color: rgb(250, 250, 250);
+	font-family: "Consolas", Times, serif;
+}
 
-    font-family: "Consolas", Times, serif;
-    background-color: #282828;
+.button {
+    background-color: rgb(68, 68, 68);
 	border: none;
 	color: white;
-	padding: 15px 32px;
+	padding: 15px 25px;
 	text-align: center;
 	text-decoration: none;
+	font-weight: bold;
 	display: inline-block;
-	font-size: 16px;
+	font-size: 14px;
 	margin: 4px 2px;
 	cursor: pointer;
 	border-radius: 25px;
 }
 
-.button:hover {
-  	background-color: #ff0000;
+#button-from1to2:hover, #button-from1to3:hover {
+  	background-color: red;
+}
+#button-from2to1:hover, #button-from2to3:hover {
+	background-color: green;
+}
+#button-from3to1:hover, #button-from3to2:hover {
+	background-color: blue;
+}
+
+#rightTable {
+	border-collapse: collapse;
+	vertical-align: middle;
+}
+#moveDiscs {
+	padding: 1px;
+	background-color: lightgrey;
+	text-align: center;
+}
+#withButtons{
+	border-bottom: 1px solid black;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+	border-top: 0.5px dashed black;
+}
+#withoutButtons {
+	border-top: 1px solid black;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+}
+
+#userBottomTable {
+	background-color: lightgrey;
+	width: 50%;
+}
+#userBottomTable td {
+	width: 33.3%;
+	padding: 10px;
+	text-align: center;
+}
+#userBottomTable th {
+	padding: 5px;
+	text-align: center;
 }

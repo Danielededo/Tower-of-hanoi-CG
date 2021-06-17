@@ -16,21 +16,82 @@
         </canvas>
     </td>
 
-    <td>
-        <button class="button" id="button-from1to2" type="button">1st &#10132; 2nd (or 'a')</button>
-        <button class="button" id="button-from1to3" type="button">1st &#10132; 3rd (or 'q')</button>
-        <br/>
-        <br/>
-        <button class="button" id="button-from2to1" type="button">2nd &#10132; 1st (or 'd')</button>
-        <button class="button" id="button-from2to3" type="button">2nd &#10132; 3rd (or 's')</button>
-        <br/>
-        <br/>
-        <button class="button" id="button-from3to1" type="button">3rd &#10132; 1st (or 't')</button>
-        <button class="button" id="button-from3to2" type="button">3rd &#10132; 2nd (or 'f')</button>
+    <td id="rightTable">
+        <table id="moveDiscs">
+            <tr><td id="withoutButtons">
+                <b>Move from the 1st disc:</b>
+            </td></tr>
+            <tr><td id="withButtons">
+                <button class="button" id="button-from1to2" type="button">1st &#10132; 2nd (or 'a')</button>
+                <button class="button" id="button-from1to3" type="button">1st &#10132; 3rd (or 'q')</button>
+            </td></tr>
+            <tr><td id="withoutButtons">
+                <b>Move from the 2nd disc:</b>
+            </td></tr>
+            <tr><td id="withButtons">
+                <button class="button" id="button-from2to1" type="button">2nd &#10132; 1st (or 'd')</button>
+                <button class="button" id="button-from2to3" type="button">2nd &#10132; 3rd (or 's')</button>
+            </td></tr>
+            <tr><td id="withoutButtons">
+                <b>Move from the 3rd disc:</b>
+            </td></tr>
+            <tr><td id="withButtons">
+                <button class="button" id="button-from3to1" type="button">3rd &#10132; 1st (or 't')</button>
+                <button class="button" id="button-from3to2" type="button">3rd &#10132; 2nd (or 'f')</button>
+            </td></tr>
+        </table>
     </td>
     </table>
-    
-    <table border="1" style="background-color: grey;">
+
+
+    <table class="table" id="userBottomTable" border="1">
+        <tr>
+            <th> Light type </th>
+            <th> Diffuse type</th>
+            <th> Specular type</th>
+        </tr>
+        <tr>
+            <!-- Light type -->
+            <td>
+                <div id="xyz">
+                    <select id="lightType">
+                        <option value="direct">Direct</option>
+                        <option value="point">Point</option>
+                        <option value="spot">Spot</option>
+                        <option value="none">None</option>
+                    </select>
+                </div>
+            </td>
+
+            <!-- Diffuse type -->
+            <td>
+                <div id="xyz">
+                    <select id="diffuseType">
+                        <option value="lambert">Lambert</option>
+                        <option value="toon">Toon</option>
+                        <option value="none">None</option>
+                    </select>
+                </div>
+            </td>
+
+            <!-- Specular type -->
+            <td>
+                <div id="xyz">
+                    <select id="specularType">
+                        <option value="phong">Phong</option>
+                        <option value="blinn">Blinn</option>
+                        <option value="toonP">Toon (Phong)</option>
+                        <option value="toonB">Toon (Blinn)</option>
+                        <option value="none">None</option>
+                    </select>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+
+<!--
+    <table class="table" border="1">
         <tr>
           <td><div style="text-align:center"><select id="lightEditNo" onchange="showLight(this.value);">
             <option value="LA">Light A</option>
@@ -225,6 +286,8 @@
             <td><div id="S42"><input type="range" min="0" max="100" id="SToonTh"></div></td>
         </tr>
       </table>
+-->
+
 
     <!-- load libraries-->
     <script src="./Libraries/quaternion.min.js"></script>
