@@ -7,23 +7,23 @@ in vec3 fPosition;
 
 uniform vec3 uColor; // the object's color
 
-uniform vec2 uDiffuseType; // ok
-uniform vec3 uSpecularType; // ok
+uniform vec2 uDiffuseType; 
+uniform vec3 uSpecularType; 
 
-uniform float uLightConeOut; // ok
-uniform float uLightConeIn; // ok
-uniform float uLightDecay; // ok
-uniform float uLightTarget; // ok
-uniform vec3 uLightType; // ok
+uniform float uLightConeOut; 
+uniform float uLightConeIn; 
+uniform float uLightDecay; 
+uniform float uLightTarget; 
+uniform vec3 uLightType; 
 uniform vec3 uLightPosition;
 uniform vec3 uLightDirection;
 uniform vec3 uLightColor;
 
 uniform vec3 uAmbientLightColor;
-uniform vec3 uDiffuseColor; // ok
-uniform float uSpecShine; // ok
-uniform float uDToonTh; // ok
-uniform float uSToonTh; // ok
+uniform vec3 uDiffuseColor; 
+uniform float uSpecShine; 
+uniform float uDToonTh; 
+uniform float uSToonTh; 
 uniform vec3 uSpecularColor;
 uniform vec3 uEye;
 
