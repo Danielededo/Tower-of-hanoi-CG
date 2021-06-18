@@ -273,7 +273,12 @@ Disc.prototype.draw = function(drawingState) {
     gl.uniform3fv(shaderProgram[1].LightPositionLoc, drawingState.lightPosition);
     gl.uniform3fv(shaderProgram[1].LightDirectionLoc, drawingState.lightDirection);
     gl.uniform3fv(shaderProgram[1].LightColorLoc, drawingState.lightColor);
-    gl.uniform3fv(shaderProgram[1].AmbientLightColorLoc, drawingState.ambientLightColor);
+
+    var col = document.getElementById("ambientLightColor").value.substring(1,7);
+    var R = parseInt(col.substring(0,2) ,16) / 255;
+    var G = parseInt(col.substring(2,4) ,16) / 255;
+    var B = parseInt(col.substring(4,6) ,16) / 255;
+    gl.uniform3f(shaderProgram[1].AmbientLightColorLoc, R,G,B);
 
     gl.uniform3fv(shaderProgram[1].DiffuseColorLoc, drawingState.diffuseColor);
     gl.uniform1f(shaderProgram[1].SpecShineLoc, drawingState.specShine);

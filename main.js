@@ -156,9 +156,6 @@ async function main() {
 
         var lightDirection = [-1.0, 1.0, 1.0]; // the direction of the direct light
 
-        var ambientLightColor = [1.0, 1.0, 1.0];
-
-
         var specularColor = [0.4, 0.4, 0.4];
 
         var diffuseColor = [0.6, 0.6, 0.6];
@@ -181,7 +178,6 @@ async function main() {
             lightPosition : lightPosition,
             lightDirection : lightDirection,
             lightColor: lightColor,
-            ambientLightColor : ambientLightColor,
             specularColor : specularColor,
             diffuseColor : diffuseColor,
             specShine : specShine,
