@@ -60,8 +60,6 @@ Rod.prototype.initialize = function(drawingState) {
 
     shaderProgram[0].DiffuseTypeLoc = gl.getUniformLocation(shaderProgram[0], 'uDiffuseType');
     shaderProgram[0].uSpecularTypeLoc = gl.getUniformLocation(shaderProgram[0], 'uSpecularType');
-    shaderProgram[0].LightConeOutLoc = gl.getUniformLocation(shaderProgram[0], 'uLightConeOut');
-    shaderProgram[0].LightConeInLoc = gl.getUniformLocation(shaderProgram[0], 'uLightConeIn');
     shaderProgram[0].LightDecayLoc = gl.getUniformLocation(shaderProgram[0], 'uLightDecay');
     shaderProgram[0].LightTargetLoc = gl.getUniformLocation(shaderProgram[0], 'uLightTarget');
     shaderProgram[0].LightTypeLoc = gl.getUniformLocation(shaderProgram[0], 'uLightType');
@@ -287,11 +285,9 @@ Rod.prototype.draw = function(drawingState) {
 
     gl.uniform2fv(shaderProgram[0].DiffuseTypeLoc, diffuseType);
     gl.uniform3fv(shaderProgram[0].uSpecularTypeLoc, specularType);
-    gl.uniform1f(shaderProgram[0].LightConeOutLoc, drawingState.lightConeOut);
-    gl.uniform1f(shaderProgram[0].LightConeInLoc, drawingState.lightConeIn);
     gl.uniform1f(shaderProgram[0].LightDecayLoc, drawingState.lightDecay);
     gl.uniform1f(shaderProgram[0].LightTargetLoc, drawingState.lightTarget);
-    gl.uniform3fv(shaderProgram[0].LightTypeLoc, lightType);
+    gl.uniform2fv(shaderProgram[0].LightTypeLoc, lightType);
     
     gl.uniform3fv(shaderProgram[0].LightPositionLoc, drawingState.lightPosition);
     gl.uniform3fv(shaderProgram[0].LightDirectionLoc, drawingState.lightDirection);

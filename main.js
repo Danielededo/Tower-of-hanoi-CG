@@ -19,13 +19,10 @@ function doMouseWheel(event) {
 function changeLightType(value){
     switch(value){
         case "direct":
-            lightType = [1.0, 0.0, 0.0];
+            lightType = [1.0, 0.0];
             break;
         case "point":
-            lightType = [0.0, 1.0, 0.0];
-            break;
-        case "spot":
-            lightType = [0.0, 0.0, 1.0];
+            lightType = [0.0, 1.0];
             break;
     }
 }
@@ -76,7 +73,7 @@ async function main() {
         return;
     }
 
-    lightType = [1.0, 0.0, 0.0];
+    lightType = [1.0, 0.0];
     diffuseType = [1.0, 0.0];
     specularType = [0.0, 1.0, 0.0];
     // start a new game through the constructor
@@ -152,8 +149,6 @@ async function main() {
         var aspectRatio = canvas.width/canvas.height;
         var projectionM = twgl.m4.perspective(fieldOfView, aspectRatio, 0.1, 100); // Mp = perspective projection
 
-        var lightConeOut = 30.0;
-        var lightConeIn = 0.8; // between 0 e 1
         var lightDecay = 0.5;
         var lightTarget = 6.1;
 
@@ -181,8 +176,6 @@ async function main() {
             gl : gl,
             projection : projectionM, // perspective projection matrix
             view : viewM, // view matrix
-            lightConeOut : lightConeOut,
-            lightConeIn : lightConeIn,
             lightDecay : lightDecay,
             lightTarget : lightTarget,
             lightPosition : lightPosition,

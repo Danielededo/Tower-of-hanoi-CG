@@ -10,11 +10,9 @@ uniform vec3 uColor; // the object's color
 uniform vec2 uDiffuseType; 
 uniform vec3 uSpecularType; 
 
-uniform float uLightConeOut; 
-uniform float uLightConeIn; 
 uniform float uLightDecay; 
 uniform float uLightTarget; 
-uniform vec3 uLightType; 
+uniform vec2 uLightType; 
 uniform vec3 uLightPosition;
 uniform vec3 uLightDirection;
 uniform vec3 uLightColor;
@@ -31,38 +29,29 @@ out vec4 myOutputColor;
 
 // light direction computation
 vec3 compLightDir() {
+
 	//lights
 	// -> Point
 	vec3 pointLightDir = normalize(uLightPosition - fPosition);
 	// -> Direct
 	vec3 directLightDir = uLightDirection;
-	// -> Spot
-	vec3 spotLightDir = normalize(uLightPosition - fPosition);
 
 	return            directLightDir * uLightType.x +
-					  pointLightDir * uLightType.y +
-					  spotLightDir * uLightType.z;
+					  pointLightDir * uLightType.y;
 }
 
 // light color computation
 vec4 compLightColor(vec3 lightDir, vec4 lightCol) {
-	float lightCosOut = cos(radians(uLightConeOut / 2.0));
-	float lightCosIn = cos(radians(uLightConeOut * uLightConeIn / 2.0));
 
 	//lights
 	// -> Point
 	vec4 pointLightCol = lightCol * pow(uLightTarget / length(uLightPosition - fPosition), uLightDecay);
 	// -> Direct
 	vec4 directLightCol = lightCol;
-	// -> Spot
-	vec3 spotLightDir = normalize(uLightPosition - fPosition);
-	float CosAngle = dot(spotLightDir, lightDir);
-	vec4 spotLightCol = lightCol * pow(uLightTarget / length(uLightPosition - fPosition), uLightDecay) *
-						clamp((CosAngle - lightCosOut) / (lightCosIn - lightCosOut), 0.0, 1.0);
+
 	// ----> Select final component
 	return          directLightCol * uLightType.x +
-					pointLightCol * uLightType.y +
-					spotLightCol * uLightType.z;
+					pointLightCol * uLightType.y;
 }
 
 // Diffuse computation

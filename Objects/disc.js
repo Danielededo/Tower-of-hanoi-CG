@@ -48,8 +48,6 @@ Disc.prototype.initialize = function(drawingState) {
 
     shaderProgram[1].DiffuseTypeLoc = gl.getUniformLocation(shaderProgram[1], 'uDiffuseType');
     shaderProgram[1].uSpecularTypeLoc = gl.getUniformLocation(shaderProgram[1], 'uSpecularType');
-    shaderProgram[1].LightConeOutLoc = gl.getUniformLocation(shaderProgram[1], 'uLightConeOut');
-    shaderProgram[1].LightConeInLoc = gl.getUniformLocation(shaderProgram[1], 'uLightConeIn');
     shaderProgram[1].LightDecayLoc = gl.getUniformLocation(shaderProgram[1], 'uLightDecay');
     shaderProgram[1].LightTargetLoc = gl.getUniformLocation(shaderProgram[1], 'uLightTarget');
     shaderProgram[1].LightTypeLoc = gl.getUniformLocation(shaderProgram[1], 'uLightType');
@@ -268,11 +266,9 @@ Disc.prototype.draw = function(drawingState) {
 
     gl.uniform2fv(shaderProgram[1].DiffuseTypeLoc, diffuseType);
     gl.uniform3fv(shaderProgram[1].uSpecularTypeLoc, specularType);
-    gl.uniform1f(shaderProgram[1].LightConeOutLoc, drawingState.lightConeOut);
-    gl.uniform1f(shaderProgram[1].LightConeInLoc, drawingState.lightConeIn);
     gl.uniform1f(shaderProgram[1].LightDecayLoc, drawingState.lightDecay);
     gl.uniform1f(shaderProgram[1].LightTargetLoc, drawingState.lightTarget);
-    gl.uniform3fv(shaderProgram[1].LightTypeLoc, lightType);
+    gl.uniform2fv(shaderProgram[1].LightTypeLoc, lightType);
 
     gl.uniform3fv(shaderProgram[1].LightPositionLoc, drawingState.lightPosition);
     gl.uniform3fv(shaderProgram[1].LightDirectionLoc, drawingState.lightDirection);
