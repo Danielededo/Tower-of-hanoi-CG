@@ -21,10 +21,10 @@ var discIndex = 1; // for the constructor of disc
 Disc = function Disc(name, position, outerDiameter, innerDiameter, height, precision, color) {
     this.name = name || 'disc' + discIndex++;;
     this.position = position || [0.0, 0.0, 0.0];
-    this.outerDiameter = outerDiameter || 60;
-    this.innerDiameter = innerDiameter || 20;
-    this.height = height || 10;
-    this.precision = precision || 50;
+    this.outerDiameter = outerDiameter || 0.6;
+    this.innerDiameter = innerDiameter || 0.2;
+    this.height = height || 0.1;
+    this.precision = precision || 0.5;
     this.color = color || normalizeRgb(0, 0, 0); // black by default
 }
 

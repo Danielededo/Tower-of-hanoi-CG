@@ -128,14 +128,14 @@ void main() {
     vec3 eyedirVec = normalize(uEye - fPosition);
 
     // lights
-    vec3 lightDir = compLightDir();
-    vec4 lightColor = compLightColor(lightDir, lightCol);
-
+    vec3 lightDirection = compLightDir();
+    vec4 lightColor = compLightColor(lightDirection, lightCol);
+	
     // diffuse
-    vec4 diffuse = compDiffuse(lightDir, lightColor, normalVec, diffColor);
+    vec4 diffuse = compDiffuse(lightDirection, lightColor, normalVec, diffColor);
 
     // specular
-    vec4 specular = compSpecular(lightDir, lightColor, normalVec, eyedirVec, specularCol);
+    vec4 specular = compSpecular(lightDirection, lightColor, normalVec, eyedirVec, specularCol);
 
     // ambient
     vec4 ambient = compAmbient(ambLightCol, ambMatColor);

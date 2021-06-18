@@ -31,9 +31,9 @@ var rodIndex = 1; // for the constructor of rod
 Rod = function Rod(name, position, diameter, height, precision, color) {
     this.name = name || 'rod' + rodIndex++;
     this.position = position || [0.0, 0.0, 0.0];
-    this.diameter = diameter || 20;
-    this.height = height || 60;
-    this.precision = precision || 50;
+    this.diameter = diameter || 0.2;
+    this.height = height || 0.6;
+    this.precision = precision || 0.5;
     this.color = color || normalizeRgb(0, 0, 0); // Black by default. However I use image texture for
     // rods so this.color is not used
     this.stackOfDiscs = []; // store discs

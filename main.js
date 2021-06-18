@@ -11,7 +11,7 @@ var gl;
 
 function doMouseWheel(event) {
 	var nLookRadius = lookRadius + event.wheelDelta/1000.0;
-	if((nLookRadius > 0.5) && (nLookRadius < 2.0)) {
+	if((nLookRadius > 0.6) && (nLookRadius < 3.0)) {
 		lookRadius = nLookRadius;
 	}
 }
@@ -136,7 +136,7 @@ async function main() {
 
         // here we compute the view matrix (through the camera matrix) and the projection matrix (through the function perspective)
         //  view matrix will be passed to the single objects for the computation of its viewWorld matrix (modelViewM)
-        var eye = [lookRadius*0.0, lookRadius*150.0, lookRadius*300.0]; // position of the camera
+        var eye = [lookRadius*0.0, lookRadius*1.5, lookRadius*3.0]; // position of the camera
         var target = [0.0, 0.0, 0.0];
         var up = [0.0, 1.0, 0.0];
         var cameraM = twgl.m4.lookAt(eye, target, up); // Mc = camera matrix
@@ -149,29 +149,30 @@ async function main() {
             viewM = twgl.m4.multiply(ab.getMatrix(), viewM); // rotation matrix multiplyed by view matrix(in viewM)
 
         var fieldOfView = Math.PI / 4;
-        var projectionM = twgl.m4.perspective(fieldOfView, 2, 10, 1000); // Mp = perspective projection
+        var aspectRatio = canvas.width/canvas.height;
+        var projectionM = twgl.m4.perspective(fieldOfView, aspectRatio, 0.1, 100); // Mp = perspective projection
 
         var lightConeOut = 30.0;
-        var lightConeIn = 0.8;
-        var lightDecay = 0.0;
+        var lightConeIn = 0.8; // between 0 e 1
+        var lightDecay = 0.5;
         var lightTarget = 6.1;
 
-        var lightPosition = [-1.5, 1.0, 1.0]; // the position of a single light
+        var lightPosition = [2.0, 3.0, 5.0]; // the position of the point and spot light
 
-        var lightDirection = twgl.v3.subtract(lightPosition, target);
+        var lightDirection = [-1.0, 1.0, 1.0]; // the direction of the direct light
 
         var ambientLightColor = [1.0, 1.0, 1.0];
 
 
-        var specularColor = [1.0, 1.0, 1.0];
+        var specularColor = [0.4, 0.4, 0.4];
 
         var diffuseColor = [1.0, 1.0, 1.0];
 
         var specShine = 0.7;
 
-        var DToonTh = 0.5;
+        var DToonTh = 0.8;
 
-        var SToonTh = 0.9;
+        var SToonTh = 0.2;
 
         var lightColor = [0.5, 0.5, 0.5]; // white light
 
