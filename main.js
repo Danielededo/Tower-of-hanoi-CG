@@ -75,7 +75,7 @@ async function main() {
 
     lightType = [1.0, 0.0];
     diffuseType = [1.0, 0.0];
-    specularType = [0.0, 1.0, 0.0];
+    specularType = [1.0, 0.0, 0.0];
     // start a new game through the constructor
     var game = new Game();
 
@@ -149,10 +149,10 @@ async function main() {
         var aspectRatio = canvas.width/canvas.height;
         var projectionM = twgl.m4.perspective(fieldOfView, aspectRatio, 0.1, 100); // Mp = perspective projection
 
-        var lightDecay = 0.5;
-        var lightTarget = 6.1;
+        var lightDecay = 0.3;
+        var lightTarget = 1.0;
 
-        var lightPosition = [2.0, 3.0, 5.0]; // the position of the point and spot light
+        var lightPosition = [2.0, 1.0, 1.0]; // the position of the point and spot light
 
         var lightDirection = [-1.0, 1.0, 1.0]; // the direction of the direct light
 
@@ -161,7 +161,7 @@ async function main() {
 
         var specularColor = [0.4, 0.4, 0.4];
 
-        var diffuseColor = [1.0, 1.0, 1.0];
+        var diffuseColor = [0.6, 0.6, 0.6];
 
         var specShine = 0.7;
 
@@ -169,7 +169,7 @@ async function main() {
 
         var SToonTh = 0.2;
 
-        var lightColor = [0.5, 0.5, 0.5]; // white light
+        var lightColor = [0.5, 0.5, 0.5];
 
         // make a real drawing state for drawing
         drawingState = {
@@ -198,7 +198,7 @@ async function main() {
 
         // return the frame buffer pointer to the system, now we can draw on the screen
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.viewport(0, 0, canvas.width, canvas.height); // never forget to reset viewport as canvas's size
+        gl.viewport(0, 0, canvas.width, canvas.height);
 
         // let's clear the screen as a whiteboard
         gl.clearColor(1.0, 1.0, 1.0, 1.0);
