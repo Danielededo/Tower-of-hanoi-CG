@@ -47,9 +47,9 @@
     <table class="table" id="userBottomTable" border="1">
         <tr>
             <th> Light type </th>
-            <th> Diffuse type</th>
+            <th> Ambient light</th>
+            <th>Diffuse type</th>
             <th> Specular type</th>
-            <th> Ambient ambient</th>
         </tr>
         <tr>
             <!-- Light type -->
@@ -58,8 +58,14 @@
                     <select id="lightType" onchange="changeLightType(this.value);">
                         <option value="direct">Direct</option>
                         <option value="point">Point</option>
-                        <!--<option value="spot">Spot</option>-->
                     </select>
+                </div>
+            </td>
+
+            <!-- Ambient light -->
+            <td>
+                <div id="xyz">
+                    <input type="color" id="ambientLightColor" value="#ffffff">
                 </div>
             </td>
 
@@ -86,9 +92,6 @@
                     </select>
                 </div>
             </td>
-
-            <!-- Ambient ambient -->
-            <td><div id="xyz"><input type="color" id="ambientLightColor" value="#ffffff"></div></td>
         </tr>
     </table>
 
