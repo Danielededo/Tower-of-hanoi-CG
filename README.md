@@ -26,4 +26,4 @@ The projection type adopted in this project is PERSPECTIVE PROJECTION.
 
 ## Screenshot
 Here follows a screenshot of the application:
-![](/screenshot.PNG)
+![](screenshot.pjg)
