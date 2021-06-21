@@ -7,7 +7,9 @@ in vec3 fPosition;
 in vec2 fTexCoord;
 
 uniform sampler2D uTexSampler;
-
+uniform float uRodTextureLevel;
+uniform vec3 uColor;
+uniform vec3 uDiffuseColor;
 uniform vec2 uDiffuseType; 
 uniform vec3 uSpecularType; 
 
@@ -107,8 +109,8 @@ void main() {
 
     vec4 lightCol = vec4(uLightColor, 1.0);
     vec4 texcol = texture(uTexSampler,fTexCoord);
-    vec4 diffColor = texcol;
-    vec4 ambMatColor = texcol;
+    vec4 diffColor = vec4(uDiffuseColor,1.0) * (1.0 - uRodTextureLevel) + texcol * uRodTextureLevel;
+    vec4 ambMatColor = vec4(uColor,1.0) * (1.0 - uRodTextureLevel) + texcol * uRodTextureLevel;
     vec4 ambLightCol = vec4(uAmbientLightColor, 1.0);
     vec4 specularCol = vec4(uSpecularColor, 1.0);
     vec3 normalVec = normalize(fNormal);

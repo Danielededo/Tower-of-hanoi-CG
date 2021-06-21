@@ -50,11 +50,12 @@
             <th> Ambient light</th>
             <th>Diffuse type</th>
             <th> Specular type</th>
+            <th> Texture level</th>
         </tr>
         <tr>
             <!-- Light type -->
             <td>
-                <div id="xyz">
+                <div>
                     <select id="lightType" onchange="changeLightType(this.value);">
                         <option value="direct">Direct</option>
                         <option value="point">Point</option>
@@ -64,14 +65,14 @@
 
             <!-- Ambient light -->
             <td>
-                <div id="xyz">
+                <div >
                     <input type="color" id="ambientLightColor" value="#ffffff">
                 </div>
             </td>
 
             <!-- Diffuse type -->
             <td>
-                <div id="xyz">
+                <div >
                     <select id="diffuseType" onchange="changeDiffuseType(this.value);">
                         <option value="lambert">Lambert</option>
                         <option value="toon">Toon</option>
@@ -82,7 +83,7 @@
 
             <!-- Specular type -->
             <td>
-                <div id="xyz">
+                <div >
                     <select id="specularType" onchange="changeSpecularType(this.value);">
                         <option value="phong">Phong</option>
                         <option value="blinn">Blinn</option>
@@ -91,6 +92,10 @@
                         <option value="none">None</option>
                     </select>
                 </div>
+            </td>
+            <td>
+                <div>
+                    <input type="range" min="0" max="100" id="rodTextureLevel" value="100"></div>
             </td>
         </tr>
     </table>

@@ -69,6 +69,10 @@ Rod.prototype.initialize = function(drawingState) {
     shaderProgram[0].LightColorLoc = gl.getUniformLocation(shaderProgram[0], 'uLightColor');
     shaderProgram[0].AmbientLightColorLoc = gl.getUniformLocation(shaderProgram[0], 'uAmbientLightColor');
 
+    shaderProgram[0].RodTextureLevelLoc = gl.getUniformLocation(shaderProgram[0], 'uRodTextureLevel');
+    shaderProgram[0].ColorLoc = gl.getUniformLocation(shaderProgram[0], 'uColor');
+
+    shaderProgram[0].DiffuseColorLoc = gl.getUniformLocation(shaderProgram[0], 'uDiffuseColor');
     shaderProgram[0].SpecShineLoc = gl.getUniformLocation(shaderProgram[0], 'uSpecShine');
     shaderProgram[0].DToonThLoc = gl.getUniformLocation(shaderProgram[0], 'uDToonTh');
     shaderProgram[0].SToonThLoc = gl.getUniformLocation(shaderProgram[0], 'uSToonTh');
@@ -292,6 +296,8 @@ Rod.prototype.draw = function(drawingState) {
     gl.uniform3fv(shaderProgram[0].LightPositionLoc, drawingState.lightPosition);
     gl.uniform3fv(shaderProgram[0].LightDirectionLoc, drawingState.lightDirection);
     gl.uniform3fv(shaderProgram[0].LightColorLoc, drawingState.lightColor);
+
+    gl.uniform3fv(shaderProgram[0].ColorLoc, this.color);
     
     var col = document.getElementById("ambientLightColor").value.substring(1,7);
     var R = parseInt(col.substring(0,2) ,16) / 255;
@@ -299,6 +305,10 @@ Rod.prototype.draw = function(drawingState) {
     var B = parseInt(col.substring(4,6) ,16) / 255;
     gl.uniform3f(shaderProgram[0].AmbientLightColorLoc, R,G,B);
 
+    var text = document.getElementById("rodTextureLevel").value/100.0;
+    gl.uniform1f(shaderProgram[0].RodTextureLevelLoc, text);
+
+    gl.uniform3fv(shaderProgram[0].DiffuseColorLoc, drawingState.diffuseColor);
     gl.uniform1f(shaderProgram[0].SpecShineLoc, drawingState.specShine);
     gl.uniform1f(shaderProgram[0].DToonThLoc, drawingState.DToonTh);
     gl.uniform1f(shaderProgram[0].SToonThLoc, drawingState.SToonTh);
