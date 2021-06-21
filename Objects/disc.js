@@ -2,21 +2,16 @@
 
 var Disc = undefined;
 
-// As to rod, since every rod is identical, we could put vertexPos, normal and such things outside function init
-// so that we only create buffers once for every rod to save time.
-// As to discs, their size are different so data in buffers varies. We have to use this.vertexPos, this.normal and
-// so on inside function init.
-
 var discIndex = 1; // for the constructor of disc
 /**
  * constructor for square Disc
  * @param name: a unique name
- * @param position: the position of the center of the ground in world coordinate
+ * @param position: the position of the center
  * @param outerDiameter: outer diameter of the top face and the bottom face
  * @param innerDiameter: inner diameter of the top face and the bottom face
  * @param height: height of disc
  * @param precision: the number of triangles in the top face to simulate a circle
- * @param color: a 3 dimension Float32Array storing r, g, b value ranged from 0 to 1 for shaders
+ * @param color: a 3 dimension Float32Array storing r, g, b values ranged from 0 to 1 for shaders
  */
 Disc = function Disc(name, position, outerDiameter, innerDiameter, height, precision, color) {
     this.name = name || 'disc' + discIndex++;;
@@ -28,13 +23,9 @@ Disc = function Disc(name, position, outerDiameter, innerDiameter, height, preci
     this.color = color || normalizeRgb(0, 0, 0); // black by default
 }
 
-/**
- * compile the corresponding shader program and generate all data unchanged between two frames
- */
 Disc.prototype.initialize = function(drawingState) {
     var gl = drawingState.gl;
 
-    // with the vertex shader, we need to pass it positions as an attribute - so set up that communication
     shaderProgram[1].PositionAttribute = gl.getAttribLocation(shaderProgram[1], 'vPosition'); // vPosition represents the position of the primitives
     shaderProgram[1].NormalAttribute = gl.getAttribLocation(shaderProgram[1], 'vNormal'); // vNormal represents the normals of the primitives
 
@@ -43,6 +34,7 @@ Disc.prototype.initialize = function(drawingState) {
     shaderProgram[1].ViewLoc = gl.getUniformLocation(shaderProgram[1], 'uView');
     shaderProgram[1].ProjectionLoc = gl.getUniformLocation(shaderProgram[1], 'uProjection');
     shaderProgram[1].NormalMatrixLoc = gl.getUniformLocation(shaderProgram[1], 'uNormal');
+    
     // fragment shader uniforms
     shaderProgram[1].ColorLoc = gl.getUniformLocation(shaderProgram[1], 'uColor');
 
@@ -56,7 +48,6 @@ Disc.prototype.initialize = function(drawingState) {
     shaderProgram[1].LightDirectionLoc = gl.getUniformLocation(shaderProgram[1], 'uLightDirection');
     shaderProgram[1].LightColorLoc = gl.getUniformLocation(shaderProgram[1], 'uLightColor');
     shaderProgram[1].AmbientLightColorLoc = gl.getUniformLocation(shaderProgram[1], 'uAmbientLightColor');
-
     
     shaderProgram[1].DiffuseColorLoc = gl.getUniformLocation(shaderProgram[1], 'uDiffuseColor');
     shaderProgram[1].SpecShineLoc = gl.getUniformLocation(shaderProgram[1], 'uSpecShine');
@@ -81,20 +72,10 @@ Disc.prototype.initialize = function(drawingState) {
     gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.normal), gl.STATIC_DRAW); // normal data are placed inside the buffer
 
-    // here no texture
+    // for the disc we have no texture
 }
 
-/**
- * create a disc in model coordinate <br/>
- * People use 3ds Max, cinema 4d or other tools to create models in industry but I do not have any tools so I have 
- * to create models by JavaScript codes. <br/>
- * All models are created before the drawing procedure, so if you want to shorten the waiting time before you see
- * anything on screen, you could use any tool mentioned above to draw a rod (3 rods are identical so you could only
- * draw one of them) and 4 discs and export 5 separate WaveFront obj files. Then you could use create_vertex_list.py
- * to extract concrete numbers stored in obj files and copy there numbers into functions init for variables 
- * vertexPos, normal and texCoord.
- * @return: a Float32Array contains all vertices
- */
+// create a disc in model coordinate
 Disc.prototype.generateLocalPosition = function() {
     var outerRadius = this.outerDiameter / 2;
     var innerRadius = this.innerDiameter / 2;
@@ -103,7 +84,7 @@ Disc.prototype.generateLocalPosition = function() {
     // we need 8 because there are 2+2+2+2 triangles in every cycle
     // we need 8 * this.precision triangles to depict a disc
     // every triangle has 3 vertices, so we need to multiply 3
-    // every point needs 3 numbers to describe its position in 3D coordinate
+    // every point needs 3 numbers to describe its position in 3D coordinates
 
     for (var i = 0; i < this.precision; i++) {
         // for the bottom face the mesh used is triangle strip
@@ -190,10 +171,7 @@ Disc.prototype.generateLocalPosition = function() {
     return position;
 }
 
-/**
- * generate all normal vectors of a disc's surface
- * @return: a Float32Array contains every vertical's normal
-*/
+// generate all normal vectors of a disc surface
 Disc.prototype.generateNormal = function() {
     var normal = new Float32Array(3 * 3 * 8 * this.precision);
 
@@ -237,11 +215,9 @@ Disc.prototype.generateNormal = function() {
 }
 
 
-/**
- * draw on the screen
- */
+// draw on the screen
 Disc.prototype.draw = function(drawingState) {
-    // receives from main.js the view matrix
+    
     var modelM = twgl.m4.identity();
     twgl.m4.setTranslation(modelM, this.position, modelM); // M = modelMatrix = worldMatrix, from object space to world space
 
@@ -249,7 +225,7 @@ Disc.prototype.draw = function(drawingState) {
 
     var gl = drawingState.gl;
 
-    // choose the shader(glsl) program we have compiled
+    // choose the shader (glsl) program we have compiled
     gl.useProgram(shaderProgram[1]);
 
     // we need to enable the attributes we had set up, which are set disabled by default by system
@@ -294,10 +270,10 @@ Disc.prototype.draw = function(drawingState) {
     gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
     gl.vertexAttribPointer(shaderProgram[1].NormalAttribute, 3, gl.FLOAT, false, 0, 0);
 
-    // Do the drawing
+    // do the drawing
     gl.drawArrays(gl.TRIANGLES, 0, this.vertexPos.length / 3); // the last parameter specifies how many vertices to draw
 
-    // WebGL is a state machine, so do not forget to disable all attributes after every drawing
+    // WebGL is a state machine, all attributes must be disabled after every drawing
     gl.disableVertexAttribArray(shaderProgram[1].PositionAttribute);
     gl.disableVertexAttribArray(shaderProgram[1].NormalAttribute);
 }

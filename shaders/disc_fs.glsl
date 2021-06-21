@@ -5,7 +5,7 @@ precision highp float;
 in vec3 fNormal;
 in vec3 fPosition;
 
-uniform vec3 uColor; // the object's color
+uniform vec3 uColor; // the object color
 
 uniform vec2 uDiffuseType; 
 uniform vec3 uSpecularType; 
@@ -30,10 +30,10 @@ out vec4 myOutputColor;
 // light direction computation
 vec3 compLightDir() {
 
-	//lights
-	// -> Point
+	// lights
+	// Point
 	vec3 pointLightDir = normalize(uLightPosition - fPosition);
-	// -> Direct
+	// Direct
 	vec3 directLightDir = uLightDirection;
 
 	return            directLightDir * uLightType.x +
@@ -43,13 +43,12 @@ vec3 compLightDir() {
 // light color computation
 vec4 compLightColor(vec3 lightDir, vec4 lightCol) {
 
-	//lights
-	// -> Point
+	// lights
+	// Point
 	vec4 pointLightCol = lightCol * pow(uLightTarget / length(uLightPosition - fPosition), uLightDecay);
-	// -> Direct
+	// Direct
 	vec4 directLightCol = lightCol;
 
-	// ----> Select final component
 	return          directLightCol * uLightType.x +
 					pointLightCol * uLightType.y;
 }
@@ -57,14 +56,14 @@ vec4 compLightColor(vec3 lightDir, vec4 lightCol) {
 // Diffuse computation
 vec4 compDiffuse(vec3 lightDir, vec4 lightCol, vec3 normalVec, vec4 diffColor){
 
-    //Diffuse
+    // Diffuse
     float LdotN = max(0.0, dot(normalVec, lightDir));
 	vec4 LDcol = lightCol * diffColor;
 
     // Lambert
     vec4 diffuseLambert = LDcol * LdotN;
 
-    // --> Toon
+    // Toon
 	vec4 diffuseToon = max(sign(LdotN- uDToonTh),0.0) * LDcol;
 
     return         diffuseLambert * uDiffuseType.x +
@@ -99,6 +98,7 @@ vec4 compSpecular(vec3 lightDir, vec4 lightCol, vec3 normalVec, vec3 eyedirVec, 
 
 // Ambient computation
 vec4 compAmbient(vec4 ambientLightColor, vec4 ambMatColor) {
+    
     // Ambient
 	vec4 ambientAmbient = ambientLightColor * ambMatColor;
 

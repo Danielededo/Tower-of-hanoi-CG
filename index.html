@@ -16,6 +16,7 @@
         </canvas>
     </td>
 
+    <!-- User game table -->
     <td id="rightTable">
         <table id="moveDiscs">
             <tr><td id="withoutButtons">
@@ -43,7 +44,7 @@
     </td>
     </table>
 
-
+    <!-- User bottom table -->
     <table class="table" id="userBottomTable" border="1">
         <tr>
             <th> Light type </th>
@@ -93,14 +94,17 @@
                     </select>
                 </div>
             </td>
+
+            <!-- Rod texture level -->
             <td>
                 <div>
-                    <input type="range" min="0" max="100" id="rodTextureLevel" value="100"></div>
+                    <input type="range" min="0" max="100" id="rodTextureLevel" value="100">
+                </div>
             </td>
         </tr>
     </table>
 
-    <!-- load libraries-->
+    <!-- Load libraries -->
     <script src="./Libraries/quaternion.min.js"></script>
     <script src="./Libraries/twgl-full.js"></script>
     <script src="./Libraries/jquery-3.3.1.js"></script>
@@ -120,7 +124,6 @@
     <script src="./UserInteraction/buttonClick.js"></script>
     <script src="./UserInteraction/keyboard.js"></script>
 
-    <!-- This should be loaded last, so please keep the order of loading JavaScript Files -->
     <script src="./main.js"></script>
 </body>
 </html>

@@ -2,23 +2,7 @@
 
 var Rod = undefined;
 
-// As to rod, since every rod is identical, we could put vertexPos, normal and such things outside function init
-// so that we only create buffers once for every rod to save time.
-// As to discs, their size are different so data in buffers varies. We have to use this.vertexPos, this.normal and
-// so on inside function init.
-
-var vertexPos;
-var normal;
-var texCoord;
-
-var positionBuffer;
-var normalBuffer;
-var texCoordBuffer;
-
-var texture;
-
 var rodIndex = 1; // for the constructor of rod
-
 /**
  * constructor for Rod
  * @param name: a unique name
@@ -34,28 +18,26 @@ Rod = function Rod(name, position, diameter, height, precision, color) {
     this.diameter = diameter || 0.2;
     this.height = height || 0.6;
     this.precision = precision || 0.5;
-    this.color = color || normalizeRgb(0, 0, 0); // Black by default. However I use image texture for
-    // rods so this.color is not used
+    this.color = color || normalizeRgb(0, 0, 0); // black by default
     this.stackOfDiscs = []; // store discs
 }
 
-/**
- * generate all data unchanged between two frames
- */
 Rod.prototype.initialize = function(drawingState) {
     var gl = drawingState.gl;
 
-    //create uniform/attribute locations
-    // with the vertex shader, we need to pass it positions as an attribute - so set up that communication
     shaderProgram[0].PositionAttribute = gl.getAttribLocation(shaderProgram[0], 'vPosition'); // vPosition represents the position of the primitives
     shaderProgram[0].NormalAttribute = gl.getAttribLocation(shaderProgram[0], 'vNormal'); // vNormal represents the normals of the primitives
     shaderProgram[0].TexCoordAttribute = gl.getAttribLocation(shaderProgram[0], 'vTexCoord'); // vTextCoord represents the texture coords of the primitives
+    
     // vertex shader uniforms
     shaderProgram[0].ModelLoc = gl.getUniformLocation(shaderProgram[0], 'uModel');
     shaderProgram[0].ViewLoc = gl.getUniformLocation(shaderProgram[0], 'uView');
     shaderProgram[0].ProjectionLoc = gl.getUniformLocation(shaderProgram[0], 'uProjection');
     shaderProgram[0].NormalMatrixLoc = gl.getUniformLocation(shaderProgram[0], 'uNormal');
+    
     // fragment shader uniforms
+    shaderProgram[0].ColorLoc = gl.getUniformLocation(shaderProgram[0], 'uColor');
+    
     shaderProgram[0].TexSamplerLoc = gl.getUniformLocation(shaderProgram[0], 'uTexSampler');
 
     shaderProgram[0].DiffuseTypeLoc = gl.getUniformLocation(shaderProgram[0], 'uDiffuseType');
@@ -70,7 +52,6 @@ Rod.prototype.initialize = function(drawingState) {
     shaderProgram[0].AmbientLightColorLoc = gl.getUniformLocation(shaderProgram[0], 'uAmbientLightColor');
 
     shaderProgram[0].RodTextureLevelLoc = gl.getUniformLocation(shaderProgram[0], 'uRodTextureLevel');
-    shaderProgram[0].ColorLoc = gl.getUniformLocation(shaderProgram[0], 'uColor');
 
     shaderProgram[0].DiffuseColorLoc = gl.getUniformLocation(shaderProgram[0], 'uDiffuseColor');
     shaderProgram[0].SpecShineLoc = gl.getUniformLocation(shaderProgram[0], 'uSpecShine');
@@ -82,31 +63,32 @@ Rod.prototype.initialize = function(drawingState) {
 
     // data
     // vertex positions
-    vertexPos = this.generateLocalPosition();
+    this.vertexPos = this.generateLocalPosition();
     // create buffer and upload data
-    positionBuffer = gl.createBuffer(); // create vertex buffer
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer); // vbo buffer is set as the active one, ARRAY_BUFFER means it holds vertex coords
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexPos), gl.STATIC_DRAW); // vertex data are placed inside the buffer
+    this.positionBuffer = gl.createBuffer(); // create vertex buffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer); // vbo buffer is set as the active one, ARRAY_BUFFER means it holds vertex coords
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertexPos), gl.STATIC_DRAW); // vertex data are placed inside the buffer
 
     // normals
-    normal = this.generateNormal();
+    this.normal = this.generateNormal();
     // create buffer and upload data
-    normalBuffer = gl.createBuffer(); // create normal buffer
-    gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normal), gl.STATIC_DRAW); // normal data are placed inside the buffer
+    this.normalBuffer = gl.createBuffer(); // create normal buffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.normal), gl.STATIC_DRAW); // normal data are placed inside the buffer
 
     // texture coordinates
-    texCoord = this.generateTextureCoordinate();
+    this.texCoord = this.generateTextureCoordinate();
+
     // create buffer and upload data
-    texCoordBuffer = gl.createBuffer(); // create texture buffer
-    gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texCoord), gl.STATIC_DRAW); // texture data are placed inside the buffer
+    this.texCoordBuffer = gl.createBuffer(); // create texture buffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.texCoord), gl.STATIC_DRAW); // texture data are placed inside the buffer
 
     // set up texture
-    texture = gl.createTexture();
+    this.texture = gl.createTexture();
 
     // load texture. Following two lines are critical for binding our texture object and the image
-    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.bindTexture(gl.TEXTURE_2D, this.texture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, LoadedImageFiles["woodTexture.jpg"]);
 
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
@@ -115,17 +97,7 @@ Rod.prototype.initialize = function(drawingState) {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 }
 
-/**
- * create a rod in model coordinate <br/>
- * People use 3ds Max, cinema 4d or other tools to create models in industry but I do not have any tools so I have 
- * to create models by JavaScript codes. <br/>
- * All models are created before the drawing procedure, so if you want to shorten the waiting time before you see
- * anything on screen, you could use any tool mentioned above to draw a rod (3 rods are identical so you could only
- * draw one of them) and 4 discs and export 5 separate WaveFront obj files. Then you could use create_vertex_list.py
- * to extract concrete numbers stored in obj files and copy there numbers into functions init for variables 
- * vertexPos, normal and texCoord.
- * @return: a Float32Array contains all vertices
- */
+// create a rod in model coordinate
 Rod.prototype.generateLocalPosition = function() {
     var radius = this.diameter / 2;
     var position = new Float32Array(3 * 3 * 4 * this.precision);
@@ -180,10 +152,7 @@ Rod.prototype.generateLocalPosition = function() {
     return position;
 }
 
-/**
- * generate all normal vectors of a rod's surface
- * @return: a Float32Array contains every vertical's normal
-*/
+// generate all normal vectors of a rod surface
 Rod.prototype.generateNormal = function() {
     this.precision = this.precision || 36;
     var normal = new Float32Array(3 * 3 * 4 * this.precision);
@@ -213,10 +182,7 @@ Rod.prototype.generateNormal = function() {
     return normal;
 }
 
-/**
- * generate all texture coordinate of a rod's surface
- * @return: a Float32Array contains every vertical's texture coordinate
-*/
+// generate all texture coordinate of a rod surface
 Rod.prototype.generateTextureCoordinate = function() {
     var radius = this.diameter / 2;
     var coordinate = new Float32Array(2 * 3 * 4 * this.precision);
@@ -259,11 +225,9 @@ Rod.prototype.generateTextureCoordinate = function() {
     return coordinate;
 }
 
-/**
- * draw on the screen
- */
+// draw on the screen
 Rod.prototype.draw = function(drawingState) {
-    // receives from main.js the view matrix
+
     var modelM = twgl.m4.identity();
     twgl.m4.setTranslation(modelM, this.position, modelM); // M = modelMatrix = worldMatrix, from object space to world space
 
@@ -271,7 +235,7 @@ Rod.prototype.draw = function(drawingState) {
     
     var gl = drawingState.gl;
 
-    // choose the shader(glsl) program we have compiled
+    // choose the shader (glsl) program we have compiled
     gl.useProgram(shaderProgram[0]);
 
     // we need to enable the attributes we had set up, which are set disabled by default by system
@@ -316,31 +280,28 @@ Rod.prototype.draw = function(drawingState) {
     gl.uniform3fv(shaderProgram[0].SpecularColorLoc, drawingState.specularColor);
     gl.uniform3fv(shaderProgram[0].Eye, drawingState.eye);
     
-
     // connect the attributes to the buffer
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
     gl.vertexAttribPointer(shaderProgram[0].PositionAttribute, 3, gl.FLOAT, false, 0, 0);
-    gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
     gl.vertexAttribPointer(shaderProgram[0].NormalAttribute, 3, gl.FLOAT, false, 0, 0);
-    gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordBuffer);
     gl.vertexAttribPointer(shaderProgram[0].TexCoordAttribute, 2, gl.FLOAT, false, 0, 0);
 
-    // Bind texture
+    // bind the texture
     gl.activeTexture(gl.TEXTURE1); // store wood texture
-    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.bindTexture(gl.TEXTURE_2D, this.texture);
 
-    // Do the drawing
-    gl.drawArrays(gl.TRIANGLES, 0, vertexPos.length / 3); // the last parameter specifies how many vertices to draw
+    // do the drawing
+    gl.drawArrays(gl.TRIANGLES, 0, this.vertexPos.length / 3); // the last parameter specifies how many vertices to draw
 
-    // WebGL is a state machine, so do not forget to disable all attributes after every drawing
+    // WebGL is a state machine, all attributes must be disabled after every drawing
     gl.disableVertexAttribArray(shaderProgram[0].PositionAttribute);
     gl.disableVertexAttribArray(shaderProgram[0].NormalAttribute);
     gl.disableVertexAttribArray(shaderProgram[0].TexCoordAttribute);
 }
 
-/**
- * return the number of discs appending on it
- */
+// return the number of discs into a rod
 Rod.prototype.getNumberOfDiscs = function() {
     return this.stackOfDiscs.length;
 }

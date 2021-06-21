@@ -1,13 +1,12 @@
 'use strict';
-/**
- the core logic of the game.
- */
 
-// the constructor that creates the data structures(for discs and rods)
+// the core logic of the game
+
+// the constructor creates the data structures (for discs and rods)
 function Game() {
 
     this.rods = []; //array that contains the rod objects
-    var rodDistance = 1.6; // the distance between two nearest rods
+    var rodDistance = 1.6; // the distance between the center of two near rods
     var rodDiameter = 0.2; // the diameter of the rod
     var rodHeight = 0.6;  // the height of the rod
     var rodPrecision = 30.0; // the number of triangles in the top face to simulate a circle
@@ -30,9 +29,9 @@ function Game() {
                             this.heightOfDisc, discPrecision, [200/255, 0, 0])); // vertex color is red
     
     // initialize the game state
-    this.movingUpwards = false; // whether there is a disc is moving upwards
-    this.movingSideways = false; // whether there is a disc is moving laterally
-    this.movingDownwards = false; // whether there is a disc is moving downwards
+    this.movingUpwards = false; // whether there is a disc moving upwards
+    this.movingSideways = false; // whether there is a disc moving laterally
+    this.movingDownwards = false; // whether there is a disc moving downwards
     
     this.movingDisc = undefined; // for moving animations
     this.fromRod = undefined;
@@ -54,13 +53,6 @@ Game.prototype.getNumberOfDiscs = function() {
     return count;
 }
 
-/**
- * try to move a disc
- * @param from: the index of the starting rod (index starts from 1)
- * @param to: the index of the ending rod (index starts from 1)
- * @param drawingState: a Javascript Object defined in allObjects.js. We use it to update the number of milliseconds since
- *                      the program started running
- */
 Game.prototype.tryToMoveDisc = function(from, to) {
 
     from = from || 1;
@@ -71,12 +63,12 @@ Game.prototype.tryToMoveDisc = function(from, to) {
         alert('You can move only one disc at a time!');
         return;
     }
-    // if the origin rod is empty
+    // if the starting rod is empty
     if (this.rods[from - 1].getNumberOfDiscs() === 0) {
         alert('There is no disc on the ' + ordinalNumber(from) + ' rod!');
         return;
     }
-    // if the origin disc is bigger than the destination disc
+    // if the starting disc is bigger than the destination disc
     if (this.rods[to - 1].getNumberOfDiscs() !== 0 && //the destination rod is not empty
         this.rods[to - 1].stackOfDiscs[this.rods[to - 1].getNumberOfDiscs() - 1].outerDiameter <
         this.rods[from - 1].stackOfDiscs[this.rods[from - 1].getNumberOfDiscs() - 1].outerDiameter) {
@@ -86,7 +78,7 @@ Game.prototype.tryToMoveDisc = function(from, to) {
     }
 
     
-    // I assume after the first success, player will continue to move discs for fun
+    // we assume after the first success, player will continue to move discs for fun
     if (from == 3) {
         this.hasSucceeded = false;
     }
@@ -101,12 +93,6 @@ Game.prototype.tryToMoveDisc = function(from, to) {
     this.toRod = this.rods[to - 1];
 }
 
-/**
- * update disc's position
- * if there is a moving disc, compute and change the position of it in world coordinate. Otherwise, nothing's position
- * will be changed
- * please call it in function draw in main.js
- */
 Game.prototype.updateDiscPosition = function(drawingState) {
 
     var movingSpeed = 0.002;
@@ -149,7 +135,7 @@ Game.prototype.updateDiscPosition = function(drawingState) {
    } else if (this.movingDownwards) {
         var number = this.toRod.getNumberOfDiscs(); // number of already existed discs on the target rod
         var targetAltitude = number * this.heightOfDisc; // the target height of the center of the bottom face of the
-        // moving disc in world coordinate
+        // moving disc
         var down = delta * movingSpeed;
         if (this.movingDisc.position[1] - down > targetAltitude) {
              this.movingDisc.position = [this.toRod.position[0], this.movingDisc.position[1] - down, this.toRod.position[2]];
@@ -162,11 +148,7 @@ Game.prototype.updateDiscPosition = function(drawingState) {
         }
    }
 }
-    
-/**
- * check whether the game is over and the player succeed
- * please call this method when and only when a moving animation is ended.
- */
+
 Game.prototype.checkResult = function() {
     var lastRod = this.rods[this.getNumberOfRods() - 1]; // the last rod is the target rod of the game
     var secondRod = this.rods[this.getNumberOfRods() - 2]; // the second rod is the target rod of the game

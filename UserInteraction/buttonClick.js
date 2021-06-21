@@ -1,4 +1,5 @@
 // this is the only .js file using jQuery
+
 'use strict';
 
 function bindButtonsToGame(game) {

@@ -1,4 +1,4 @@
-// recreation of a simple arcball in Javascript
+// Recreation of a simple arcball in Javascript:
 
 function ArcBall(canvas, callback) {
 
@@ -35,6 +35,7 @@ function ArcBall(canvas, callback) {
         that.mode = 0;
         if (that.callback) that.callback();
     });
+
     // support touch screen
     canvas.addEventListener("touchstart",function(e) {
         var sx = canvas.width / 2;
@@ -60,14 +61,6 @@ function ArcBall(canvas, callback) {
 
 }
 
-ArcBall.prototype.reset = function() {
-
-    "use strict";
-    this.start = new Quaternion(1, 0, 0, 0);
-    this.now = new Quaternion(1, 0, 0, 0);
-    this.mode = 0;
-};
-
 ArcBall.prototype.getMatrix = function() {
 
     "use strict";
@@ -87,26 +80,10 @@ ArcBall.prototype.click = function(x,y) {
     this.now = new Quaternion(1,0,0,0);
 };
 
-ArcBall.prototype.spin = function(x,y,z) {
-    
-    "use strict";
-    this.start = this.now.mul(this.start);
- 	var iw = x*x + y*y + z*z;
-	if (iw<1)
-		iw = math.sqrt(1-iw);
-	else
-		iw = 0;
-    this.now = new Quaternion(iw,x,y,z);
-    this.norm.normalize();
-    this.start = this.now.mul(this.start);
-
-    this.now = new Quaternion(1,0,0,0);
-};
-
 ArcBall.prototype.onUnitSphere = function(mx,my){
 
     "use strict";
-	var x = mx;	// should divide radius
+	var x = mx;
 	var y = my;
     var z;
 	var mag = x*x + y*y;
