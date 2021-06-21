@@ -11,7 +11,8 @@ The objective of the game is to move the entire stack to another rod, obeying th
 ## Ways of control 
 1. You can drag the screen by mouse to adjust the camera view;
 2. you can click buttons on the right side of the web page (or press keys denoted in texts of buttons) to move discs;
-3. you can change:
+3. you can zoom in or zoom out using the mouse wheel; 
+4. you can change:
     - the light type (Direct or Point),
     - the ambient light color,
     - the diffuse type (Lambert, Toon, or no diffuse),
