@@ -8,12 +8,6 @@ The objective of the game is to move the entire stack to another rod, obeying th
 2. each move consists of taking the upper disc from one of the rods and placing into another rod;
 3. no disc can be placed on top of a smaller disc.
 
-## Shading Space
-The shading space adopted in this project is WORLD SPACE.
-
-## Projection Type
-The projection type adopted in this project is PERSPECTIVE PROJECTION.
-
 ## Ways of control 
 1. You can drag the screen by mouse to adjust the camera view;
 2. you can click buttons on the right side of the web page (or press keys denoted in texts of buttons) to move discs;
@@ -27,3 +21,9 @@ The projection type adopted in this project is PERSPECTIVE PROJECTION.
 ## Screenshot
 Here follows a screenshot of the application:
 ![](screenshot.png)
+
+## Shading Space
+The shading space adopted in this project is WORLD SPACE.
+
+## Projection Type
+The projection type adopted in this project is PERSPECTIVE PROJECTION.
