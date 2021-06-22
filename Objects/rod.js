@@ -18,7 +18,7 @@ Rod = function Rod(name, position, diameter, height, precision, color) {
     this.diameter = diameter || 0.2;
     this.height = height || 0.6;
     this.precision = precision || 0.5;
-    this.color = color || normalizeRgb(0, 0, 0); // black by default
+    this.color = color || [0, 0, 0]; // black by default
     this.stackOfDiscs = []; // store discs
 }
 

@@ -163,3 +163,20 @@ Game.prototype.checkResult = function() {
         this.hasSucceeded = true;
     }
 }
+
+function ordinalNumber(cardinalNumber) {
+    cardinalNumber = cardinalNumber || 1;
+
+    cardinalNumber = Math.round(Math.abs(cardinalNumber));
+    var tensDigit = Math.round((cardinalNumber / 10) % 10);
+    var units = Math.round(cardinalNumber % 10);
+    if (tensDigit != 1) {
+        if (units == 1)
+            return cardinalNumber + 'st';
+        else if (units == 2)
+            return cardinalNumber + 'nd';
+        else if (units == 3)
+            return cardinalNumber + 'rd';
+    }
+    return cardinalNumber + 'th';
+}

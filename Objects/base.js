@@ -17,7 +17,7 @@ var Base = undefined;
     this.width = width || 6.0;
     this.depth = depth || 2.0;
     this.height = height || 0.1;
-    this.color = color || normalizeRgb(0, 0, 0); // black by default
+    this.color = color || [0, 0, 0]; // black by default
 }
 
 Base.prototype.initialize = function(drawingState) {

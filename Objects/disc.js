@@ -4,7 +4,7 @@ var Disc = undefined;
 
 var discIndex = 1; // for the constructor of disc
 /**
- * constructor for square Disc
+ * constructor for Disc
  * @param name: a unique name
  * @param position: the position of the center
  * @param outerDiameter: outer diameter of the top face and the bottom face
@@ -20,7 +20,7 @@ Disc = function Disc(name, position, outerDiameter, innerDiameter, height, preci
     this.innerDiameter = innerDiameter || 0.2;
     this.height = height || 0.1;
     this.precision = precision || 0.5;
-    this.color = color || normalizeRgb(0, 0, 0); // black by default
+    this.color = color || [0, 0, 0]; // black by default
 }
 
 Disc.prototype.initialize = function(drawingState) {
