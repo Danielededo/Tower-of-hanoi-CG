@@ -101,6 +101,13 @@ async function main() {
         var fragmentShader = utils.createShader(gl, gl.FRAGMENT_SHADER, shaderText[1]);
         shaderProgram[1] = utils.createProgram(gl, vertexShader, fragmentShader);
         });
+
+    // compile the shaders for base
+    await utils.loadFiles([shaderDir + 'base_vs.glsl', shaderDir + 'base_fs.glsl'], function (shaderText) {
+        var vertexShader = utils.createShader(gl, gl.VERTEX_SHADER, shaderText[0]);
+        var fragmentShader = utils.createShader(gl, gl.FRAGMENT_SHADER, shaderText[1]);
+        shaderProgram[2] = utils.createProgram(gl, vertexShader, fragmentShader);
+        });
     
 
     // for the object initialization:
@@ -116,6 +123,7 @@ async function main() {
             allObjects.push(game.rods[i].stackOfDiscs[j]); // push the discs
         }
     }
+    allObjects.push(game.base);
     allObjects.forEach(
         function(object){
             object.initialize(drawingState); // actual initialization
@@ -135,7 +143,7 @@ async function main() {
     function draw() {
 
         // here we compute the view matrix (through the camera matrix) and the projection matrix (through the perspective function)
-        var eye = [lookRadius*0.0, lookRadius*1.5, lookRadius*3.0]; // position of the camera
+        var eye = [lookRadius*0.0, lookRadius*1.5, lookRadius*3.5]; // position of the camera
         var target = [0.0, 0.0, 0.0];
         var up = [0.0, 1.0, 0.0];
         var cameraM = twgl.m4.lookAt(eye, target, up); // = Mc = camera matrix
@@ -150,10 +158,10 @@ async function main() {
         var aspectRatio = canvas.width/canvas.height;
         var projectionM = twgl.m4.perspective(fieldOfView, aspectRatio, 0.1, 100); // = Mp = perspective projection
 
-        var lightDecay = 0.3;
+        var lightDecay = 0.5;
         var lightTarget = 1.0;
 
-        var lightPosition = [2.0, 1.0, 1.0]; // the position of the point light
+        var lightPosition = [2.5, 1.5, 1.0]; // the position of the point light
 
         var lightDirection = [-1.0, 1.0, 1.0]; // the direction of the direct light
 
@@ -188,10 +196,12 @@ async function main() {
             eye : eye,
         }
 
+        /*
         // first, let's clear the background in the frame buffer
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
         gl.enable(gl.DEPTH_TEST);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        */
 
         // return the frame buffer pointer to the system, now we can draw on the screen
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);

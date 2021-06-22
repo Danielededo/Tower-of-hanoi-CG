@@ -19,26 +19,31 @@
     <!-- User game table -->
     <td id="rightTable">
         <table id="moveDiscs">
+            <tr>
+                <td id=rightTableTitle>
+                    <b> Choose a move to play the game! </b>
+                </td>
+            </tr>
             <tr><td id="withoutButtons">
-                <b>Move from the 1st rod:</b>
+                Move from the <b>1st</b> rod:
             </td></tr>
             <tr><td id="withButtons">
-                <button class="button" id="button-from1to2" type="button">1st &#10132; 2nd (or 'a')</button>
-                <button class="button" id="button-from1to3" type="button">1st &#10132; 3rd (or 'q')</button>
+                <button class="button" id="button-from1to2" type="button">1st &#10238; 2nd</br>('a')</button>
+                <button class="button" id="button-from1to3" type="button">1st &#10238; 3rd</br>('q')</button>
             </td></tr>
             <tr><td id="withoutButtons">
-                <b>Move from the 2nd rod:</b>
+                Move from the <b>2nd</b> rod:
             </td></tr>
             <tr><td id="withButtons">
-                <button class="button" id="button-from2to1" type="button">2nd &#10132; 1st (or 'd')</button>
-                <button class="button" id="button-from2to3" type="button">2nd &#10132; 3rd (or 's')</button>
+                <button class="button" id="button-from2to1" type="button">1st &#10237; 2nd</br>('d')</button>
+                <button class="button" id="button-from2to3" type="button">2nd &#10238; 3rd</br>('s')</button>
             </td></tr>
             <tr><td id="withoutButtons">
-                <b>Move from the 3rd rod:</b>
+                Move from the <b>3rd</b> rod:
             </td></tr>
             <tr><td id="withButtons">
-                <button class="button" id="button-from3to1" type="button">3rd &#10132; 1st (or 't')</button>
-                <button class="button" id="button-from3to2" type="button">3rd &#10132; 2nd (or 'f')</button>
+                <button class="button" id="button-from3to1" type="button">1st &#10237; 3rd</br>('t')</button>
+                <button class="button" id="button-from3to2" type="button">2nd &#10237; 3rd</br>('f')</button>
             </td></tr>
         </table>
     </td>
@@ -48,10 +53,10 @@
     <table class="table" id="userBottomTable" border="1">
         <tr>
             <th> Light type </th>
-            <th> Ambient light</th>
-            <th>Diffuse type</th>
-            <th> Specular type</th>
-            <th> Texture level</th>
+            <th> Ambient light </th>
+            <th> Diffuse type </th>
+            <th> Specular type </th>
+            <th> Texture level </th>
         </tr>
         <tr>
             <!-- Light type -->
@@ -113,11 +118,12 @@
 
     <script src="./Objects/textures/woodTexture.js"></script> <!-- load textures before loading object models-->
     
+    <script src="./Objects/base.js"></script> <!-- prototype of base-->
     <script src="./Objects/rod.js"></script> <!-- prototype of rod-->
     <script src="./Objects/disc.js"></script> <!-- prototype of disc-->
 
     <!-- the game logic part-->
-    <script src="./gameLogic.js"></script> <!-- load gameLogic.js first-->
+    <script src="./gameLogic.js"></script>
 
     <!-- user interaction methods-->
     <script src="./UserInteraction/arcball.js"></script>

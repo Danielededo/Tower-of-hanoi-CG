@@ -4,61 +4,69 @@ body {
 }
 
 .button {
+	font-family: "Consolas", Times, serif;
     background-color: rgb(68, 68, 68);
 	border: none;
-	color: white;
-	padding: 15px 25px;
+	color: rgb(300, 300, 300);
+	padding: 10px 20px;
 	text-align: center;
 	text-decoration: none;
 	font-weight: bold;
 	display: inline-block;
 	font-size: 14px;
-	margin: 4px 2px;
+	margin: 2px 1px;
 	cursor: pointer;
-	border-radius: 25px;
+	border-radius: 20px;
 }
-
-#button-from1to2:hover, #button-from1to3:hover {
-  	background-color: red;
-}
-#button-from2to1:hover, #button-from2to3:hover {
-	background-color: green;
-}
-#button-from3to1:hover, #button-from3to2:hover {
-	background-color: blue;
+.button:hover {
+	background-color: black
 }
 
 #rightTable {
 	border-collapse: collapse;
-	vertical-align: middle;
+	vertical-align: top;
 }
 #moveDiscs {
 	padding: 1px;
-	background-color: lightgrey;
+	background-color: rgb(200, 200, 200);
 	text-align: center;
 }
+#rightTableTitle {
+	font-size: 18px;
+	padding: 5px;
+	border-bottom: 1px solid black;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+	border-top: 1px solid black;
+	background-color: rgb(136, 136, 136);
+}
 #withButtons{
+	padding: 5px;
 	border-bottom: 1px solid black;
 	border-left: 1px solid black;
 	border-right: 1px solid black;
 	border-top: 0.5px dashed black;
 }
 #withoutButtons {
+	font-size: 16px;
+	padding: 5px;
 	border-top: 1px solid black;
 	border-left: 1px solid black;
 	border-right: 1px solid black;
+	background-color: rgb(136, 136, 136);
 }
 
 #userBottomTable {
-	background-color: lightgrey;
-	width: 50%;
+	background-color: rgb(200, 200, 200);
+	width: 60%;
 }
 #userBottomTable td {
-	width: 25%;
+	width: 20%;
 	padding: 10px;
 	text-align: center;
 }
 #userBottomTable th {
+	background-color: rgb(136, 136, 136);
 	padding: 5px;
 	text-align: center;
 }

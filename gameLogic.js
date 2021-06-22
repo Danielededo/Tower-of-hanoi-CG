@@ -6,9 +6,9 @@
 function Game() {
 
     this.rods = []; //array that contains the rod objects
-    var rodDistance = 1.6; // the distance between the center of two near rods
+    var rodDistance = 1.5; // the distance between the center of two near rods
     var rodDiameter = 0.2; // the diameter of the rod
-    var rodHeight = 0.6;  // the height of the rod
+    var rodHeight = 0.55;  // the height of the rod
     var rodPrecision = 30.0; // the number of triangles in the top face to simulate a circle
     var rodColor = [50/255, 50/255, 50/255];
     this.rods[0] = new Rod('rod1', [-rodDistance, 0, 0], rodDiameter, rodHeight, rodPrecision, rodColor);
@@ -16,17 +16,21 @@ function Game() {
     this.rods[2] = new Rod('rod3', [rodDistance, 0, 0], rodDiameter, rodHeight, rodPrecision, rodColor);
 
     // put all discs to the first rod through the array stackOfDiscs of rod[0]
-    this.heightOfDisc = 0.1;
+    this.discHeight = 0.1;
     var discPrecision = 150;
     // the inner diameter of a disc is the diameter of a rod
-    this.rods[0].stackOfDiscs.push(new Disc('disc1', [-rodDistance, 0 * this.heightOfDisc, 0], 1.2, rodDiameter,
-                            this.heightOfDisc, discPrecision, [200/255, 200/255, 0])); // vertex color is yellow
-    this.rods[0].stackOfDiscs.push(new Disc('disc2', [-rodDistance, 1 * this.heightOfDisc, 0], 1.0, rodDiameter,
-                            this.heightOfDisc, discPrecision, [0, 0, 200/255])); // vertex color is blue
-    this.rods[0].stackOfDiscs.push(new Disc('disc3', [-rodDistance, 2 * this.heightOfDisc, 0], 0.8, rodDiameter,
-                            this.heightOfDisc, discPrecision, [0, 200/255, 0])); // vertex color is lime
-    this.rods[0].stackOfDiscs.push(new Disc('disc4', [-rodDistance, 3 * this.heightOfDisc, 0], 0.6, rodDiameter,
-                            this.heightOfDisc, discPrecision, [200/255, 0, 0])); // vertex color is red
+    this.rods[0].stackOfDiscs.push(new Disc('disc1', [-rodDistance, 0 * this.discHeight, 0], 1.0, rodDiameter,
+                            this.discHeight, discPrecision, [200/255, 200/255, 0])); // vertex color is yellow
+    this.rods[0].stackOfDiscs.push(new Disc('disc2', [-rodDistance, 1 * this.discHeight, 0], 0.85, rodDiameter,
+                            this.discHeight, discPrecision, [0, 0, 200/255])); // vertex color is blue
+    this.rods[0].stackOfDiscs.push(new Disc('disc3', [-rodDistance, 2 * this.discHeight, 0], 0.7, rodDiameter,
+                            this.discHeight, discPrecision, [0, 200/255, 0])); // vertex color is lime
+    this.rods[0].stackOfDiscs.push(new Disc('disc4', [-rodDistance, 3 * this.discHeight, 0], 0.55, rodDiameter,
+                            this.discHeight, discPrecision, [200/255, 0, 0])); // vertex color is red
+
+    // base
+    var baseColor = [5/255, 5/255, 5/255];
+    this.base = new Base('base', [0.0, 0.0, 0.0], 4.2, 1.2, 0.2, baseColor);
     
     // initialize the game state
     this.movingUpwards = false; // whether there is a disc moving upwards
@@ -134,7 +138,7 @@ Game.prototype.updateDiscPosition = function(drawingState) {
         }
    } else if (this.movingDownwards) {
         var number = this.toRod.getNumberOfDiscs(); // number of already existed discs on the target rod
-        var targetAltitude = number * this.heightOfDisc; // the target height of the center of the bottom face of the
+        var targetAltitude = number * this.discHeight; // the target height of the center of the bottom face of the
         // moving disc
         var down = delta * movingSpeed;
         if (this.movingDisc.position[1] - down > targetAltitude) {
