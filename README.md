@@ -39,5 +39,5 @@ The projection type adopted in this project is PERSPECTIVE PROJECTION.
 The latest version of the project is available at [this GitHub Page](https://github.com/Danielededo/Tower-of-hanoi-CG), but it can also be built offline by cloning this repository and running a webserver (e.g. Apache) in the same folder.
 
 ## Authors
-- Daniele De Dominicis
-- Leonardo Guerra
+- [Daniele De Dominicis](https://github.com/Danielededo)
+- [Leonardo Guerra](https://github.com/leoguerra8)
