@@ -99,14 +99,15 @@ Game.prototype.tryToMoveDisc = function(from, to) {
 
 Game.prototype.updateDiscPosition = function(drawingState) {
 
+    // only on the first call
+    if (!this.lastTime) {
+        this.lastTime = drawingState.realTime;
+        return; // do nothing
+    }
+
     var movingSpeed = 0.002;
     var flyingAltitude = 0.8;
 
-    // on the first call, do nothing
-    if (!this.lastTime) {
-        this.lastTime = drawingState.realTime;
-        return;
-    }
     var delta = drawingState.realTime - this.lastTime;
     this.lastTime = drawingState.realTime;
 

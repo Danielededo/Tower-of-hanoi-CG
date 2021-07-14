@@ -129,18 +129,18 @@ async function main() {
             object.initialize(drawingState); // actual initialization
     });
     
-    var rotation; // the arcball for the rotation
+    var rotation;
 
 
     // for the animation:
     var realTime = performance.now(); // the returned value represents the time elapsed since the time origin
     var frameIndex = 0;
-    var frameCount = 10; // only use 10 frames (the second frame to the eleventh frame) to compute user's fps
+    var frameThreshold = 10; // only use 10 frames (the second frame to the eleventh frame) to compute user's fps
     var startTimestamp; // for computing user's fps
     var fps = 60; // fps = 60 Hz (updated soon after the first 10 frames)
 
     // drawing function
-    function draw() {
+    function drawScene() {
 
         // here we compute the view matrix (through the camera matrix) and the projection matrix (through the perspective function)
         var eye = [lookRadius*0.0, lookRadius*1.5, lookRadius*3.5]; // position of the camera
@@ -151,7 +151,7 @@ async function main() {
         var viewM = twgl.m4.inverse(cameraM); // = Mv = view matrix = (Mc)^-1 (= the inverse of camera matrix)
 
         // when we are testing fps at the first stage, player has no control, which means rotation has not been defined
-        if (frameIndex > frameCount)
+        if (frameIndex > frameThreshold)
             viewM = twgl.m4.multiply(rotation.getMatrix(), viewM); // rotation matrix multiplyed by view matrix (result in viewM)
 
         var fieldOfView = Math.PI / 4;
@@ -196,13 +196,6 @@ async function main() {
             eye : eye,
         }
 
-        /*
-        // first, let's clear the background in the frame buffer
-        gl.clearColor(0.0, 0.0, 0.0, 1.0);
-        gl.enable(gl.DEPTH_TEST);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        */
-
         // return the frame buffer pointer to the system, now we can draw on the screen
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.viewport(0, 0, canvas.width, canvas.height);
@@ -233,10 +226,10 @@ async function main() {
         realTime += 1000 / fps;
 
         // the first frame whose index is 0 is not taken into consideration
-        if (frameIndex === frameCount + 1) {
+        if (frameIndex == frameThreshold + 1) {
             
             // update fps (1 second = 1000 mill-seconds)
-            fps = Math.round(frameCount * 1000 / (performance.now() - startTimestamp));
+            fps = Math.round(frameThreshold * 1000 / (performance.now() - startTimestamp));
 
             // from now on support user interactions
             bindButtonsToGame(game);
@@ -246,9 +239,9 @@ async function main() {
 
         // the requestAnimationFrame function tells the browser to call the specified function before the next repaint 
         //  so that we can update the rendered image with the latest changes
-        window.requestAnimationFrame(draw);
+        window.requestAnimationFrame(drawScene);
     }
-    draw();
+    drawScene();
 }
 
 window.onload = main;

@@ -25,9 +25,9 @@ Rod = function Rod(name, position, diameter, height, precision, color) {
 Rod.prototype.initialize = function(drawingState) {
     var gl = drawingState.gl;
 
-    shaderProgram[0].PositionAttribute = gl.getAttribLocation(shaderProgram[0], 'vPosition'); // vPosition represents the position of the primitives
-    shaderProgram[0].NormalAttribute = gl.getAttribLocation(shaderProgram[0], 'vNormal'); // vNormal represents the normals of the primitives
-    shaderProgram[0].TexCoordAttribute = gl.getAttribLocation(shaderProgram[0], 'vTexCoord'); // vTextCoord represents the texture coords of the primitives
+    shaderProgram[0].PositionAttributeLoc = gl.getAttribLocation(shaderProgram[0], 'vPosition'); // vPosition represents the position of the primitives
+    shaderProgram[0].NormalAttributeLoc = gl.getAttribLocation(shaderProgram[0], 'vNormal'); // vNormal represents the normals of the primitives
+    shaderProgram[0].TexCoordAttributeLoc = gl.getAttribLocation(shaderProgram[0], 'vTexCoord'); // vTextCoord represents the texture coords of the primitives
     
     // vertex shader uniforms
     shaderProgram[0].ModelLoc = gl.getUniformLocation(shaderProgram[0], 'uModel');
@@ -87,7 +87,7 @@ Rod.prototype.initialize = function(drawingState) {
     // set up texture
     this.texture = gl.createTexture();
 
-    // load texture. Following two lines are critical for binding our texture object and the image
+    // load texture (binding our texture object and the image)
     gl.bindTexture(gl.TEXTURE_2D, this.texture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, LoadedImageFiles["woodTexture.jpg"]);
 
@@ -239,9 +239,9 @@ Rod.prototype.draw = function(drawingState) {
     gl.useProgram(shaderProgram[0]);
 
     // we need to enable the attributes we had set up, which are set disabled by default by system
-    gl.enableVertexAttribArray(shaderProgram[0].PositionAttribute);
-    gl.enableVertexAttribArray(shaderProgram[0].NormalAttribute);
-    gl.enableVertexAttribArray(shaderProgram[0].TexCoordAttribute);
+    gl.enableVertexAttribArray(shaderProgram[0].PositionAttributeLoc);
+    gl.enableVertexAttribArray(shaderProgram[0].NormalAttributeLoc);
+    gl.enableVertexAttribArray(shaderProgram[0].TexCoordAttributeLoc);
 
     // set the uniforms
     gl.uniformMatrix4fv(shaderProgram[0].ModelLoc, false, modelM);
@@ -282,11 +282,11 @@ Rod.prototype.draw = function(drawingState) {
     
     // connect the attributes to the buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
-    gl.vertexAttribPointer(shaderProgram[0].PositionAttribute, 3, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(shaderProgram[0].PositionAttributeLoc, 3, gl.FLOAT, false, 0, 0);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
-    gl.vertexAttribPointer(shaderProgram[0].NormalAttribute, 3, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(shaderProgram[0].NormalAttributeLoc, 3, gl.FLOAT, false, 0, 0);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordBuffer);
-    gl.vertexAttribPointer(shaderProgram[0].TexCoordAttribute, 2, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(shaderProgram[0].TexCoordAttributeLoc, 2, gl.FLOAT, false, 0, 0);
 
     // bind the texture
     gl.activeTexture(gl.TEXTURE1); // store wood texture
@@ -296,9 +296,9 @@ Rod.prototype.draw = function(drawingState) {
     gl.drawArrays(gl.TRIANGLES, 0, this.vertexPos.length / 3); // the last parameter specifies how many vertices to draw
 
     // WebGL is a state machine, all attributes must be disabled after every drawing
-    gl.disableVertexAttribArray(shaderProgram[0].PositionAttribute);
-    gl.disableVertexAttribArray(shaderProgram[0].NormalAttribute);
-    gl.disableVertexAttribArray(shaderProgram[0].TexCoordAttribute);
+    gl.disableVertexAttribArray(shaderProgram[0].PositionAttributeLoc);
+    gl.disableVertexAttribArray(shaderProgram[0].NormalAttributeLoc);
+    gl.disableVertexAttribArray(shaderProgram[0].TexCoordAttributeLoc);
 }
 
 // return the number of discs into a rod

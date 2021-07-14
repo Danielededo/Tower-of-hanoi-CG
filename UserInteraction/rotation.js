@@ -1,5 +1,3 @@
-// Recreation of a simple arcball in Javascript:
-
 function Rotation(canvas, callback) {
 
     "use strict";

@@ -23,8 +23,8 @@ var Base = undefined;
 Base.prototype.initialize = function(drawingState) {
     var gl = drawingState.gl;
 
-    shaderProgram[2].PositionAttribute = gl.getAttribLocation(shaderProgram[2], 'vPosition'); // vPosition represents the position of the primitives
-    shaderProgram[2].NormalAttribute = gl.getAttribLocation(shaderProgram[2], 'vNormal'); // vNormal represents the normals of the primitives
+    shaderProgram[2].PositionAttributeLoc = gl.getAttribLocation(shaderProgram[2], 'vPosition'); // vPosition represents the position of the primitives
+    shaderProgram[2].NormalAttributeLoc = gl.getAttribLocation(shaderProgram[2], 'vNormal'); // vNormal represents the normals of the primitives
 
     // vertex shader uniforms
     shaderProgram[2].ModelLoc = gl.getUniformLocation(shaderProgram[2], 'uModel');
@@ -198,8 +198,8 @@ Base.prototype.draw = function(drawingState) {
     gl.useProgram(shaderProgram[2]);
 
     // we need to enable the attributes we had set up, which are set disabled by default by system
-    gl.enableVertexAttribArray(shaderProgram[2].PositionAttribute);
-    gl.enableVertexAttribArray(shaderProgram[2].NormalAttribute);
+    gl.enableVertexAttribArray(shaderProgram[2].PositionAttributeLoc);
+    gl.enableVertexAttribArray(shaderProgram[2].NormalAttributeLoc);
 
     // set the uniforms
     gl.uniformMatrix4fv(shaderProgram[2].ModelLoc, false, modelM);
@@ -235,14 +235,14 @@ Base.prototype.draw = function(drawingState) {
 
     // connect the attributes to the buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
-    gl.vertexAttribPointer(shaderProgram[2].PositionAttribute, 3, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(shaderProgram[2].PositionAttributeLoc, 3, gl.FLOAT, false, 0, 0);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
-    gl.vertexAttribPointer(shaderProgram[2].NormalAttribute, 3, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(shaderProgram[2].NormalAttributeLoc, 3, gl.FLOAT, false, 0, 0);
 
     // do the drawing
     gl.drawArrays(gl.TRIANGLES, 0, this.vertexPos.length / 3); // the last parameter specifies how many vertices to draw
 
     // WebGL is a state machine, all attributes must be disabled after every drawing
-    gl.disableVertexAttribArray(shaderProgram[2].PositionAttribute);
-    gl.disableVertexAttribArray(shaderProgram[2].NormalAttribute);
+    gl.disableVertexAttribArray(shaderProgram[2].PositionAttributeLoc);
+    gl.disableVertexAttribArray(shaderProgram[2].NormalAttributeLoc);
 }
