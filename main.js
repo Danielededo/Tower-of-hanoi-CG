@@ -129,7 +129,7 @@ async function main() {
             object.initialize(drawingState); // actual initialization
     });
     
-    var ab; // the arcball for the rotation
+    var rotation; // the arcball for the rotation
 
 
     // for the animation:
@@ -150,9 +150,9 @@ async function main() {
 
         var viewM = twgl.m4.inverse(cameraM); // = Mv = view matrix = (Mc)^-1 (= the inverse of camera matrix)
 
-        // when we are testing fps at the first stage, player has no control, which means arcball has not been defined
+        // when we are testing fps at the first stage, player has no control, which means rotation has not been defined
         if (frameIndex > frameCount)
-            viewM = twgl.m4.multiply(ab.getMatrix(), viewM); // rotation matrix multiplyed by view matrix (result in viewM)
+            viewM = twgl.m4.multiply(rotation.getMatrix(), viewM); // rotation matrix multiplyed by view matrix (result in viewM)
 
         var fieldOfView = Math.PI / 4;
         var aspectRatio = canvas.width/canvas.height;
@@ -241,7 +241,7 @@ async function main() {
             // from now on support user interactions
             bindButtonsToGame(game);
             bindKeysToGame(game);
-            ab = new ArcBall(canvas);
+            rotation = new Rotation(canvas);
         }
 
         // the requestAnimationFrame function tells the browser to call the specified function before the next repaint 

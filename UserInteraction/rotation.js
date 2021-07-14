@@ -1,6 +1,6 @@
 // Recreation of a simple arcball in Javascript:
 
-function ArcBall(canvas, callback) {
+function Rotation(canvas, callback) {
 
     "use strict";
     this.start = new Quaternion(1, 0, 0, 0);
@@ -61,14 +61,14 @@ function ArcBall(canvas, callback) {
 
 }
 
-ArcBall.prototype.getMatrix = function() {
+Rotation.prototype.getMatrix = function() {
 
     "use strict";
     var q = this.now.mul(this.start);
     return q.toMatrix4();
 };
 
-ArcBall.prototype.click = function(x,y) {
+Rotation.prototype.click = function(x,y) {
 
     "use strict";
     this.start = this.now.mul(this.start);
@@ -80,7 +80,7 @@ ArcBall.prototype.click = function(x,y) {
     this.now = new Quaternion(1,0,0,0);
 };
 
-ArcBall.prototype.onUnitSphere = function(mx,my){
+Rotation.prototype.onUnitSphere = function(mx,my){
 
     "use strict";
 	var x = mx;
@@ -98,7 +98,7 @@ ArcBall.prototype.onUnitSphere = function(mx,my){
     return [x,y,z];
 };
 
-ArcBall.prototype.computeNow = function(mx,my){
+Rotation.prototype.computeNow = function(mx,my){
     
     "use strict";
     var down = this.onUnitSphere(this.downX, this.downY);
