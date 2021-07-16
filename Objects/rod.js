@@ -84,13 +84,14 @@ Rod.prototype.initialize = function(drawingState) {
     gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.texCoord), gl.STATIC_DRAW); // texture data are placed inside the buffer
 
-    // set up texture
+    // create texture object
     this.texture = gl.createTexture();
 
-    // load texture (binding our texture object and the image)
+    // binding the texture object to the active slot
     gl.bindTexture(gl.TEXTURE_2D, this.texture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, LoadedImageFiles["woodTexture.jpg"]);
 
+    //pack and send the image into a WebGL texture object
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
@@ -249,7 +250,7 @@ Rod.prototype.draw = function(drawingState) {
     gl.uniformMatrix4fv(shaderProgram[0].ProjectionLoc, false, drawingState.projection);
     gl.uniformMatrix4fv(shaderProgram[0].NormalMatrixLoc, false, normalM);
 
-    gl.uniform1i(shaderProgram[0].TexSamplerLoc, 1); // so we will store the image texture
+    gl.uniform1i(shaderProgram[0].TexSamplerLoc, 0); // so we will store the image texture
 
     gl.uniform2fv(shaderProgram[0].DiffuseTypeLoc, diffuseType);
     gl.uniform3fv(shaderProgram[0].uSpecularTypeLoc, specularType);
@@ -289,7 +290,7 @@ Rod.prototype.draw = function(drawingState) {
     gl.vertexAttribPointer(shaderProgram[0].TexCoordAttributeLoc, 2, gl.FLOAT, false, 0, 0);
 
     // bind the texture
-    gl.activeTexture(gl.TEXTURE1); // store wood texture
+    gl.activeTexture(gl.TEXTURE0); // store wood texture
     gl.bindTexture(gl.TEXTURE_2D, this.texture);
 
     // do the drawing
