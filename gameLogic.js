@@ -129,7 +129,7 @@ Game.prototype.updateDiscPosition = function(drawingState) {
         var forward = delta * movingSpeed;
         if (twgl.v3.distance(posOfDisc, posOfRod) > forward) {
             var discToRod = twgl.v3.subtract(posOfRod, posOfDisc);
-            var movingVector = twgl.v3.mulScalar(twgl.v3.normalize(discToRod), forward);
+            var movingVector = twgl.v3.mulScalar(twgl.v3.normalize(discToRod), forward); // vector * scalar
             this.movingDisc.position = twgl.v3.add(posOfDisc, movingVector);
         } else { // we have reached the destination rod
             this.movingDisc.position = posOfRod;
@@ -167,17 +167,13 @@ Game.prototype.checkResult = function() {
 
 function ordinalNumber(cardinalNumber) {
     cardinalNumber = cardinalNumber || 1;
-
-    cardinalNumber = Math.round(Math.abs(cardinalNumber));
-    var tensDigit = Math.round((cardinalNumber / 10) % 10);
-    var units = Math.round(cardinalNumber % 10);
-    if (tensDigit != 1) {
-        if (units == 1)
-            return cardinalNumber + 'st';
-        else if (units == 2)
-            return cardinalNumber + 'nd';
-        else if (units == 3)
-            return cardinalNumber + 'rd';
-    }
-    return cardinalNumber + 'th';
+ 
+    if (cardinalNumber == 1)
+        return cardinalNumber + 'st';
+    else if (cardinalNumber == 2)
+        return cardinalNumber + 'nd';
+    else if (cardinalNumber == 3)
+        return cardinalNumber + 'rd';
+    else
+        return cardinalNumber + 'th';
 }

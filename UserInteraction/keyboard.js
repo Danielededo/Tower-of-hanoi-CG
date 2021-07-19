@@ -17,6 +17,6 @@ function bindKeysToGame(game) {
             game.tryToMoveDisc(3, 1);
         else if (event.keyCode === 70) // 'F'
             game.tryToMoveDisc(3, 2);
-        e.stopPropagation();
+        e.stopPropagation(); // prevents further propagation of the current event
     };
 }
