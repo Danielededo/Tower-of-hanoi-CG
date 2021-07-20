@@ -23,16 +23,16 @@ var Base = undefined;
 Base.prototype.initialize = function(drawingState) {
     var gl = drawingState.gl;
 
+    // attribute locations
     shaderProgram[2].PositionAttributeLoc = gl.getAttribLocation(shaderProgram[2], 'vPosition'); // vPosition represents the position of the primitives
     shaderProgram[2].NormalAttributeLoc = gl.getAttribLocation(shaderProgram[2], 'vNormal'); // vNormal represents the normals of the primitives
 
-    // vertex shader uniforms
+    // uniform locations
     shaderProgram[2].ModelLoc = gl.getUniformLocation(shaderProgram[2], 'uModel');
     shaderProgram[2].ViewLoc = gl.getUniformLocation(shaderProgram[2], 'uView');
     shaderProgram[2].ProjectionLoc = gl.getUniformLocation(shaderProgram[2], 'uProjection');
     shaderProgram[2].NormalMatrixLoc = gl.getUniformLocation(shaderProgram[2], 'uNormal');
     
-    // fragment shader uniforms
     shaderProgram[2].ColorLoc = gl.getUniformLocation(shaderProgram[2], 'uColor');
 
     shaderProgram[2].DiffuseTypeLoc = gl.getUniformLocation(shaderProgram[2], 'uDiffuseType');

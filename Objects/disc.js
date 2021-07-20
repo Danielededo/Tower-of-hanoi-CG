@@ -26,16 +26,16 @@ Disc = function Disc(name, position, outerDiameter, innerDiameter, height, preci
 Disc.prototype.initialize = function(drawingState) {
     var gl = drawingState.gl;
 
+    // attribute locations
     shaderProgram[1].PositionAttributeLoc = gl.getAttribLocation(shaderProgram[1], 'vPosition'); // vPosition represents the position of the primitives
     shaderProgram[1].NormalAttributeLoc = gl.getAttribLocation(shaderProgram[1], 'vNormal'); // vNormal represents the normals of the primitives
 
-    // vertex shader uniforms
+    // uniform locations
     shaderProgram[1].ModelLoc = gl.getUniformLocation(shaderProgram[1], 'uModel');
     shaderProgram[1].ViewLoc = gl.getUniformLocation(shaderProgram[1], 'uView');
     shaderProgram[1].ProjectionLoc = gl.getUniformLocation(shaderProgram[1], 'uProjection');
     shaderProgram[1].NormalMatrixLoc = gl.getUniformLocation(shaderProgram[1], 'uNormal');
     
-    // fragment shader uniforms
     shaderProgram[1].ColorLoc = gl.getUniformLocation(shaderProgram[1], 'uColor');
 
     shaderProgram[1].DiffuseTypeLoc = gl.getUniformLocation(shaderProgram[1], 'uDiffuseType');

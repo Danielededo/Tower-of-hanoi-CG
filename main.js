@@ -96,14 +96,14 @@ async function main() {
         });
 
     // compile the shaders for disc
-    await utils.loadFiles([shaderDir + 'disc_vs.glsl', shaderDir + 'disc_fs.glsl'], function (shaderText) {
+    await utils.loadFiles([shaderDir + 'obj_vs.glsl', shaderDir + 'obj_fs.glsl'], function (shaderText) {
         var vertexShader = utils.createShader(gl, gl.VERTEX_SHADER, shaderText[0]);
         var fragmentShader = utils.createShader(gl, gl.FRAGMENT_SHADER, shaderText[1]);
         shaderProgram[1] = utils.createProgram(gl, vertexShader, fragmentShader);
         });
 
     // compile the shaders for base
-    await utils.loadFiles([shaderDir + 'base_vs.glsl', shaderDir + 'base_fs.glsl'], function (shaderText) {
+    await utils.loadFiles([shaderDir + 'obj_vs.glsl', shaderDir + 'obj_fs.glsl'], function (shaderText) {
         var vertexShader = utils.createShader(gl, gl.VERTEX_SHADER, shaderText[0]);
         var fragmentShader = utils.createShader(gl, gl.FRAGMENT_SHADER, shaderText[1]);
         shaderProgram[2] = utils.createProgram(gl, vertexShader, fragmentShader);

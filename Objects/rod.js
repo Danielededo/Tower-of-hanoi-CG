@@ -25,17 +25,17 @@ Rod = function Rod(name, position, diameter, height, precision, color) {
 Rod.prototype.initialize = function(drawingState) {
     var gl = drawingState.gl;
 
+    // attribute locations
     shaderProgram[0].PositionAttributeLoc = gl.getAttribLocation(shaderProgram[0], 'vPosition'); // vPosition represents the position of the primitives
     shaderProgram[0].NormalAttributeLoc = gl.getAttribLocation(shaderProgram[0], 'vNormal'); // vNormal represents the normals of the primitives
     shaderProgram[0].TexCoordAttributeLoc = gl.getAttribLocation(shaderProgram[0], 'vTexCoord'); // vTextCoord represents the texture coords of the primitives
     
-    // vertex shader uniforms
+    // uniform locations
     shaderProgram[0].ModelLoc = gl.getUniformLocation(shaderProgram[0], 'uModel');
     shaderProgram[0].ViewLoc = gl.getUniformLocation(shaderProgram[0], 'uView');
     shaderProgram[0].ProjectionLoc = gl.getUniformLocation(shaderProgram[0], 'uProjection');
     shaderProgram[0].NormalMatrixLoc = gl.getUniformLocation(shaderProgram[0], 'uNormal');
     
-    // fragment shader uniforms
     shaderProgram[0].ColorLoc = gl.getUniformLocation(shaderProgram[0], 'uColor');
     
     shaderProgram[0].TexSamplerLoc = gl.getUniformLocation(shaderProgram[0], 'uTexSampler');
